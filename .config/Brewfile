@@ -1,0 +1,21 @@
+cask_args appdir: '/Applications'
+tap "homebrew/bundle"
+tap "homebrew/cask"
+tap "homebrew/core"
+
+brew "mas"
+brew "zsh"
+brew "zsh-completions"
+
+cask "docker"
+cask "github"
+cask "google-chrome"
+cask "google-japanese-ime"
+cask "google-backup-and-sync"
+cask "inkdrop"
+cask "slack"
+cask "visual-studio-code"
+cask "1password"
+
+mas "Xcode", id: 497799835
+mas "LINE", id: 539883307

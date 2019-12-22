@@ -1,0 +1,171 @@
+{
+  "entries": {
+    "tap": {
+      "homebrew/bundle": {
+        "revision": "bed1552647b7a181e84c7f89a532128d485bef75"
+      },
+      "homebrew/cask": {
+        "revision": "fd4e32768c3a4ca3ddc64a61148b5bc11ec54b93"
+      },
+      "homebrew/core": {
+        "revision": "964ad30ec2f112919cc28f3ccd390dc489dbe680"
+      }
+    },
+    "cask": {
+      "google-chrome": {
+        "version": "79.0.3945.88",
+        "options": {
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "google-japanese-ime": {
+        "version": "latest",
+        "options": {
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "google-drive-file-stream": {
+        "version": "latest",
+        "options": {
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "slack": {
+        "version": "4.2.0",
+        "options": {
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "1password": {
+        "version": "7.4.1",
+        "options": {
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "docker": {
+        "version": "2.1.0.5,40693",
+        "options": {
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "github": {
+        "version": "2.2.4-be951a19",
+        "options": {
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "google-backup-and-sync": {
+        "version": "latest",
+        "options": {
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "inkdrop": {
+        "version": "4.4.1",
+        "options": {
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "visual-studio-code": {
+        "version": "1.41.1",
+        "options": {
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      }
+    },
+    "brew": {
+      "mas": {
+        "version": "1.6.3",
+        "bottle": {
+          "cellar": ":any",
+          "prefix": "/usr/local",
+          "files": {
+            "catalina": {
+              "url": "https://homebrew.bintray.com/bottles/mas-1.6.3.catalina.bottle.tar.gz",
+              "sha256": "2069b8c1c1a64c2fb91cc1c25ab9c9890c61f2182224b9e0605a35a151bb85bd"
+            },
+            "mojave": {
+              "url": "https://homebrew.bintray.com/bottles/mas-1.6.3.mojave.bottle.tar.gz",
+              "sha256": "3dd5a50b551a37c164c31375cc8498ba870e29e50086bd5c4c294bc26708a6d2"
+            },
+            "high_sierra": {
+              "url": "https://homebrew.bintray.com/bottles/mas-1.6.3.high_sierra.bottle.tar.gz",
+              "sha256": "a0d1e45203448c08420c3eab2d40ef957fd22c8e40fbeb067bc7bffe4f08dfe2"
+            }
+          }
+        }
+      },
+      "zsh": {
+        "version": "5.7.1",
+        "bottle": {
+          "cellar": "/usr/local/Cellar",
+          "prefix": "/usr/local",
+          "files": {
+            "catalina": {
+              "url": "https://homebrew.bintray.com/bottles/zsh-5.7.1.catalina.bottle.tar.gz",
+              "sha256": "a24afee5cc1af2b139b6afb8963992b3fb22a4b9fbfa02402ac17e6bfa66a27a"
+            },
+            "mojave": {
+              "url": "https://homebrew.bintray.com/bottles/zsh-5.7.1.mojave.bottle.tar.gz",
+              "sha256": "793d87f67e64a5e01dfdea890af218e4779a2df514d395b956e464129af16fd7"
+            },
+            "high_sierra": {
+              "url": "https://homebrew.bintray.com/bottles/zsh-5.7.1.high_sierra.bottle.tar.gz",
+              "sha256": "6656fe9aa5d5cbaff49bc9c1ccf17b7d96d21036ac44c9181bd35c57dc38b450"
+            },
+            "sierra": {
+              "url": "https://homebrew.bintray.com/bottles/zsh-5.7.1.sierra.bottle.tar.gz",
+              "sha256": "008dfc844b88fcd61925233b08f0d78b2851bf2901320a5f6ee975da4b8604e3"
+            }
+          }
+        }
+      },
+      "zsh-completions": {
+        "version": "0.31.0",
+        "bottle": false
+      }
+    },
+    "mas": {
+      "Xcode": {
+        "id": "497799835",
+        "version": "11.3"
+      },
+      "LINE": {
+        "id": "539883307",
+        "version": "5.21.2"
+      }
+    }
+  },
+  "system": {
+    "macos": {
+      "mojave": {
+        "HOMEBREW_VERSION": "2.2.1",
+        "HOMEBREW_PREFIX": "/usr/local",
+        "Homebrew/homebrew-core": "964ad30ec2f112919cc28f3ccd390dc489dbe680",
+        "CLT": "10.3.0.0.1.1562985497",
+        "Xcode": "11.3",
+        "macOS": "10.14.6"
+      }
+    }
+  }
+}
