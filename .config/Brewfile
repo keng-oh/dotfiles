@@ -5,7 +5,6 @@ tap "homebrew/core"
 
 brew "mas"
 brew "zsh"
-brew "zsh-completions"
 
 cask "docker"
 cask "github"

@@ -15,6 +15,9 @@ source ~/.alias
 # use emacs keybind
 bindkey -e
 
+# Brewfile PATH
+export HOMEBREW_BUNDLE_FILE=~/.config/Brewfile
+
 # zsh history
 HISTFILE=$HOME/.zsh_history
 HISTSIZE=100000

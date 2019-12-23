@@ -5,6 +5,7 @@ echo "DOTFILES SETUP START"
 for f in .??*; do
   [ "$f" = ".git" ] && continue
   [ "$f" == ".DS_Store" ] && continue
+  [ "$f" == ".gitignore" ] && continue
   ln -snfv ~/dotfiles/"$f" ~/
 done
 
