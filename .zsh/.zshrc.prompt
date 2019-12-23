@@ -2,6 +2,7 @@
 # Prompt settings
 # ------------------------------
 
+
 # colorful
 autoload -Uz colors
 colors

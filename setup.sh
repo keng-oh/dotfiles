@@ -29,3 +29,8 @@ else
 fi
 
 echo "DOTFILES SETUP FINISHED"
+
+echo "Install zplugin START"
+mkdir ~/.zplugin
+git clone https://github.com/zdharma/zplugin.git ~/.zplugin/bin
+echo "Install zplugin FINISHED"

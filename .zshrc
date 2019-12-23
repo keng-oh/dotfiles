@@ -3,6 +3,3 @@
 # .zshrcは~/.zsh/.zshrc.mainをロードするだけ
 
 source ~/.zsh/.zshrc.main
-
-# zpluginインストーラーが実行されると以下に設定が書き込まれる
- 
