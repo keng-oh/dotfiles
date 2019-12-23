@@ -20,11 +20,8 @@ HISTFILE=$HOME/.zsh_history
 HISTSIZE=100000
 SAVEHIST=1000000
 
-# use zplugin
-source "$HOME/.zplugin/bin/zplugin.zsh"
-
-autoload -Uz _zplugin
-(( ${+_comps} )) && _comps[zplugin]=_zplugin
+# zplugin
+source ~/.zsh/.zshrc.zplugin
 
 # options
 source ~/.zsh/.zshrc.options

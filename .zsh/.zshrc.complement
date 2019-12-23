@@ -4,9 +4,9 @@
 
 
 # setting zsh-completions
-if [ -e /usr/local/share/zsh-completions ]; then
-  fpath=(/usr/local/share/zsh-completions $fpath)
+if [ -e ${ZPLGM[PLUGINS_DIR]}/zsh-users---zsh-completions/src ]; then
+  fpath=(${ZPLGM[PLUGINS_DIR]}/zsh-users---zsh-completions/src $fpath)
 fi
 
-#autoload -U compinit
-#compinit
+autoload -U compinit
+compinit
