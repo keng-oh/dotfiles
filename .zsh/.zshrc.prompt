@@ -3,10 +3,6 @@
 # ------------------------------
 
 
-# colorful
-autoload -Uz colors
-colors
-
 # vcs_info for git info
 autoload -Uz vcs_info
 setopt prompt_subst
