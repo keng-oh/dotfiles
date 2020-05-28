@@ -91,6 +91,38 @@
             "appdir": "/Applications"
           }
         }
+      },
+      "alfred": {
+        "version": "4.0.7_1131",
+        "options": {
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "virtualbox": {
+        "version": "6.1.0,135406",
+        "options": {
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "docker-toolbox": {
+        "version": "19.03.1",
+        "options": {
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "spotify": {
+        "version": "latest",
+        "options": {
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
       }
     },
     "brew": {
@@ -143,6 +175,10 @@
       "zsh-completions": {
         "version": "0.31.0",
         "bottle": false
+      },
+      "nodebrew": {
+        "version": "1.0.1",
+        "bottle": false
       }
     },
     "mas": {
@@ -165,6 +201,14 @@
         "CLT": "10.3.0.0.1.1562985497",
         "Xcode": "11.3",
         "macOS": "10.14.6"
+      },
+      "catalina": {
+        "HOMEBREW_VERSION": "2.2.1",
+        "HOMEBREW_PREFIX": "/usr/local",
+        "Homebrew/homebrew-core": "964ad30ec2f112919cc28f3ccd390dc489dbe680",
+        "CLT": "1100.0.33.17",
+        "Xcode": "11.3",
+        "macOS": "10.15.3"
       }
     }
   }

@@ -25,6 +25,16 @@ if which brew >/dev/null 2>&1; then
   echo "set shell zsh"
   sudo sh -c "echo $(brew --prefix)/bin/zsh >> /etc/shells"
   chsh -s $(brew --prefix)/bin/zsh
+  
+  echo "installing nodebrew from homebrew"
+  export PATH="$PATH:$HOME/.nodebrew/current/bin"
+  if which nodebrew >/dev/null 2>&1; then
+    nodebrew install-binary stable
+    nodebrew use stable
+  else
+    echo "nodebrew install failed" 
+  fi
+
 else
   echo "homebrew is already installed"
 fi

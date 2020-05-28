@@ -5,8 +5,10 @@ tap "homebrew/core"
 
 brew "mas"
 brew "zsh"
+brew "nodebrew"
 
 cask "docker"
+cask "docker-toolbox"
 cask "github"
 cask "google-chrome"
 cask "google-japanese-ime"
@@ -15,6 +17,9 @@ cask "inkdrop"
 cask "slack"
 cask "visual-studio-code"
 cask "1password"
+cask "alfred"
+cask "virtualbox"
+cask "spotify"
 
 mas "Xcode", id: 497799835
 mas "LINE", id: 539883307

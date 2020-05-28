@@ -7,7 +7,9 @@
 export LANG=ja_JP.UTF-8
 
 # add PATH
-export PATH="$HOME/bin:$PATH"
+PATH="$PATH:$HOME/bin"
+PATH="$PATH:$HOME/.nodebrew/current/bin"
+export PATH
 
 # add Alias
 source ~/.alias

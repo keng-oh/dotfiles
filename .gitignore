@@ -1,2 +1,4 @@
 
 .ssh/known_hosts
+.docker
+.config/gatsby
