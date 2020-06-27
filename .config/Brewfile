@@ -4,11 +4,14 @@ tap "homebrew/cask"
 tap "homebrew/core"
 
 brew "mas"
-brew "zsh"
 brew "nodebrew"
+brew "tree"
+brew "wget"
+brew "zsh"
 
 cask "1password"
 cask "alfred"
+cask "clipy"
 cask "docker"
 cask "docker-toolbox"
 cask "github"
@@ -16,10 +19,13 @@ cask "google-backup-and-sync"
 cask "google-chrome"
 cask "google-japanese-ime"
 cask "inkdrop"
+cask "raindropio"
 cask "slack"
 cask "spotify"
+cask "tableplus"
 cask "virtualbox"
 cask "visual-studio-code"
 
 mas "LINE", id: 539883307
+mas "Magnet", id: 441258766
 mas "Xcode", id: 497799835
