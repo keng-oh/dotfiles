@@ -163,6 +163,69 @@
             "appdir": "/Applications"
           }
         }
+      },
+      "android-studio": {
+        "version": "4.0.0.16,193.6514223",
+        "options": {
+          "full_name": "android-studio",
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "react-native-debugger": {
+        "version": "0.11.3",
+        "options": {
+          "full_name": "react-native-debugger",
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "vivaldi": {
+        "version": "3.0.1874.38",
+        "options": {
+          "full_name": "vivaldi",
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "autodesk-fusion360": {
+        "version": "latest",
+        "options": {
+          "full_name": "autodesk-fusion360",
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "teensy": {
+        "version": "latest",
+        "options": {
+          "full_name": "teensy",
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "obs": {
+        "version": "25.0.8",
+        "options": {
+          "full_name": "obs",
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "hyper": {
+        "version": "3.0.2",
+        "options": {
+          "full_name": "hyper",
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
       }
     },
     "brew": {
