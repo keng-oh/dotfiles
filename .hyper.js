@@ -9,11 +9,10 @@ module.exports = {
     updateChannel: 'stable',
 
     // default font size in pixels for all tabs
-    fontSize: 12,
+    fontSize: 14,
 
     // font family with optional fallbacks
-    fontFamily:
-      'Menlo, "DejaVu Sans Mono", Consolas, "Lucida Console", monospace',
+    fontFamily: '"VL ゴシック", Menlo, "DejaVu Sans Mono", Consolas, "Lucida Console", monospace',
 
     // default font weight: 'normal' or 'bold'
     fontWeight: 'normal',
@@ -141,7 +140,8 @@ module.exports = {
     // for advanced config flags please refer to https://hyper.is/#cfg
 
     // hyper-opacityプラグインの設定
-    opacity: 0.85,
+    opacity: 0.80,
+
     // 範囲選択するとクリップボードにコピーされる
     copyOnSelect: true,
   },
@@ -160,6 +160,7 @@ module.exports = {
     'hyperborder',
     'hyper-pane',
     'hyper-tab-icons-plus',
+    'hyper-opacity',
   ],
 
   // in development, you can create a directory under
