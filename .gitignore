@@ -3,4 +3,5 @@
 .docker/
 .config/gatsby/
 .config/configstore
+.config/gcloud
 .hyper_plugins
