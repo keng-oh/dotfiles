@@ -1,12 +1,14 @@
 #!/bin/sh
 
+SCRIPT_DIR=$(cd $(dirname $0); pwd)
+
 echo "DOTFILES SETUP START"
 
 for f in .??*; do
-  [ "$f" = ".git" ] && continue
+  [ "$f" == ".git" ] && continue
   [ "$f" == ".DS_Store" ] && continue
   [ "$f" == ".gitignore" ] && continue
-  ln -snfv ~/dotfiles/"$f" ~/
+  ln -snfv "$SCRIPT_DIR/$f" ~
 done
 
 echo "installing homebrew..."
@@ -29,8 +31,12 @@ if which brew >/dev/null 2>&1; then
   echo "installing nodebrew from homebrew"
   export PATH="$PATH:$HOME/.nodebrew/current/bin"
   if which nodebrew >/dev/null 2>&1; then
+    nodebrew setup
     nodebrew install-binary stable
     nodebrew use stable
+    if which npm >/dev/null 2>&1; then
+      npm install -g yarn gatsby-cli expo-cli
+    fi
   else
     echo "nodebrew install failed" 
   fi
