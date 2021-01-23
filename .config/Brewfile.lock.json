@@ -2,18 +2,18 @@
   "entries": {
     "tap": {
       "homebrew/bundle": {
-        "revision": "f8c270884e685d24bd85439786a360de3be58f1d"
+        "revision": "9aed384937bdf545b5c4e3e1fcc0a2bd686dd979"
       },
       "homebrew/cask": {
-        "revision": "472b911e3b6de0acf9b7b191629313e09eec2bcc"
+        "revision": "f941d0ed467e6e471aff8e83f5919a2457d7fa7c"
       },
       "homebrew/core": {
-        "revision": "33368800787252fb5ddacdc4ba0f31a6157ab4b7"
+        "revision": "46f7240b902c07e75bb04af4e02ab1e9bcac7eaa"
       }
     },
     "cask": {
       "google-chrome": {
-        "version": "79.0.3945.88",
+        "version": "86.0.4240.183",
         "options": {
           "full_name": "google-chrome",
           "args": {
@@ -39,7 +39,7 @@
         }
       },
       "slack": {
-        "version": "4.2.0",
+        "version": "4.10.3",
         "options": {
           "full_name": "slack",
           "args": {
@@ -48,7 +48,7 @@
         }
       },
       "1password": {
-        "version": "7.4.1",
+        "version": "7.6",
         "options": {
           "full_name": "1password",
           "args": {
@@ -57,7 +57,7 @@
         }
       },
       "docker": {
-        "version": "2.1.0.5,40693",
+        "version": "2.5.0.0,49427",
         "options": {
           "full_name": "docker",
           "args": {
@@ -66,7 +66,7 @@
         }
       },
       "github": {
-        "version": "2.2.4-be951a19",
+        "version": "2.5.6-e0dac138",
         "options": {
           "full_name": "github",
           "args": {
@@ -93,7 +93,7 @@
         }
       },
       "visual-studio-code": {
-        "version": "1.41.1",
+        "version": "1.50.1",
         "options": {
           "full_name": "visual-studio-code",
           "args": {
@@ -102,7 +102,7 @@
         }
       },
       "alfred": {
-        "version": "4.0.7_1131",
+        "version": "4.2_1180",
         "options": {
           "full_name": "alfred",
           "args": {
@@ -111,7 +111,7 @@
         }
       },
       "virtualbox": {
-        "version": "6.1.10,138449",
+        "version": "6.1.16,140961",
         "options": {
           "full_name": "virtualbox",
           "args": {
@@ -156,7 +156,7 @@
         }
       },
       "tableplus": {
-        "version": "3.5.3,314",
+        "version": "3.10.0,348",
         "options": {
           "full_name": "tableplus",
           "args": {
@@ -165,7 +165,7 @@
         }
       },
       "android-studio": {
-        "version": "4.0.0.16,193.6514223",
+        "version": "4.1.0.19,201.6858069",
         "options": {
           "full_name": "android-studio",
           "args": {
@@ -174,7 +174,7 @@
         }
       },
       "react-native-debugger": {
-        "version": "0.11.3",
+        "version": "0.11.5",
         "options": {
           "full_name": "react-native-debugger",
           "args": {
@@ -183,7 +183,7 @@
         }
       },
       "vivaldi": {
-        "version": "3.0.1874.38",
+        "version": "3.4.2066.94",
         "options": {
           "full_name": "vivaldi",
           "args": {
@@ -210,7 +210,7 @@
         }
       },
       "obs": {
-        "version": "25.0.8",
+        "version": "26.0.2",
         "options": {
           "full_name": "obs",
           "args": {
@@ -228,7 +228,7 @@
         }
       },
       "notion": {
-        "version": "2.0.7",
+        "version": "2.0.8",
         "options": {
           "full_name": "notion",
           "args": {
@@ -246,7 +246,7 @@
         }
       },
       "discord": {
-        "version": "0.0.257",
+        "version": "0.0.259",
         "options": {
           "full_name": "discord",
           "args": {
@@ -266,18 +266,18 @@
     },
     "brew": {
       "mas": {
-        "version": "1.7.0",
+        "version": "1.7.1",
         "bottle": {
           "cellar": ":any",
           "prefix": "/usr/local",
           "files": {
             "catalina": {
-              "url": "https://homebrew.bintray.com/bottles/mas-1.7.0.catalina.bottle.tar.gz",
-              "sha256": "b985d100947063ee94961f7f1290f232786634b869d20d56bd553197cf91188b"
+              "url": "https://homebrew.bintray.com/bottles/mas-1.7.1.catalina.bottle.tar.gz",
+              "sha256": "e6de2f98ebd21885a9827664fe1b7eea5516a7fd75d5b7383e3a9b088591a27f"
             },
             "mojave": {
-              "url": "https://homebrew.bintray.com/bottles/mas-1.7.0.mojave.bottle.tar.gz",
-              "sha256": "c7005c34a3cf38d23f98e9cc238a0deae61f50ea5dfbcf51a34cc689a9db315e"
+              "url": "https://homebrew.bintray.com/bottles/mas-1.7.1.mojave.bottle.tar.gz",
+              "sha256": "8b6dc4e261ebdc8e2f93afe87da3db4d482eb3d8a0358ab19a0485d434550e77"
             }
           }
         }
@@ -359,22 +359,22 @@
       },
       "kubectl": null,
       "minikube": {
-        "version": "1.11.0",
+        "version": "1.14.2",
         "bottle": {
           "cellar": ":any_skip_relocation",
           "prefix": "/usr/local",
           "files": {
             "catalina": {
-              "url": "https://homebrew.bintray.com/bottles/minikube-1.11.0.catalina.bottle.tar.gz",
-              "sha256": "458c030e48c868ac3499c8d321656c67ac4b10637d1549f9e2921c5eab4d0963"
+              "url": "https://homebrew.bintray.com/bottles/minikube-1.14.2.catalina.bottle.tar.gz",
+              "sha256": "a4762d696dacfd5a8252b7b76d3a5d8e0a053d40c8f1944e71974586f61fd45f"
             },
             "mojave": {
-              "url": "https://homebrew.bintray.com/bottles/minikube-1.11.0.mojave.bottle.tar.gz",
-              "sha256": "79f7f401711c9c3c2519c93c5b0bb22e7491c4a2b44b06ed8e6a362b25885cd5"
+              "url": "https://homebrew.bintray.com/bottles/minikube-1.14.2.mojave.bottle.tar.gz",
+              "sha256": "349df87fd083b5cdb7383c36de194049bd24a625ddf83104cc814e41fcece1ef"
             },
             "high_sierra": {
-              "url": "https://homebrew.bintray.com/bottles/minikube-1.11.0.high_sierra.bottle.tar.gz",
-              "sha256": "b68b609f8165cccd4f418a5a2f4dff9baa1ed13fb16b98f1d6dcf121c6d4495e"
+              "url": "https://homebrew.bintray.com/bottles/minikube-1.14.2.high_sierra.bottle.tar.gz",
+              "sha256": "33c2c0047f8bfc26393a868887457363c1dce31ebcc469282f06de18220371a6"
             }
           }
         }
@@ -383,19 +383,19 @@
     "mas": {
       "Xcode": {
         "id": "497799835",
-        "version": "11.7"
+        "version": "12.1"
       },
       "LINE": {
         "id": "539883307",
-        "version": "6.2.2"
+        "version": "6.3.2"
       },
       "Magnet": {
         "id": "441258766",
-        "version": "2.4.6"
+        "version": "2.4.9"
       },
       "Spark": {
         "id": "1176895641",
-        "version": "2.8.3"
+        "version": "2.9.9"
       }
     }
   },
@@ -410,12 +410,12 @@
         "macOS": "10.14.6"
       },
       "catalina": {
-        "HOMEBREW_VERSION": "2.3.0-65-g82e3dea",
+        "HOMEBREW_VERSION": "2.5.8",
         "HOMEBREW_PREFIX": "/usr/local",
-        "Homebrew/homebrew-core": "33368800787252fb5ddacdc4ba0f31a6157ab4b7",
-        "CLT": "11.0.33.17",
-        "Xcode": "11.7",
-        "macOS": "10.15.3"
+        "Homebrew/homebrew-core": "46f7240b902c07e75bb04af4e02ab1e9bcac7eaa",
+        "CLT": "12.1.0.0.1.1602137645",
+        "Xcode": "12.1",
+        "macOS": "10.15.7"
       }
     }
   }
