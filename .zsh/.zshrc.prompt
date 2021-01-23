@@ -53,7 +53,7 @@ export tmp_prompt2="%{${fg[cyan]}%}%_> %{${reset_color}%}"
 export tmp_rprompt="[${c_current_dir_fullpath}]"
 export tmp_sprompt="%{${fg[yellow]}%}%r is correct? [Yes, No, Abort, Edit]:%{${reset_color}%}"
 
-export custom_prompt='[${c_current_dir} ${hh_mm_ss}]${CMD_STATUS} '
+export custom_prompt='[${c_user_name}${c_at_sign}${c_host_name} ${c_current_dir} ${hh_mm_ss}]${CMD_STATUS} '
 export custom_rprompt='${vcs_info_msg_0_}'
 
 export PROMPT=$custom_prompt    # 通常のプロンプト
