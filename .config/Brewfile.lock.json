@@ -280,6 +280,42 @@
             "appdir": "/Applications"
           }
         }
+      },
+      "kindle": {
+        "version": "1.30.59055",
+        "options": {
+          "full_name": "kindle",
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "zwift": {
+        "version": "1.0,25",
+        "options": {
+          "full_name": "zwift",
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "skype": {
+        "version": "8.67.0.96",
+        "options": {
+          "full_name": "skype",
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
+      },
+      "responsively": {
+        "version": "0.15.0",
+        "options": {
+          "full_name": "responsively",
+          "args": {
+            "appdir": "/Applications"
+          }
+        }
       }
     },
     "brew": {
@@ -425,11 +461,11 @@
     "mas": {
       "Xcode": {
         "id": "497799835",
-        "version": "12.3"
+        "version": "12.4"
       },
       "LINE": {
         "id": "539883307",
-        "version": "6.5.2"
+        "version": "6.6.0"
       },
       "Magnet": {
         "id": "441258766",
@@ -437,7 +473,7 @@
       },
       "Spark": {
         "id": "1176895641",
-        "version": "2.9.9"
+        "version": "2.9.15"
       }
     }
   },
@@ -472,8 +508,8 @@
         "HOMEBREW_PREFIX": "/usr/local",
         "Homebrew/homebrew-core": "e04a3029e5b704191ed018bc21493f21cee3acb2",
         "CLT": "",
-        "Xcode": "12.3",
-        "macOS": "11.1"
+        "Xcode": "12.4",
+        "macOS": "11.2.2"
       }
     }
   }
