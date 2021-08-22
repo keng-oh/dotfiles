@@ -2,6 +2,7 @@ cask_args appdir: '/Applications'
 tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/core"
+tap "homebrew/cask-drivers"
 
 brew "gitui"
 brew "kubectl"
@@ -38,10 +39,10 @@ cask "slack"
 cask "spotify"
 cask "steam"
 cask "tableplus"
-cask "teensy"
 cask "virtualbox"
 cask "visual-studio-code"
 cask "vivaldi"
+cask "zsa-wally"
 cask "zwift"
 
 mas "LINE", id: 539883307
