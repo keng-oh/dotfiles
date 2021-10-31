@@ -5,3 +5,4 @@
 .config/configstore
 .config/gcloud
 .hyper_plugins
+node_modules/

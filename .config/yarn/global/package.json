@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "fastify-cli": "^2.13.0"
+  }
+}
