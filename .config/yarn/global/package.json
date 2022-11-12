@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "fastify-cli": "^2.13.0"
+    "fastify-cli": "^2.13.0",
+    "prettier": "^2.5.1"
   }
 }

@@ -161,6 +161,7 @@ module.exports = {
     'hyper-pane',
     'hyper-tab-icons-plus',
     'hyper-opacity',
+    "hyperalfred"
   ],
 
   // in development, you can create a directory under
