@@ -4,6 +4,20 @@ Nix + Home Managerによるクロスプラットフォーム開発環境設定
 
 ## セットアップ
 
+### 事前準備
+
+#### macOSの場合
+
+Homebrewを先にインストールしてください。
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+#### Linuxの場合
+
+特に事前準備は不要です（Flatpakは自動インストールされます）。
+
 ### 初回インストール
 
 ```bash
@@ -43,14 +57,29 @@ make help
 ├── home.nix            # 共通ホーム設定
 ├── Makefile            # セットアップ・管理用
 ├── modules/
-│   ├── packages.nix    # パッケージリスト
+│   ├── packages.nix    # パッケージリスト（CLI/開発ツール）
 │   ├── git.nix         # Git設定
 │   ├── zsh.nix         # Zsh設定とエイリアス
-│   ├── cli-tools.nix   # CLIツール設定
-│   ├── linux.nix       # Linux固有設定
-│   └── darwin.nix      # macOS固有設定
+│   ├── zellij.nix      # Zellij設定
+│   ├── wezterm.nix     # WezTerm設定ファイル管理
+│   ├── cli-tools.nix   # CLIツール設定（Starship, direnv等）
+│   ├── linux.nix       # Linux固有設定（Flatpak経由でGUIアプリ管理）
+│   └── darwin.nix      # macOS固有設定（Homebrew Cask経由でGUIアプリ管理）
+├── wezterm/
+│   └── wezterm.lua     # WezTerm設定ファイル
 └── README.md
 ```
+
+## パッケージ管理
+
+### CLI/開発ツール
+Nixで宣言的に管理（再現性重視）
+
+### GUIアプリケーション
+- **Linux**: Flatpak経由で管理
+  - WezTerm, Chrome, VSCode, Ulauncher
+- **macOS**: Homebrew Cask経由で管理
+  - WezTerm, Chrome, VSCode, Raycast
 
 ## エイリアス一覧
 

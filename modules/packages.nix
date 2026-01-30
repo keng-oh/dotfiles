@@ -14,7 +14,6 @@
     delta
     zoxide
     zellij
-    wezterm
 
     # 開発ツール
     nodejs_20
