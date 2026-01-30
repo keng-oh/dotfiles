@@ -1,8 +1,6 @@
+result
+result-*
+*.swp
+*.swo
+*~
 .DS_Store
-.ssh/known_hosts
-.docker/
-.config/gatsby/
-.config/configstore
-.config/gcloud
-.hyper_plugins
-node_modules/
