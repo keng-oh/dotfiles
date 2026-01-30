@@ -46,28 +46,28 @@ install: ## 初回セットアップ（Nix + Home Manager）
 		echo "==> Flakes機能を有効化しました"; \
 	fi
 	@echo "==> flake.lockを生成中..."
-	@cd $(CONFIG_DIR) && nix flake update
+	@cd $(CONFIG_DIR) && nix flake update --impure
 	@echo "==> Home Managerを適用中..."
-	@cd $(CONFIG_DIR) && nix run home-manager/master -- switch --flake $(FLAKE_PATH)
+	@cd $(CONFIG_DIR) && nix run home-manager/master --impure -- switch --flake $(FLAKE_PATH)
 	@echo ""
 	@echo "✓ セットアップ完了！"
 	@echo "  シェルを再起動してください: exec zsh"
 
 switch: ## 設定を適用
 	@echo "==> Home Manager設定を適用中..."
-	@home-manager switch --flake $(FLAKE_PATH)
+	@home-manager switch --impure --flake $(FLAKE_PATH)
 	@echo "✓ 設定を適用しました"
 
 update: ## flakeを更新して設定を適用
 	@echo "==> flakeを更新中..."
-	@cd $(CONFIG_DIR) && nix flake update
+	@cd $(CONFIG_DIR) && nix flake update --impure
 	@echo "==> 設定を適用中..."
-	@home-manager switch --flake $(FLAKE_PATH)
+	@home-manager switch --impure --flake $(FLAKE_PATH)
 	@echo "✓ 更新完了"
 
 check: ## 設定をチェック（適用せず）
 	@echo "==> 設定をチェック中..."
-	@cd $(CONFIG_DIR) && nix flake check
+	@cd $(CONFIG_DIR) && nix flake check --impure
 	@echo "✓ 設定に問題ありません"
 
 clean: ## 古い世代を削除
