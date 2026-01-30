@@ -30,8 +30,14 @@ install: ## 初回セットアップ（Nix + Home Manager）
 	@if ! command -v nix >/dev/null 2>&1; then \
 		echo "==> Nixをインストール中..."; \
 		sh <(curl -L https://nixos.org/nix/install) --daemon; \
-		echo "==> シェルを再起動してください: exec $$SHELL"; \
-		exit 0; \
+		echo ""; \
+		echo "✓ Nixのインストールが完了しました"; \
+		echo ""; \
+		echo "次のステップ:"; \
+		echo "  1. シェルを再起動: exec bash"; \
+		echo "  2. 再度実行: make install"; \
+		echo ""; \
+		false; \
 	fi
 	@echo "==> Nix設定を確認..."
 	@mkdir -p $(HOME)/.config/nix
