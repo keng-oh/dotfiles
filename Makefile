@@ -48,7 +48,7 @@ install: ## 初回セットアップ（Nix + Home Manager）
 	@echo "==> flake.lockを生成中..."
 	@cd $(CONFIG_DIR) && nix flake update --impure
 	@echo "==> Home Managerを適用中..."
-	@cd $(CONFIG_DIR) && nix run home-manager/master --impure -- switch --flake $(FLAKE_PATH)
+	@cd $(CONFIG_DIR) && nix run home-manager/master --impure -- switch --impure --flake $(FLAKE_PATH)
 	@echo ""
 	@echo "✓ セットアップ完了！"
 	@echo "  シェルを再起動してください: exec zsh"
