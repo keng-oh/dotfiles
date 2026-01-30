@@ -1,5 +1,8 @@
 .PHONY: help install update switch check clean info backup git-push
 
+# シェルをBashに指定
+SHELL := /bin/bash
+
 # デフォルトターゲット
 .DEFAULT_GOAL := help
 
