@@ -22,8 +22,7 @@
       config.default_prog = { 'zsh', '-l' }
 
       -- フロントエンド設定（EGLエラー対策）
-      config.front_end = "WebGpu"
-      config.webgpu_power_preference = "LowPower"
+      config.front_end = "Software"
 
       -- ウィンドウ設定
       config.window_padding = {
