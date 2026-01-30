@@ -12,9 +12,6 @@ mkdir -p ~/repos
 git clone https://github.com/keng-oh/dotfiles.git ~/repos/dotfiles
 cd ~/repos/dotfiles
 
-# modules/git.nixのGitメールアドレスを確認・編集
-nano modules/git.nix
-
 # 初回セットアップ実行
 make install
 ```
