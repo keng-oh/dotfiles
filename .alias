@@ -1,5 +1,0 @@
-alias la='ls -la'
-alias ll='ls -l'
-alias h='history -iD'
-alias dce='docker-compose exec'
-alias dcr='docker-compose run'
