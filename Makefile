@@ -1,4 +1,4 @@
-.PHONY: help install update switch check clean info backup git-push
+.PHONY: help install update switch check clean info backup git-push setup-flatpak
 
 # シェルをBashに指定
 SHELL := /bin/bash
@@ -97,3 +97,27 @@ git-push: ## Gitにコミット＆プッシュ
 		git commit -m "Update: $$(date +%Y-%m-%d)" && \
 		git push
 	@echo "✓ GitHubにプッシュしました"
+
+setup-flatpak: ## Flatpakアプリの権限設定（Linux）
+	@echo "==> Flatpakアプリの権限を設定中..."
+	@if command -v flatpak >/dev/null 2>&1; then \
+		flatpak override --user org.wezfurlong.wezterm --filesystem=host --filesystem=/nix 2>/dev/null || true; \
+		flatpak override --user com.visualstudio.code --filesystem=host --filesystem=/nix 2>/dev/null || true; \
+		echo "==> VSCode Flatpak用のgit設定を作成中..."; \
+		mkdir -p $(HOME)/.var/app/com.visualstudio.code/config/git; \
+		echo "[user]" > $(HOME)/.var/app/com.visualstudio.code/config/git/config; \
+		echo "	name = KENG" >> $(HOME)/.var/app/com.visualstudio.code/config/git/config; \
+		echo "	email = contact@ken-g.dev" >> $(HOME)/.var/app/com.visualstudio.code/config/git/config; \
+		echo "[init]" >> $(HOME)/.var/app/com.visualstudio.code/config/git/config; \
+		echo "	defaultBranch = main" >> $(HOME)/.var/app/com.visualstudio.code/config/git/config; \
+		echo "[pull]" >> $(HOME)/.var/app/com.visualstudio.code/config/git/config; \
+		echo "	rebase = false" >> $(HOME)/.var/app/com.visualstudio.code/config/git/config; \
+		echo "[core]" >> $(HOME)/.var/app/com.visualstudio.code/config/git/config; \
+		echo "	editor = nvim" >> $(HOME)/.var/app/com.visualstudio.code/config/git/config; \
+		echo "✓ Flatpak権限設定完了"; \
+		echo "  - WezTerm: ホームディレクトリとNixストアへのアクセスを許可"; \
+		echo "  - VSCode: ホームディレクトリとNixストアへのアクセスを許可"; \
+		echo "  - VSCode: git設定ファイルを作成"; \
+	else \
+		echo "⚠ Flatpakがインストールされていません（macOSの場合は不要）"; \
+	fi

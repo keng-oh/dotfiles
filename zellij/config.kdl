@@ -1,0 +1,8 @@
+// Zellijの設定ファイル
+
+// デフォルトシェルをzshに設定
+default_shell "zsh"
+
+// その他の基本設定
+pane_frames false
+theme "tokyo-night-dark"

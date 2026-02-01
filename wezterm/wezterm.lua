@@ -13,7 +13,7 @@ config.font = wezterm.font('JetBrains Mono', { weight = 'Regular' })
 config.font_size = 12.0
 
 -- デフォルトシェルをzshに設定
-config.default_prog = { 'zsh', '-l' }
+config.default_prog = { '/home/keng/.nix-profile/bin/zsh', '-l' }
 
 -- フロントエンド設定（EGLエラー対策）
 config.front_end = "Software"

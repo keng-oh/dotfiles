@@ -30,6 +30,20 @@ cd ~/repos/dotfiles
 make install
 ```
 
+### Flatpakアプリの追加設定（Linux）
+
+Flatpak経由でインストールされた開発ツールがNix管理のシェルやコマンドにアクセスできるように、以下の設定が必要です。
+
+```bash
+make setup-flatpak
+```
+
+このコマンドは以下を実行します：
+- WezTermとVSCodeにホームディレクトリ (`~`) へのアクセス許可
+- WezTermとVSCodeにNixストア (`/nix`) へのアクセス許可
+
+これにより、これらのアプリでNix管理のzsh、zoxide、fzf、starshipなどのツールが正しく動作します。
+
 ### 日常的な使い方
 
 ```bash
