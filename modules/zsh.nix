@@ -1,5 +1,9 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
+let
+  isDarwin = pkgs.stdenv.isDarwin;
+  isLinux = pkgs.stdenv.isLinux;
+in
 {
   programs.zsh = {
     enable = true;
@@ -29,11 +33,8 @@
       glog = "git log --oneline --graph --decorate";
 
       # nix/home-manager系
-      hms = "home-manager switch --flake ~/repos/dotfiles";
-      hmu = "cd ~/repos/dotfiles && make update";
-
-      # システム系
-      update = "sudo apt update && sudo apt upgrade -y";
+      hms = "cd \"\${DOTFILES_DIR:-$HOME/repos/dotfiles}\" && make switch";
+      hmu = "cd \"\${DOTFILES_DIR:-$HOME/repos/dotfiles}\" && make update";
 
       # cd系
       ".." = "cd ..";
@@ -43,10 +44,25 @@
       # その他便利系
       c = "clear";
       h = "history";
+    }
+    // lib.optionalAttrs isLinux {
+      update = "sudo apt update && sudo apt upgrade -y";
       ports = "sudo netstat -tulanp";
+    }
+    // lib.optionalAttrs isDarwin {
+      update = "softwareupdate -ia && brew update && brew upgrade";
+      ports = "lsof -nP -iTCP -sTCP:LISTEN";
     };
 
     initExtra = ''
+      # Homebrew（macOS）
+      if [ -x /opt/homebrew/bin/brew ]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+      fi
+
+      # ローカル環境変数（認証情報など）
+      [ -f ~/.zshrc.local ] && source ~/.zshrc.local
+
       # zoxide（cd代替）
       eval "$(zoxide init zsh)"
       alias cd="z"

@@ -30,6 +30,11 @@ cd ~/repos/dotfiles
 make install
 ```
 
+補足:
+
+- Makefileはリポジトリの場所を自動検出するため、どこに置いても `make switch` / `make update` が動きます。
+- Zshの `hms` / `hmu` は `$DOTFILES_DIR` を参照します（未設定時は `~/repos/dotfiles`）。
+
 ### Flatpakアプリの追加設定（Linux）
 
 Flatpak経由でインストールされた開発ツールがNix管理のシェルやコマンドにアクセスできるように、以下の設定が必要です。
@@ -39,6 +44,7 @@ make setup-flatpak
 ```
 
 このコマンドは以下を実行します：
+
 - WezTermとVSCodeにホームディレクトリ (`~`) へのアクセス許可
 - WezTermとVSCodeにNixストア (`/nix`) へのアクセス許可
 
@@ -87,9 +93,11 @@ make help
 ## パッケージ管理
 
 ### CLI/開発ツール
+
 Nixで宣言的に管理（再現性重視）
 
 ### GUIアプリケーション
+
 - **Linux**: Flatpak経由で管理
   - WezTerm, Chrome, VSCode, Ulauncher
 - **macOS**: Homebrew Cask経由で管理

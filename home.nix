@@ -1,6 +1,8 @@
 { config, pkgs, ... }:
 
 {
+  nixpkgs.config.allowUnfree = true;
+
   imports = [
     ./modules/packages.nix
     ./modules/git.nix

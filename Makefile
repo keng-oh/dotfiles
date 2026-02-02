@@ -16,9 +16,13 @@ else
     $(error Unsupported OS: $(UNAME))
 endif
 
-# 設定ディレクトリ
-CONFIG_DIR := $(HOME)/repos/dotfiles
+# 設定ディレクトリ（Makefileの場所=リポジトリルートを基準にする）
+MAKEFILE_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
+CONFIG_DIR ?= $(MAKEFILE_DIR)
 FLAKE_PATH := $(CONFIG_DIR)\#$(SYSTEM)
+
+# Home Manager（インストール済みならそれを使い、無ければnix runで実行）
+HOME_MANAGER := $(shell command -v home-manager >/dev/null 2>&1 && echo home-manager || echo 'nix run home-manager/master --')
 
 help: ## ヘルプを表示
 	@echo "利用可能なコマンド:"
@@ -55,14 +59,14 @@ install: ## 初回セットアップ（Nix + Home Manager）
 
 switch: ## 設定を適用
 	@echo "==> Home Manager設定を適用中..."
-	@home-manager switch --impure --flake $(FLAKE_PATH)
+	@$(HOME_MANAGER) switch --impure --flake $(FLAKE_PATH)
 	@echo "✓ 設定を適用しました"
 
 update: ## flakeを更新して設定を適用
 	@echo "==> flakeを更新中..."
 	@cd $(CONFIG_DIR) && nix flake update --impure
 	@echo "==> 設定を適用中..."
-	@home-manager switch --impure --flake $(FLAKE_PATH)
+	@$(HOME_MANAGER) switch --impure --flake $(FLAKE_PATH)
 	@echo "✓ 更新完了"
 
 check: ## 設定をチェック（適用せず）
@@ -72,7 +76,7 @@ check: ## 設定をチェック（適用せず）
 
 clean: ## 古い世代を削除
 	@echo "==> 古い世代を削除中..."
-	@home-manager expire-generations "-7 days"
+	@$(HOME_MANAGER) expire-generations "-7 days"
 	@nix-collect-garbage -d
 	@echo "✓ クリーンアップ完了"
 

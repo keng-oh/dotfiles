@@ -8,22 +8,37 @@
 
   # macOS固有の環境変数
   home.sessionVariables = {
-    # 必要に応じて追加
+    DOTFILES_DIR = "$HOME/repos/dotfiles";
   };
 
   # Homebrew Caskアプリのインストール
   home.activation.homebrewCasks = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    # Homebrewがインストールされているか確認
-    if ! command -v brew >/dev/null 2>&1; then
-      echo "Homebrewがインストールされていません。先にHomebrewをインストールしてください:"
-      echo "/bin/bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
-      exit 1
+    # Homebrew（PATHに無い場合もあるため/opt/homebrewを優先して探す）
+    BREW=""
+    if [ -x /opt/homebrew/bin/brew ]; then
+      BREW="/opt/homebrew/bin/brew"
+    elif command -v brew >/dev/null 2>&1; then
+      BREW="brew"
     fi
 
-    # GUIアプリをインストール
-    brew install --cask wezterm || true
-    brew install --cask google-chrome || true
-    brew install --cask visual-studio-code || true
-    brew install --cask raycast || true
+    if [ -z "$BREW" ]; then
+      echo "⚠ Homebrewが見つかりません。GUIアプリのインストールをスキップします。"
+      echo "  必要なら先にHomebrewをインストールしてください:"
+      echo "  /bin/bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
+    else
+      # GUIアプリをインストール
+      "$BREW" install --cask wezterm || true
+      "$BREW" install --cask google-chrome || true
+      "$BREW" install --cask visual-studio-code || true
+      "$BREW" install --cask raycast || true
+      "$BREW" install --cask clipy || true
+      "$BREW" install --cask google-japanese-ime || true
+      "$BREW" install --cask karabiner-elements || true
+      "$BREW" install --cask postman || true
+      "$BREW" install --cask tableplus || true
+      "$BREW" install --cask slack || true
+      "$BREW" install --cask github || true
+      "$BREW" install --cask meld || true
+    fi
   '';
 }

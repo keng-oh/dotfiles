@@ -1,10 +1,15 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
+let
+  isDarwin = pkgs.stdenv.isDarwin;
+  isLinux = pkgs.stdenv.isLinux;
+in
 {
   home.packages = with pkgs; [
     # CLI essentials
     git
     neovim
+    gitui
     ripgrep
     fd
     bat
@@ -16,9 +21,12 @@
     zellij
 
     # 開発ツール
-    nodejs_20
+    nodejs_22
     python311
     php83
+    awscli2
+    kubectl
+    tree-sitter
 
     # その他
     htop
@@ -31,5 +39,15 @@
     lazygit
     lazydocker
     navi
+  ]
+  ++ lib.optionals isDarwin [
+    colima
+    docker-client
+  ]
+  ++ lib.optionals isLinux [
+    docker
+  ]
+  ++ lib.optionals (pkgs ? github-copilot-cli) [
+    github-copilot-cli
   ];
 }

@@ -1,6 +1,32 @@
 { config, pkgs, ... }:
 
 {
+  # GitHub Copilot CLI - MCP設定（環境変数から認証情報を読み込む想定）
+  xdg.configFile."github-copilot/config.json".text = builtins.toJSON {
+    mcpServers = {
+      git = {
+        command = "npx";
+        args = [ "-y" "@modelcontextprotocol/server-git" ];
+      };
+      github = {
+        command = "npx";
+        args = [ "-y" "@modelcontextprotocol/server-github" ];
+      };
+      docker = {
+        command = "npx";
+        args = [ "-y" "@modelcontextprotocol/server-docker" ];
+      };
+      fetch = {
+        command = "npx";
+        args = [ "-y" "@modelcontextprotocol/server-fetch" ];
+      };
+      atlassian = {
+        command = "npx";
+        args = [ "-y" "@modelcontextprotocol/server-atlassian" ];
+      };
+    };
+  };
+
   # Starship
   programs.starship = {
     enable = true;
