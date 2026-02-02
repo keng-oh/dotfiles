@@ -1,38 +1,16 @@
 local wezterm = require 'wezterm'
-local config = {}
 
+local config = {}
 if wezterm.config_builder then
   config = wezterm.config_builder()
 end
 
--- カラースキーム
-config.color_scheme = 'Tokyo Night'
+local utils = require 'utils'
 
--- フォント設定
-config.font = wezterm.font('JetBrains Mono', { weight = 'Regular' })
-config.font_size = 12.0
-
--- デフォルトシェルをzshに設定
-config.default_prog = { '/home/keng/.nix-profile/bin/zsh', '-l' }
-
--- フロントエンド設定（EGLエラー対策）
-config.front_end = "Software"
-
--- ウィンドウ設定
-config.window_padding = {
-  left = 8,
-  right = 8,
-  top = 8,
-  bottom = 8,
-}
-
--- タブバー設定
-config.use_fancy_tab_bar = false
-config.tab_bar_at_bottom = false
-config.hide_tab_bar_if_only_one_tab = true
-
--- その他
-config.enable_scroll_bar = false
-config.window_close_confirmation = 'NeverPrompt'
+require('shell').apply(config, wezterm, utils)
+require('appearance').apply(config, wezterm, utils)
+require('tabbar').apply(config, wezterm, utils)
+require('status').apply(config, wezterm, utils)
+require('keys').apply(config, wezterm, utils)
 
 return config
