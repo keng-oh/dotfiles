@@ -6,9 +6,11 @@ SHELL := /bin/bash
 # デフォルトターゲット
 .DEFAULT_GOAL := help
 
-# OSの検出
+# OSの検出（環境変数CONFIGで上書き可能）
 UNAME := $(shell uname -s)
-ifeq ($(UNAME),Linux)
+ifdef CONFIG
+    SYSTEM := $(CONFIG)
+else ifeq ($(UNAME),Linux)
     SYSTEM := linux
 else ifeq ($(UNAME),Darwin)
     SYSTEM := mac

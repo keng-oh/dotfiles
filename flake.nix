@@ -19,6 +19,14 @@
         ];
       };
 
+      "server" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        modules = [
+          ./home.nix
+          ./modules/server.nix
+        ];
+      };
+
       "mac" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.aarch64-darwin;
         modules = [
