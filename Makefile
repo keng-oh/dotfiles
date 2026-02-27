@@ -87,7 +87,7 @@ setup-shell: ## デフォルトシェルをzshに設定（サーバー用）
 		echo "==> /etc/shellsにzshを追加中（sudoが必要）..."; \
 		echo "$$ZSH_PATH" | sudo tee -a /etc/shells; \
 	fi; \
-	chsh -s "$$ZSH_PATH"; \
+	sudo usermod -s "$$ZSH_PATH" "$$USER" && \
 	echo "✓ デフォルトシェルをzshに変更しました（再ログインで反映）"
 
 check: ## 設定をチェック（適用せず）
