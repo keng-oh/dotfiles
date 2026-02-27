@@ -1,4 +1,4 @@
-.PHONY: help install update switch check clean info backup git-push setup-flatpak
+.PHONY: help install update switch check clean info backup git-push setup-flatpak setup-shell
 
 # シェルをBashに指定
 SHELL := /bin/bash
@@ -57,15 +57,38 @@ install: ## 初回セットアップ（Nix + Home Manager）
 
 switch: ## 設定を適用
 	@echo "==> Home Manager設定を適用中..."
-	@home-manager switch --impure --flake $(FLAKE_PATH)
+	@if command -v home-manager >/dev/null 2>&1; then \
+		home-manager switch --impure --flake $(FLAKE_PATH); \
+	else \
+		cd $(CONFIG_DIR) && nix run home-manager/master --impure -- switch --impure --flake $(FLAKE_PATH); \
+	fi
 	@echo "✓ 設定を適用しました"
 
 update: ## flakeを更新して設定を適用
 	@echo "==> flakeを更新中..."
 	@cd $(CONFIG_DIR) && nix flake update --impure
 	@echo "==> 設定を適用中..."
-	@home-manager switch --impure --flake $(FLAKE_PATH)
+	@if command -v home-manager >/dev/null 2>&1; then \
+		home-manager switch --impure --flake $(FLAKE_PATH); \
+	else \
+		cd $(CONFIG_DIR) && nix run home-manager/master --impure -- switch --impure --flake $(FLAKE_PATH); \
+	fi
 	@echo "✓ 更新完了"
+
+setup-shell: ## デフォルトシェルをzshに設定（サーバー用）
+	@echo "==> zshのパスを確認中..."
+	@ZSH_PATH=$$(command -v zsh 2>/dev/null || echo "$$HOME/.nix-profile/bin/zsh"); \
+	if [ ! -x "$$ZSH_PATH" ]; then \
+		echo "✗ zshが見つかりません。先に make install を実行してください"; \
+		exit 1; \
+	fi; \
+	echo "zsh: $$ZSH_PATH"; \
+	if ! grep -qF "$$ZSH_PATH" /etc/shells 2>/dev/null; then \
+		echo "==> /etc/shellsにzshを追加中（sudoが必要）..."; \
+		echo "$$ZSH_PATH" | sudo tee -a /etc/shells; \
+	fi; \
+	chsh -s "$$ZSH_PATH"; \
+	echo "✓ デフォルトシェルをzshに変更しました（再ログインで反映）"
 
 check: ## 設定をチェック（適用せず）
 	@echo "==> 設定をチェック中..."
