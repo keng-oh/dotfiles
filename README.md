@@ -26,8 +26,11 @@ mkdir -p ~/repos
 git clone https://github.com/keng-oh/dotfiles.git ~/repos/dotfiles
 cd ~/repos/dotfiles
 
-# 初回セットアップ実行
+# デスクトップ環境（Linux GUI / macOS）の場合
 make install
+
+# サーバー環境（Ubuntu Server等のGUIなし）の場合
+CONFIG=server make install
 ```
 
 ### Flatpakアプリの追加設定（Linux）
@@ -61,6 +64,10 @@ make clean
 
 # ヘルプを表示
 make help
+
+# サーバー環境で使用する場合は、CONFIG環境変数を指定
+CONFIG=server make switch
+CONFIG=server make update
 ```
 
 ## ディレクトリ構成
@@ -77,7 +84,8 @@ make help
 │   ├── zellij.nix      # Zellij設定
 │   ├── wezterm.nix     # WezTerm設定ファイル管理
 │   ├── cli-tools.nix   # CLIツール設定（Starship, direnv等）
-│   ├── linux.nix       # Linux固有設定（Flatpak経由でGUIアプリ管理）
+│   ├── linux.nix       # Linux GUI環境用設定（Flatpak経由でGUIアプリ管理）
+│   ├── server.nix      # サーバー環境用設定（GUIアプリなし）
 │   └── darwin.nix      # macOS固有設定（Homebrew Cask経由でGUIアプリ管理）
 ├── wezterm/
 │   └── wezterm.lua     # WezTerm設定ファイル
@@ -90,8 +98,9 @@ make help
 Nixで宣言的に管理（再現性重視）
 
 ### GUIアプリケーション
-- **Linux**: Flatpak経由で管理
+- **Linux GUI環境**: Flatpak経由で管理
   - WezTerm, Chrome, VSCode, Ulauncher
+- **Linux サーバー環境**: GUIアプリなし（CLI/開発ツールのみ）
 - **macOS**: Homebrew Cask経由で管理
   - WezTerm, Chrome, VSCode, Raycast
 
