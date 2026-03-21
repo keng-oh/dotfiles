@@ -1,0 +1,49 @@
+name: Check
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  check-linux:
+    name: Check & Switch (linux / server)
+    runs-on: ubuntu-latest
+    env:
+      USER: runner
+      HOME: /home/runner
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DeterminateSystems/nix-installer-action@v14
+
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+
+      - name: make check
+        run: make check CONFIG_DIR=$GITHUB_WORKSPACE
+
+      - name: make switch (linux)
+        run: make switch CONFIG_DIR=$GITHUB_WORKSPACE
+
+      - name: make switch (server)
+        run: make switch CONFIG_DIR=$GITHUB_WORKSPACE CONFIG=server
+
+  check-mac:
+    name: Check & Switch (mac)
+    runs-on: macos-14
+    env:
+      USER: runner
+      HOME: /Users/runner
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DeterminateSystems/nix-installer-action@v14
+
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+
+      - name: make check
+        run: make check CONFIG_DIR=$GITHUB_WORKSPACE
+
+      - name: make switch (mac)
+        run: make switch CONFIG_DIR=$GITHUB_WORKSPACE
