@@ -10,8 +10,6 @@ config.color_scheme = 'Tokyo Night'
 
 -- フォント設定
 config.font = wezterm.font_with_fallback({
-  'HackGenNerd Console',
-  'HackGenNerd',
   'HackGen Console',
   'monospace',
 })
