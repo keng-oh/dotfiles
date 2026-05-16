@@ -10,6 +10,8 @@
     ./modules/common/cli-tools.nix
   ];
 
+  nixpkgs.config.allowUnfree = true;
+
   home.username = builtins.getEnv "USER";
   home.homeDirectory = builtins.getEnv "HOME";
   home.stateVersion = "24.05";
