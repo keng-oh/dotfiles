@@ -10,9 +10,9 @@ config.color_scheme = 'Tokyo Night'
 
 -- フォント設定
 config.font = wezterm.font_with_fallback({
-  'HackGen Console NF',
   'HackGenNerd Console',
-  'HackGen35 Console NF',
+  'HackGenNerd',
+  'HackGen Console',
   'monospace',
 })
 config.font_size = 12.0

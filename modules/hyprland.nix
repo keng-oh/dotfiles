@@ -83,7 +83,7 @@
     };
     style = ''
       * {
-        font-family: "HackGen Console NF", monospace;
+        font-family: "HackGenNerd Console", "HackGenNerd", monospace;
         font-size: 13px;
       }
 
@@ -139,6 +139,6 @@
     borderSize = 2;
     textColor = "#cdd6f4";
     defaultTimeout = 5000;
-    font = "HackGen Console NF 11";
+    font = "HackGenNerd Console 11";
   };
 }
