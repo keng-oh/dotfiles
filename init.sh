@@ -57,9 +57,9 @@ apply_home_manager() {
     cd "$DOTFILES_DIR"
     nix flake update --impure
     if command -v home-manager &>/dev/null; then
-        home-manager switch --impure --flake ".#$system"
+        home-manager switch --impure -b backup --flake ".#$system"
     else
-        nix run home-manager/master --impure -- switch --impure --flake ".#$system"
+        nix run home-manager/master --impure -- switch --impure -b backup --flake ".#$system"
     fi
 }
 

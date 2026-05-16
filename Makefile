@@ -37,9 +37,9 @@ install: ## 初回セットアップ
 switch: ## 設定を適用
 	@echo "==> Home Manager設定を適用中..."
 	@if command -v home-manager >/dev/null 2>&1; then \
-		home-manager switch --impure --flake $(FLAKE_PATH); \
+		home-manager switch --impure -b backup --flake $(FLAKE_PATH); \
 	else \
-		cd $(CONFIG_DIR) && nix run home-manager/master --impure -- switch --impure --flake $(FLAKE_PATH); \
+		cd $(CONFIG_DIR) && nix run home-manager/master --impure -- switch --impure -b backup --flake $(FLAKE_PATH); \
 	fi
 	@echo "✓ 設定を適用しました"
 
@@ -48,9 +48,9 @@ update: ## flakeを更新して設定を適用
 	@cd $(CONFIG_DIR) && nix flake update --impure
 	@echo "==> 設定を適用中..."
 	@if command -v home-manager >/dev/null 2>&1; then \
-		home-manager switch --impure --flake $(FLAKE_PATH); \
+		home-manager switch --impure -b backup --flake $(FLAKE_PATH); \
 	else \
-		cd $(CONFIG_DIR) && nix run home-manager/master --impure -- switch --impure --flake $(FLAKE_PATH); \
+		cd $(CONFIG_DIR) && nix run home-manager/master --impure -- switch --impure -b backup --flake $(FLAKE_PATH); \
 	fi
 	@echo "✓ 更新完了"
 
