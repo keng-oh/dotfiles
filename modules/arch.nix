@@ -3,47 +3,61 @@
 {
   imports = [ ./hyprland.nix ];
 
-  home.sessionVariables = { };
+  home.packages = with pkgs; [
+    # ターミナル・エディタ
+    wezterm
+    vscode
 
-  # fcitx5 環境変数（Wayland用）
-  home.file.".config/environment.d/fcitx.conf".text = ''
-    GTK_IM_MODULE=fcitx
-    QT_IM_MODULE=fcitx
-    XMODIFIERS=@im=fcitx
-  '';
+    # ブラウザ
+    google-chrome
+
+    # コミュニケーション
+    discord
+
+    # 音楽
+    spotify
+
+    # ノート
+    obsidian
+
+    # パスワード管理
+    _1password-gui
+
+    # ランチャー
+    ulauncher
+
+    # Docker
+    docker
+    docker-compose
+
+    # Hyprland エコシステム（システムレベル）
+    hyprland
+    xdg-desktop-portal-hyprland
+
+    # フォント
+    hackgen-nerd
+  ];
+
+  # 日本語入力
+  i18n.inputMethod = {
+    enable = true;
+    type = "fcitx5";
+    fcitx5.addons = with pkgs; [
+      fcitx5-mozc
+      fcitx5-gtk
+    ];
+  };
 
   programs.zsh.shellAliases = {
     update = "paru -Syu";
     hms = "home-manager switch --impure --flake ~/repos/dotfiles#arch";
   };
 
-  # GUIアプリをparu経由でインストール
-  home.activation.archApps = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    if command -v paru >/dev/null 2>&1; then
-      paru -S --needed --noconfirm \
-        wezterm \
-        google-chrome \
-        visual-studio-code-bin \
-        ulauncher \
-        obsidian \
-        discord \
-        spotify \
-        1password \
-        docker \
-        docker-compose \
-        fcitx5 \
-        fcitx5-mozc \
-        fcitx5-qt \
-        fcitx5-gtk \
-        fcitx5-configtool \
-        hyprland \
-        xdg-desktop-portal-hyprland \
-        ttf-hackgen-nerd
-      sudo systemctl enable --now docker
-      sudo usermod -aG docker "$USER"
-    else
-      echo "⚠ paru が見つかりません。手動でGUIアプリをインストールしてください"
-      echo "  paru -S wezterm google-chrome visual-studio-code-bin ulauncher obsidian discord spotify 1password docker docker-compose"
+  # Docker サービスを有効化
+  home.activation.dockerSetup = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    if command -v sudo >/dev/null 2>&1 && command -v systemctl >/dev/null 2>&1; then
+      sudo systemctl enable --now docker 2>/dev/null || true
+      sudo usermod -aG docker "$USER" 2>/dev/null || true
     fi
   '';
 }
