@@ -60,7 +60,7 @@
     if command -v paru >/dev/null 2>&1; then
       echo "==> paru: パッケージをインストール中..."
       /usr/bin/paru -S --needed \
-        wezterm \
+        wezterm-git \
         ttf-hackgen \
         xdg-desktop-portal-hyprland \
         </dev/tty >/dev/tty 2>&1 || true
