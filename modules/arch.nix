@@ -61,7 +61,7 @@
       echo "==> paru: パッケージをインストール中..."
       /usr/bin/paru -S --needed \
         wezterm \
-        ttf-hackgen-nerd \
+        ttf-hackgen \
         xdg-desktop-portal-hyprland \
         </dev/tty >/dev/tty 2>&1 || true
     else

@@ -9,7 +9,12 @@ end
 config.color_scheme = 'Tokyo Night'
 
 -- フォント設定
-config.font = wezterm.font('HackGen Console NF', { weight = 'Regular' })
+config.font = wezterm.font_with_fallback({
+  'HackGen Console NF',
+  'HackGenNerd Console',
+  'HackGen35 Console NF',
+  'monospace',
+})
 config.font_size = 12.0
 
 -- デフォルトシェルをzshに設定
