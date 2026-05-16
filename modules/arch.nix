@@ -56,8 +56,8 @@
 
   # paru でのみ提供されるパッケージ
   home.activation.paruPackages = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    if command -v paru >/dev/null 2>&1; then
-      paru -S --needed --noconfirm \
+    if [ -x /usr/bin/paru ]; then
+      /usr/bin/paru -S --needed --noconfirm \
         wezterm \
         ttf-hackgen-nerd \
         xdg-desktop-portal-hyprland
