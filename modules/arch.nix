@@ -35,7 +35,8 @@
     xdg-desktop-portal-hyprland
 
     # フォント
-    hackgen-nerd
+    hackgen
+    nerd-fonts.symbols-only
   ];
 
   # 日本語入力
