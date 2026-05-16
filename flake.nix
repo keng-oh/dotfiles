@@ -11,26 +11,34 @@
 
   outputs = { nixpkgs, home-manager, ... }: {
     homeConfigurations = {
-      "linux" = home-manager.lib.homeManagerConfiguration {
+      "arch" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         modules = [
-          ./home.nix
-          ./modules/linux.nix
+          ./common.nix
+          ./modules/arch.nix
         ];
       };
 
-      "server" = home-manager.lib.homeManagerConfiguration {
+      "ubuntu" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.x86_64-linux;
         modules = [
-          ./home.nix
-          ./modules/server.nix
+          ./common.nix
+          ./modules/ubuntu.nix
+        ];
+      };
+
+      "ubuntu-server" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+        modules = [
+          ./common.nix
+          ./modules/ubuntu-server.nix
         ];
       };
 
       "mac" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgs.legacyPackages.aarch64-darwin;
         modules = [
-          ./home.nix
+          ./common.nix
           ./modules/darwin.nix
         ];
       };

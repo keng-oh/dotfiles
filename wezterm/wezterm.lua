@@ -9,11 +9,12 @@ end
 config.color_scheme = 'Tokyo Night'
 
 -- フォント設定
-config.font = wezterm.font('JetBrains Mono', { weight = 'Regular' })
+config.font = wezterm.font('HackGen Console NF', { weight = 'Regular' })
 config.font_size = 12.0
 
 -- デフォルトシェルをzshに設定
-config.default_prog = { '/home/keng/.nix-profile/bin/zsh', '-l' }
+local home = os.getenv('HOME')
+config.default_prog = { home .. '/.nix-profile/bin/zsh', '-l' }
 
 -- フロントエンド設定（EGLエラー対策）
 config.front_end = "Software"

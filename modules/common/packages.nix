@@ -31,5 +31,8 @@
     lazygit
     lazydocker
     navi
+
+    # AI
+    claude-code
   ];
 }

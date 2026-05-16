@@ -6,9 +6,10 @@
     # macOS専用ツール（必要に応じて追加）
   ];
 
-  # macOS固有の環境変数
-  home.sessionVariables = {
-    # 必要に応じて追加
+  home.sessionVariables = { };
+
+  programs.zsh.shellAliases = {
+    hms = "home-manager switch --impure --flake ~/repos/dotfiles#mac";
   };
 
   # Homebrew Caskアプリのインストール
@@ -25,5 +26,9 @@
     brew install --cask google-chrome || true
     brew install --cask visual-studio-code || true
     brew install --cask raycast || true
+    brew install --cask obsidian || true
+    brew install --cask discord || true
+    brew install --cask spotify || true
+    brew install --cask 1password || true
   '';
 }

@@ -29,11 +29,7 @@
       glog = "git log --oneline --graph --decorate";
 
       # nix/home-manager系
-      hms = "home-manager switch --flake ~/repos/dotfiles";
       hmu = "cd ~/repos/dotfiles && make update";
-
-      # システム系
-      update = "sudo apt update && sudo apt upgrade -y";
 
       # cd系
       ".." = "cd ..";

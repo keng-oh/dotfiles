@@ -23,11 +23,16 @@ jobs:
       - name: make check
         run: make check CONFIG_DIR=$GITHUB_WORKSPACE
 
-      - name: make switch (linux)
+      - name: make switch (ubuntu)
         run: make switch CONFIG_DIR=$GITHUB_WORKSPACE
 
-      - name: make switch (server)
-        run: make switch CONFIG_DIR=$GITHUB_WORKSPACE CONFIG=server
+      - name: make switch (ubuntu-server)
+        run: make switch CONFIG_DIR=$GITHUB_WORKSPACE CONFIG=ubuntu-server
+
+      - name: build (arch)
+        run: |
+          nix run home-manager/master --impure -- \
+            build --impure --flake "$GITHUB_WORKSPACE#arch"
 
   check-mac:
     name: Check & Switch (mac)

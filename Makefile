@@ -1,4 +1,4 @@
-.PHONY: help install update switch check clean info backup git-push setup-flatpak setup-shell
+.PHONY: help install update switch check clean info backup git-push
 
 # シェルをBashに指定
 SHELL := /bin/bash
@@ -11,7 +11,11 @@ UNAME := $(shell uname -s)
 ifdef CONFIG
     SYSTEM := $(CONFIG)
 else ifeq ($(UNAME),Linux)
-    SYSTEM := linux
+    ifneq ($(wildcard /etc/arch-release),)
+        SYSTEM := arch
+    else
+        SYSTEM := ubuntu
+    endif
 else ifeq ($(UNAME),Darwin)
     SYSTEM := mac
 else
@@ -27,33 +31,8 @@ help: ## ヘルプを表示
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
 		awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
 
-install: ## 初回セットアップ（Nix + Home Manager）
-	@echo "==> Nixのインストール状態を確認..."
-	@if ! command -v nix >/dev/null 2>&1; then \
-		echo "==> Nixをインストール中..."; \
-		sh <(curl -L https://nixos.org/nix/install) --daemon; \
-		echo ""; \
-		echo "✓ Nixのインストールが完了しました"; \
-		echo ""; \
-		echo "次のステップ:"; \
-		echo "  1. シェルを再起動: exec bash"; \
-		echo "  2. 再度実行: make install"; \
-		echo ""; \
-		false; \
-	fi
-	@echo "==> Nix設定を確認..."
-	@mkdir -p $(HOME)/.config/nix
-	@if ! grep -q "experimental-features" $(HOME)/.config/nix/nix.conf 2>/dev/null; then \
-		echo "experimental-features = nix-command flakes" >> $(HOME)/.config/nix/nix.conf; \
-		echo "==> Flakes機能を有効化しました"; \
-	fi
-	@echo "==> flake.lockを生成中..."
-	@cd $(CONFIG_DIR) && nix flake update --impure
-	@echo "==> Home Managerを適用中..."
-	@cd $(CONFIG_DIR) && nix run home-manager/master --impure -- switch --impure --flake $(FLAKE_PATH)
-	@echo ""
-	@echo "✓ セットアップ完了！"
-	@echo "  シェルを再起動してください: exec zsh"
+install: ## 初回セットアップ
+	@bash $(CONFIG_DIR)/init.sh
 
 switch: ## 設定を適用
 	@echo "==> Home Manager設定を適用中..."
@@ -75,20 +54,6 @@ update: ## flakeを更新して設定を適用
 	fi
 	@echo "✓ 更新完了"
 
-setup-shell: ## デフォルトシェルをzshに設定（サーバー用）
-	@echo "==> zshのパスを確認中..."
-	@ZSH_PATH=$$(command -v zsh 2>/dev/null || echo "$$HOME/.nix-profile/bin/zsh"); \
-	if [ ! -x "$$ZSH_PATH" ]; then \
-		echo "✗ zshが見つかりません。先に make install を実行してください"; \
-		exit 1; \
-	fi; \
-	echo "zsh: $$ZSH_PATH"; \
-	if ! grep -qF "$$ZSH_PATH" /etc/shells 2>/dev/null; then \
-		echo "==> /etc/shellsにzshを追加中（sudoが必要）..."; \
-		echo "$$ZSH_PATH" | sudo tee -a /etc/shells; \
-	fi; \
-	sudo usermod -s "$$ZSH_PATH" "$$USER" && \
-	echo "✓ デフォルトシェルをzshに変更しました（再ログインで反映）"
 
 check: ## 設定をチェック（適用せず）
 	@echo "==> 設定をチェック中..."
@@ -123,26 +88,3 @@ git-push: ## Gitにコミット＆プッシュ
 		git push
 	@echo "✓ GitHubにプッシュしました"
 
-setup-flatpak: ## Flatpakアプリの権限設定（Linux）
-	@echo "==> Flatpakアプリの権限を設定中..."
-	@if command -v flatpak >/dev/null 2>&1; then \
-		flatpak override --user org.wezfurlong.wezterm --filesystem=host --filesystem=/nix 2>/dev/null || true; \
-		flatpak override --user com.visualstudio.code --filesystem=host --filesystem=/nix 2>/dev/null || true; \
-		echo "==> VSCode Flatpak用のgit設定を作成中..."; \
-		mkdir -p $(HOME)/.var/app/com.visualstudio.code/config/git; \
-		echo "[user]" > $(HOME)/.var/app/com.visualstudio.code/config/git/config; \
-		echo "	name = KENG" >> $(HOME)/.var/app/com.visualstudio.code/config/git/config; \
-		echo "	email = contact@ken-g.dev" >> $(HOME)/.var/app/com.visualstudio.code/config/git/config; \
-		echo "[init]" >> $(HOME)/.var/app/com.visualstudio.code/config/git/config; \
-		echo "	defaultBranch = main" >> $(HOME)/.var/app/com.visualstudio.code/config/git/config; \
-		echo "[pull]" >> $(HOME)/.var/app/com.visualstudio.code/config/git/config; \
-		echo "	rebase = false" >> $(HOME)/.var/app/com.visualstudio.code/config/git/config; \
-		echo "[core]" >> $(HOME)/.var/app/com.visualstudio.code/config/git/config; \
-		echo "	editor = nvim" >> $(HOME)/.var/app/com.visualstudio.code/config/git/config; \
-		echo "✓ Flatpak権限設定完了"; \
-		echo "  - WezTerm: ホームディレクトリとNixストアへのアクセスを許可"; \
-		echo "  - VSCode: ホームディレクトリとNixストアへのアクセスを許可"; \
-		echo "  - VSCode: git設定ファイルを作成"; \
-	else \
-		echo "⚠ Flatpakがインストールされていません（macOSの場合は不要）"; \
-	fi

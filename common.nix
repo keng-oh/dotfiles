@@ -2,12 +2,12 @@
 
 {
   imports = [
-    ./modules/packages.nix
-    ./modules/git.nix
-    ./modules/zsh.nix
-    ./modules/zellij.nix
-    ./modules/wezterm.nix
-    ./modules/cli-tools.nix
+    ./modules/common/packages.nix
+    ./modules/common/git.nix
+    ./modules/common/zsh.nix
+    ./modules/common/zellij.nix
+    ./modules/common/wezterm.nix
+    ./modules/common/cli-tools.nix
   ];
 
   home.username = builtins.getEnv "USER";
