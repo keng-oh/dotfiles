@@ -4,8 +4,7 @@
   imports = [ ./hyprland.nix ];
 
   home.packages = with pkgs; [
-    # ターミナル・エディタ
-    wezterm
+    # エディタ
     vscode
 
     # ブラウザ
@@ -34,8 +33,10 @@
     hyprland
     xdg-desktop-portal-hyprland
 
-    # フォント（日本語 + Nerd Font アイコン対応）
-    udev-gothic-nf
+    # 日本語フォント
+    noto-fonts-cjk-sans
+    noto-fonts-cjk-serif
+
   ];
 
   # 日本語入力
@@ -52,6 +53,16 @@
     update = "paru -Syu";
     hms = "home-manager switch --impure --flake ~/repos/dotfiles#arch";
   };
+
+  # paru でのみ提供されるパッケージ
+  home.activation.paruPackages = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    if command -v paru >/dev/null 2>&1; then
+      paru -S --needed --noconfirm \
+        wezterm \
+        ttf-hackgen-nerd \
+        xdg-desktop-portal-hyprland
+    fi
+  '';
 
   # Docker サービスを有効化
   home.activation.dockerSetup = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
