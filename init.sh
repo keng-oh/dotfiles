@@ -34,7 +34,7 @@ install_nix() {
         return
     fi
     echo "==> Nixをインストール中..."
-    sh <(curl -L https://nixos.org/nix/install) --daemon
+    sh <(curl -L https://nixos.org/nix/install) --no-daemon
     source_nix
 }
 
