@@ -1,9 +1,5 @@
 {
   "permissions": {
-    "allow": [
-      "WebFetch(domain:hypr.land)",
-      "WebSearch",
-      "WebFetch(domain:github.com)"
-    ]
+    "allow": ["WebFetch", "WebSearch"]
   }
 }
