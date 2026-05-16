@@ -83,7 +83,7 @@
     };
     style = ''
       * {
-        font-family: "HackGen Console", "Symbols Nerd Font", monospace;
+        font-family: "UDEV Gothic NF", monospace;
         font-size: 13px;
       }
 
@@ -139,6 +139,6 @@
     borderSize = 2;
     textColor = "#cdd6f4";
     defaultTimeout = 5000;
-    font = "HackGen Console 11";
+    font = "UDEV Gothic NF 11";
   };
 }

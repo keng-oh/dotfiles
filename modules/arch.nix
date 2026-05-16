@@ -34,9 +34,8 @@
     hyprland
     xdg-desktop-portal-hyprland
 
-    # フォント
-    hackgen
-    nerd-fonts.symbols-only
+    # フォント（日本語 + Nerd Font アイコン対応）
+    udev-gothic-nf
   ];
 
   # 日本語入力
