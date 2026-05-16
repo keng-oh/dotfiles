@@ -56,11 +56,16 @@
 
   # paru でのみ提供されるパッケージ
   home.activation.paruPackages = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    if [ -x /usr/bin/paru ]; then
-      /usr/bin/paru -S --needed --noconfirm \
+    export PATH="/usr/bin:/usr/local/bin:/bin:$PATH"
+    if command -v paru >/dev/null 2>&1; then
+      echo "==> paru: パッケージをインストール中..."
+      /usr/bin/paru -S --needed \
         wezterm \
         ttf-hackgen-nerd \
-        xdg-desktop-portal-hyprland
+        xdg-desktop-portal-hyprland \
+        </dev/tty >/dev/tty 2>&1 || true
+    else
+      echo "⚠ paru が見つかりません (PATH=$PATH)"
     fi
   '';
 
