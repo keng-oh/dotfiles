@@ -9,13 +9,61 @@
 
   # エコシステムツール
   home.packages = with pkgs; [
-    wofi          # アプリランチャー
-    swww          # 壁紙デーモン
-    hyprlock      # スクリーンロック
-    grimblast     # スクリーンショット
-    wl-clipboard  # クリップボード
-    brightnessctl # 輝度調整
+    wofi              # アプリランチャー
+    swww              # 壁紙デーモン
+    hyprlock          # スクリーンロック
+    hypridle          # アイドル管理
+    grimblast         # スクリーンショット
+    wl-clipboard      # クリップボード
+    cliphist          # クリップボード履歴
+    brightnessctl     # 輝度調整
+    playerctl         # メディアキー制御
+    networkmanagerapplet  # WiFi トレイ
+    polkit_gnome      # 認証ダイアログ
+    adw-gtk3          # GTK3 ダークテーマ
+    papirus-icon-theme  # アイコンテーマ
+    adwaita-qt        # Qt ダークテーマ
   ];
+
+  # GTK ダークテーマ
+  gtk = {
+    enable = true;
+    theme = {
+      name = "adw-gtk3-dark";
+      package = pkgs.adw-gtk3;
+    };
+    iconTheme = {
+      name = "Papirus-Dark";
+      package = pkgs.papirus-icon-theme;
+    };
+    cursorTheme = {
+      name = "Adwaita";
+      size = 24;
+    };
+    gtk3.extraConfig.gtk-application-prefer-dark-theme = 1;
+    gtk4.extraConfig.gtk-application-prefer-dark-theme = 1;
+  };
+
+  # Qt ダークテーマ
+  qt = {
+    enable = true;
+    platformTheme.name = "gtk";
+    style = {
+      name = "adwaita-dark";
+      package = pkgs.adwaita-qt;
+    };
+  };
+
+  # システムカラースキーム（GTK4/libadwaita アプリ向け）
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+      gtk-theme = "adw-gtk3-dark";
+      icon-theme = "Papirus-Dark";
+      cursor-theme = "Adwaita";
+      cursor-size = 24;
+    };
+  };
 
   # ステータスバー
   programs.waybar = {

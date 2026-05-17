@@ -7,9 +7,6 @@
     # エディタ
     vscode
 
-    # ブラウザ
-    google-chrome
-
     # コミュニケーション
     discord
 
@@ -63,6 +60,7 @@
         wezterm-git \
         ttf-hackgen \
         xdg-desktop-portal-hyprland \
+        google-chrome \
         </dev/tty >/dev/tty 2>&1 || true
     else
       echo "⚠ paru が見つかりません (PATH=$PATH)"
