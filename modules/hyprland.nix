@@ -7,6 +7,29 @@
     force = true;
   };
 
+  # 電源メニュースクリプト
+  home.file.".config/hypr/scripts/powermenu.sh" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      options="󰐥  Shutdown\n󰒲  Sleep\n󰜉  Reboot\n󰌾  Lock\n󰗽  Logout"
+      chosen=$(echo -e "$options" | wofi \
+        --show dmenu \
+        --prompt "" \
+        --width 220 \
+        --height 235 \
+        --no-actions \
+        --insensitive)
+      case "$chosen" in
+        "󰐥  Shutdown") systemctl poweroff ;;
+        "󰒲  Sleep")    systemctl suspend ;;
+        "󰜉  Reboot")   systemctl reboot ;;
+        "󰌾  Lock")     hyprlock ;;
+        "󰗽  Logout")   hyprctl dispatch exit ;;
+      esac
+    '';
+  };
+
   # エコシステムツール
   home.packages = with pkgs; [
     wofi              # アプリランチャー
@@ -81,6 +104,7 @@
           "network"
           "battery"
           "tray"
+          "custom/power"
         ];
 
         "hyprland/workspaces" = {
@@ -126,6 +150,12 @@
 
         tray = {
           spacing = 8;
+        };
+
+        "custom/power" = {
+          format = "󰐥";
+          on-click = "$HOME/.config/hypr/scripts/powermenu.sh";
+          tooltip = false;
         };
       };
     };
@@ -174,6 +204,17 @@
 
       #battery.critical {
         color: #f38ba8;
+      }
+
+      #custom-power {
+        padding: 0 14px;
+        color: #f38ba8;
+        font-size: 15px;
+      }
+
+      #custom-power:hover {
+        background: rgba(243, 139, 168, 0.15);
+        border-radius: 4px;
       }
     '';
   };
