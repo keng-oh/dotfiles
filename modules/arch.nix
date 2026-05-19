@@ -67,6 +67,18 @@
     fi
   '';
 
+  # fcitx5 設定ファイルをコピー（シンボリックリンクだと fcitx5 が書き込めないため）
+  home.activation.fcitx5Config = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    FCITX5_DIR="$HOME/.config/fcitx5"
+    SRC="${builtins.toString ../fcitx5}"
+    mkdir -p "$FCITX5_DIR/conf"
+    cp -f "$SRC/config"               "$FCITX5_DIR/config"
+    cp -f "$SRC/profile"              "$FCITX5_DIR/profile"
+    cp -f "$SRC/conf/notifications.conf" "$FCITX5_DIR/conf/notifications.conf"
+    pkill fcitx5 2>/dev/null || true
+    fcitx5 -d 2>/dev/null &
+  '';
+
   # Docker サービスを有効化
   home.activation.dockerSetup = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     if command -v sudo >/dev/null 2>&1 && command -v systemctl >/dev/null 2>&1; then

@@ -1,13 +1,22 @@
 # dotfiles プロジェクト
 
 Nix + Home Managerによるクロスプラットフォーム開発環境設定リポジトリ。
+現在の主な使用環境: Arch Linux (CachyOS) + Hyprland。
 
 ## 構成
 
-- `flake.nix` / `home.nix` - Nix Flake + Home Manager エントリポイント
-- `modules/` - 各種設定モジュール（packages, git, zsh, cli-tools, wezterm, zellij, linux, darwin）
+- `flake.nix` - Nix Flake エントリポイント（arch / ubuntu / ubuntu-server / mac）
+- `common.nix` - 全プラットフォーム共通設定
+- `modules/` - プラットフォーム別モジュール
+  - `arch.nix` - Arch Linux固有設定（メイン）
+  - `hyprland.nix` - Hyprland + Waybar + Mako + テーマ設定
+  - `darwin.nix` - macOS固有設定
+  - `ubuntu.nix` / `ubuntu-server.nix` - Ubuntu固有設定
+  - `common/` - 共通モジュール群（git, zsh, cli-tools, wezterm, zellij）
+- `hypr/` - Hyprland設定ファイル（hyprland.conf）
 - `wezterm/` - WezTerm設定ファイル
 - `zellij/` - Zellij設定ファイル
+- `fcitx5/` - fcitx5設定ファイル（make switchでコピー適用）
 - `Makefile` - セットアップ・管理用コマンド
 
 ## よく使うコマンド
@@ -19,8 +28,14 @@ Nix + Home Managerによるクロスプラットフォーム開発環境設定�
 
 ## 編集時の注意
 
-- Nix式の構文を守ること（`home.nix`, `modules/*.nix`）
-- Linux固有の設定は `modules/linux.nix`、macOS固有は `modules/darwin.nix`
-- GUIアプリはLinux=Flatpak、macOS=Homebrew Cask で管理
+- Nix式の構文を守ること（`flake.nix`, `modules/*.nix`）
+- Arch固有の設定は `modules/arch.nix`、macOS固有は `modules/darwin.nix`
+- Hyprland関連（waybar, mako, テーマ等）は `modules/hyprland.nix`
 - 変更後は `make check` で構文チェックしてから `make switch` で適用
-- 設定の更新後、READMEやドキュメントも更新すること
+
+## パッケージ管理の方針
+
+- 基本は Nix (home.packages) で管理
+- GUIアプリで Nix 版が GPU/OpenGL 問題を起こす場合は paru（AUR）で管理
+  - 現在 paru 管理: `google-chrome`, `wezterm-git`, `ttf-hackgen`, `xdg-desktop-portal-hyprland`
+- fcitx5設定は `fcitx5/` 以下で管理し、make switch 時にコピー（シンボリックリンクにすると fcitx5 が書き込めないため）
