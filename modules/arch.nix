@@ -54,16 +54,19 @@
   # paru でのみ提供されるパッケージ
   home.activation.paruPackages = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     export PATH="/usr/bin:/usr/local/bin:/bin:$PATH"
-    if command -v paru >/dev/null 2>&1; then
-      echo "==> paru: パッケージをインストール中..."
-      /usr/bin/paru -S --needed \
-        wezterm-git \
-        ttf-hackgen \
-        xdg-desktop-portal-hyprland \
-        google-chrome \
-        </dev/tty >/dev/tty 2>&1 || true
-    else
-      echo "⚠ paru が見つかりません (PATH=$PATH)"
+    _pkgs="
+      wezterm-git
+      ttf-hackgen
+      xdg-desktop-portal-hyprland
+      google-chrome
+    "
+    _missing=""
+    for _pkg in $_pkgs; do
+      /usr/bin/paru -Qi "$_pkg" &>/dev/null || _missing="$_missing $_pkg"
+    done
+    if [ -n "$_missing" ]; then
+      echo "==> paru: 未インストールのパッケージを追加中:$_missing"
+      /usr/bin/paru -S --needed --noconfirm $_missing </dev/tty >/dev/tty 2>&1 || true
     fi
   '';
 

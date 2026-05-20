@@ -4,8 +4,10 @@
       "Bash(make help)",
       "Bash(make info)",
       "Bash(make check)",
+      "Bash(make switch)",
       "Bash(nix flake show *)",
-      "Bash(home-manager generations)"
+      "Bash(home-manager generations)",
+      "Bash(hyprctl reload)"
     ],
     "deny": [
       "Bash(rm -rf *)",
