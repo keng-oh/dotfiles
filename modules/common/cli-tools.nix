@@ -35,4 +35,10 @@
       pager = "less -FR";
     };
   };
+
+  # yazi（ファイルマネージャー）
+  programs.yazi = {
+    enable = true;
+    enableZshIntegration = true;
+  };
 }

@@ -45,7 +45,6 @@
     polkit_gnome      # 認証ダイアログ
     adw-gtk3          # GTK3 ダークテーマ
     papirus-icon-theme  # アイコンテーマ
-    adwaita-qt        # Qt ダークテーマ
   ];
 
   # GTK ダークテーマ
@@ -67,14 +66,10 @@
     gtk4.extraConfig.gtk-application-prefer-dark-theme = 1;
   };
 
-  # Qt ダークテーマ
+  # Qt テーマ（GTK に従わせる）
   qt = {
     enable = true;
     platformTheme.name = "gtk";
-    style = {
-      name = "adwaita-dark";
-      package = pkgs.adwaita-qt;
-    };
   };
 
   # システムカラースキーム（GTK4/libadwaita アプリ向け）
@@ -95,9 +90,9 @@
       mainBar = {
         layer = "top";
         position = "top";
-        height = 36;
+        height = 46;
         spacing = 4;
-        modules-left = [ "hyprland/workspaces" "hyprland/window" ];
+        modules-left = [ "hyprland/workspaces" ];
         modules-center = [ "clock" ];
         modules-right = [
           "pulseaudio"
@@ -112,13 +107,9 @@
           on-click = "activate";
         };
 
-        "hyprland/window" = {
-          max-length = 50;
-        };
-
         clock = {
           format = "{:%H:%M}";
-          format-alt = "{:%Y-%m-%d %H:%M}";
+          format-alt = "{:%Y-%m-%d (%a) %H:%M}";
           tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
         };
 
@@ -163,25 +154,43 @@
       * {
         font-family: "HackGenNerd Console", "HackGenNerd", monospace;
         font-size: 13px;
+        min-height: 0;
+        border: none;
+        border-radius: 0;
       }
 
       window#waybar {
-        background-color: rgba(30, 30, 46, 0.9);
+        background-color: transparent;
         color: #cdd6f4;
-        border-bottom: 2px solid rgba(137, 180, 250, 0.3);
+      }
+
+      /* 左・中央・右グループをそれぞれ角丸ピルに */
+      .modules-left,
+      .modules-center,
+      .modules-right {
+        background-color: rgba(30, 30, 46, 0.88);
+        border-radius: 12px;
+        margin: 5px 4px;
+        padding: 0 6px;
+      }
+
+      #workspaces {
+        background: transparent;
+        padding: 0 2px;
       }
 
       #workspaces button {
         padding: 0 8px;
         color: #6c7086;
         background: transparent;
-        border: none;
-        border-radius: 4px;
+        border-radius: 8px;
+        margin: 3px 2px;
+        min-height: 24px;
       }
 
       #workspaces button.active {
         color: #89b4fa;
-        background: rgba(137, 180, 250, 0.15);
+        background: rgba(137, 180, 250, 0.2);
       }
 
       #workspaces button:hover {
@@ -210,11 +219,11 @@
         padding: 0 14px;
         color: #f38ba8;
         font-size: 15px;
+        border-radius: 0 12px 12px 0;
       }
 
       #custom-power:hover {
         background: rgba(243, 139, 168, 0.15);
-        border-radius: 4px;
       }
     '';
   };

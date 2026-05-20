@@ -22,6 +22,9 @@ config.default_prog = { home .. '/.nix-profile/bin/zsh', '-l' }
 -- フロントエンド設定（EGLエラー対策）
 config.front_end = "Software"
 
+-- 透過設定
+config.window_background_opacity = 0.7
+
 -- ウィンドウ設定
 config.window_padding = {
   left = 8,
