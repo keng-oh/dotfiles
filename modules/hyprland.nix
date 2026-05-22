@@ -49,7 +49,12 @@
     polkit_gnome      # 認証ダイアログ
     adw-gtk3          # GTK3 ダークテーマ
     papirus-icon-theme  # アイコンテーマ
+    swaynotificationcenter  # 通知センター
   ];
+
+  # swaync 設定
+  home.file.".config/swaync/config.json".source = ../swaync/config.json;
+  home.file.".config/swaync/style.css".source   = ../swaync/style.css;
 
   # GTK ダークテーマ
   gtk = {
@@ -103,6 +108,7 @@
           "network"
           "battery"
           "tray"
+          "custom/notification"
           "custom/power"
         ];
 
@@ -145,6 +151,23 @@
 
         tray = {
           spacing = 8;
+        };
+
+        "custom/notification" = {
+          format = "{icon}";
+          format-icons = {
+            notification = "󰂚";
+            none = "󰂜";
+            dnd-notification = "󰂛";
+            dnd-none = "󰂛";
+          };
+          return-type = "json";
+          exec-if = "which swaync-client";
+          exec = "swaync-client -swb";
+          on-click = "swaync-client -t -sw";
+          on-click-right = "swaync-client -d -sw";
+          escape = true;
+          tooltip = false;
         };
 
         "custom/power" = {
@@ -219,6 +242,21 @@
         color: #f38ba8;
       }
 
+      #custom-notification {
+        padding: 0 12px;
+        color: #cdd6f4;
+        font-size: 15px;
+      }
+
+      #custom-notification.notification {
+        color: #fab387;
+      }
+
+      #custom-notification:hover {
+        background: rgba(250, 179, 135, 0.15);
+        border-radius: 4px;
+      }
+
       #custom-power {
         padding: 0 14px;
         color: #f38ba8;
@@ -232,15 +270,4 @@
     '';
   };
 
-  # 通知デーモン
-  services.mako = {
-    enable = true;
-    backgroundColor = "#1e1e2e";
-    borderColor = "#89b4fa";
-    borderRadius = 8;
-    borderSize = 2;
-    textColor = "#cdd6f4";
-    defaultTimeout = 5000;
-    font = "HackGenNerd Console 11";
-  };
 }
