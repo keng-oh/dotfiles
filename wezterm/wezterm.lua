@@ -42,4 +42,18 @@ config.hide_tab_bar_if_only_one_tab = true
 config.enable_scroll_bar = false
 config.window_close_confirmation = 'NeverPrompt'
 
+-- Ctrl+T を Zellij に渡す
+config.keys = {
+  {
+    key = 't',
+    mods = 'CTRL',
+    action = wezterm.action.SendKey { key = 't', mods = 'CTRL' },
+  },
+  {
+    key = 'T',
+    mods = 'CTRL',
+    action = wezterm.action.SendKey { key = 't', mods = 'CTRL' },
+  },
+}
+
 return config

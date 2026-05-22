@@ -87,4 +87,3 @@ git-push: ## Gitにコミット＆プッシュ
 		git commit -m "Update: $$(date +%Y-%m-%d)" && \
 		git push
 	@echo "✓ GitHubにプッシュしました"
-

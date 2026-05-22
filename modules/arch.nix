@@ -19,12 +19,9 @@
     # パスワード管理
     _1password-gui
 
-    # ランチャー
-    ulauncher
-
-    # Docker
-    docker
-    docker-compose
+    # キーリング
+    gnome-keyring
+    libsecret
 
     # Hyprland エコシステム（システムレベル）
     hyprland
@@ -59,6 +56,8 @@
       ttf-hackgen
       xdg-desktop-portal-hyprland
       google-chrome
+      docker
+      docker-compose
     "
     _missing=""
     for _pkg in $_pkgs; do
@@ -75,15 +74,15 @@
     FCITX5_DIR="$HOME/.config/fcitx5"
     SRC="${builtins.toString ../fcitx5}"
     mkdir -p "$FCITX5_DIR/conf"
-    cp -f "$SRC/config"               "$FCITX5_DIR/config"
-    cp -f "$SRC/profile"              "$FCITX5_DIR/profile"
-    cp -f "$SRC/conf/notifications.conf" "$FCITX5_DIR/conf/notifications.conf"
+    cp --no-preserve=mode -f "$SRC/config"               "$FCITX5_DIR/config"
+    cp --no-preserve=mode -f "$SRC/profile"              "$FCITX5_DIR/profile"
+    cp --no-preserve=mode -f "$SRC/conf/notifications.conf" "$FCITX5_DIR/conf/notifications.conf"
     pkill fcitx5 2>/dev/null || true
-    fcitx5 -d 2>/dev/null &
+    hyprctl dispatch exec "fcitx5 -d" 2>/dev/null || true
   '';
 
-  # Docker サービスを有効化
-  home.activation.dockerSetup = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+  # Docker サービスを有効化（paruインストール後）
+  home.activation.dockerSetup = lib.hm.dag.entryAfter [ "paruPackages" ] ''
     if command -v sudo >/dev/null 2>&1 && command -v systemctl >/dev/null 2>&1; then
       sudo systemctl enable --now docker 2>/dev/null || true
       sudo usermod -aG docker "$USER" 2>/dev/null || true
