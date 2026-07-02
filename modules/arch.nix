@@ -23,6 +23,9 @@
     gnome-keyring
     libsecret
 
+    # SDDM テーマ
+    sddm-astronaut
+
     # Hyprland エコシステム（システムレベル）
     hyprland
     xdg-desktop-portal-hyprland

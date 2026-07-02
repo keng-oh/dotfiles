@@ -4,6 +4,7 @@
   imports = [
     ./modules/common/packages.nix
     ./modules/common/git.nix
+    ./modules/common/ssh.nix
     ./modules/common/zsh.nix
     ./modules/common/zellij.nix
     ./modules/common/wezterm.nix

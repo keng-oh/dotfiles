@@ -1,4 +1,4 @@
-.PHONY: help install update switch check clean info backup git-push
+.PHONY: help install update switch check clean info backup git-push sddm-setup
 
 # シェルをBashに指定
 SHELL := /bin/bash
@@ -80,6 +80,14 @@ backup: ## 現在の設定をバックアップ
 	@echo "==> バックアップ作成中..."
 	@tar -czf $(HOME)/home-manager-backup-$$(date +%Y%m%d-%H%M%S).tar.gz -C $(HOME)/.config home-manager
 	@echo "✓ バックアップ完了: ~/home-manager-backup-*.tar.gz"
+
+sddm-setup: ## SDDMテーマを設定（要sudo）
+	@echo "==> SDDM astronaut テーマを設定中..."
+	@sudo mkdir -p /etc/sddm.conf.d
+	@printf '[Theme]\nCurrent=sddm-astronaut-theme\n' | sudo tee /etc/sddm.conf.d/theme.conf
+	@sudo rm -rf /usr/share/sddm/themes/sddm-astronaut-theme
+	@sudo cp -r $(HOME)/.nix-profile/share/sddm/themes/sddm-astronaut-theme /usr/share/sddm/themes/
+	@echo "✓ SDDM テーマを設定しました（次回ログイン画面から反映）"
 
 git-push: ## Gitにコミット＆プッシュ
 	@cd $(CONFIG_DIR) && \

@@ -37,7 +37,7 @@
   # エコシステムツール
   home.packages = with pkgs; [
     wofi              # アプリランチャー
-    swww              # 壁紙デーモン
+    awww              # 壁紙デーモン（旧swww）
     hyprlock          # スクリーンロック
     hypridle          # アイドル管理
     grimblast         # スクリーンショット
@@ -199,6 +199,13 @@
         border-radius: 12px;
         margin: 5px 4px;
         padding: 0 6px;
+      }
+
+      window#secondBar .modules-center,
+      window#secondBar .modules-right {
+        background-color: transparent;
+        padding: 0;
+        margin: 0;
       }
 
       #workspaces {

@@ -6,3 +6,4 @@ default_shell "zsh"
 // その他の基本設定
 pane_frames false
 theme "tokyo-night-dark"
+show_startup_tips false

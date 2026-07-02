@@ -16,11 +16,14 @@
     zellij
 
     # 開発ツール
-    nodejs_20
+    nodejs_22
     python311
     php83
+    ruby
 
     # その他
+    blueman
+    wtype
     htop
     btop
     curl
@@ -31,6 +34,9 @@
     lazygit
     lazydocker
     navi
+
+    # シークレット管理
+    doppler
 
     # AI
     claude-code
