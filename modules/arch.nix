@@ -22,6 +22,7 @@
     # キーリング
     gnome-keyring
     libsecret
+    gcr
 
     # SDDM テーマ
     sddm-astronaut
@@ -61,6 +62,7 @@
       google-chrome
       docker
       docker-compose
+      claude-desktop
     "
     _missing=""
     for _pkg in $_pkgs; do

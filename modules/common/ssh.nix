@@ -3,32 +3,34 @@
 {
   programs.ssh = {
     enable = true;
-    matchBlocks = {
+    enableDefaultConfig = false;
+    settings = {
       "pve01" = {
-        hostname = "192.168.0.200";
-        user = "root";
-        port = 22;
-        identitiesOnly = true;
-        identityFile = "~/.ssh/proxmox.pub";
+        HostName = "192.168.0.200";
+        User = "root";
+        Port = 22;
+        IdentitiesOnly = true;
+        IdentityFile = "~/.ssh/proxmox.pub";
       };
       "pve01-develop" = {
-        hostname = "192.168.2.101";
-        user = "dev";
-        port = 22;
-        identitiesOnly = true;
-        identityFile = "~/.ssh/proxmox_dev.pub";
-      };
-      "llm-server" = {
-        hostname = "192.168.0.7";
-        user = "keng";
-        port = 2222;
-        identitiesOnly = true;
-        identityFile = "~/.ssh/llm-server.pub";
+        HostName = "192.168.2.101";
+        User = "dev";
+        Port = 22;
+        IdentitiesOnly = true;
+        IdentityFile = "~/.ssh/proxmox_dev.pub";
       };
       "*" = {
-        extraOptions = {
-          IdentityAgent = "~/.1password/agent.sock";
-        };
+        IdentityAgent = "~/.1password/agent.sock";
+        ForwardAgent = false;
+        AddKeysToAgent = "no";
+        Compression = false;
+        ServerAliveInterval = 0;
+        ServerAliveCountMax = 3;
+        HashKnownHosts = false;
+        UserKnownHostsFile = "~/.ssh/known_hosts";
+        ControlMaster = "no";
+        ControlPath = "~/.ssh/master-%r@%n:%p";
+        ControlPersist = "no";
       };
     };
   };

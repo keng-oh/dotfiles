@@ -78,7 +78,7 @@
   # Qt テーマ（GTK に従わせる）
   qt = {
     enable = true;
-    platformTheme.name = "gtk";
+    platformTheme.name = "gtk3";
   };
 
   # システムカラースキーム（GTK4/libadwaita アプリ向け）

@@ -3,13 +3,19 @@
 {
   programs.git = {
     enable = true;
-    userName = "KENG";
-    userEmail = "contact@ken-g.dev";
-    delta.enable = true;
-    extraConfig = {
+    settings = {
+      user = {
+        name = "KENG";
+        email = "contact@ken-g.dev";
+      };
       init.defaultBranch = "main";
       pull.rebase = false;
       core.editor = "nvim";
     };
+  };
+
+  programs.delta = {
+    enable = true;
+    enableGitIntegration = true;
   };
 }

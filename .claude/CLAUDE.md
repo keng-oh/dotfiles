@@ -37,5 +37,5 @@ Nix + Home Managerによるクロスプラットフォーム開発環境設定�
 
 - 基本は Nix (home.packages) で管理
 - GUIアプリで Nix 版が GPU/OpenGL 問題を起こす場合は paru（AUR）で管理
-  - 現在 paru 管理: `google-chrome`, `wezterm-git`, `ttf-hackgen`, `xdg-desktop-portal-hyprland`
+  - 現在 paru 管理: `google-chrome`, `wezterm-git`, `ttf-hackgen`, `xdg-desktop-portal-hyprland`, `docker`, `docker-compose`, `claude-desktop`
 - fcitx5設定は `fcitx5/` 以下で管理し、make switch 時にコピー（シンボリックリンクにすると fcitx5 が書き込めないため）
