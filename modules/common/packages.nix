@@ -20,6 +20,8 @@
     python311
     php83
     ruby
+    go
+    flutter
 
     # その他
     blueman
