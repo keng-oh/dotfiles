@@ -1,0 +1,38 @@
+# AUR パッケージ
+# (インストール: grep -vE '^\s*(#|$)' aur.txt | paru -S --needed -)
+
+# エディタ
+visual-studio-code-bin
+
+# ブラウザ
+google-chrome
+
+# ターミナル
+wezterm-git
+
+# フォント
+ttf-hackgen
+
+# 音楽
+spotify
+
+# パスワード管理
+1password
+
+# AI
+claude-desktop
+
+# シークレット管理
+doppler-cli-bin
+
+# SDDM テーマ
+sddm-astronaut-theme
+
+# Flutter(ソースビルドの flutter より高速なバイナリ版)
+flutter-bin
+
+# Android SDK
+android-sdk-cmdline-tools-latest
+android-sdk-platform-tools
+android-sdk-build-tools
+android-emulator

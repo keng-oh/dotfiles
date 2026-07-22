@@ -4,3 +4,4 @@ result-*
 *.swo
 *~
 .DS_Store
+migration-work/

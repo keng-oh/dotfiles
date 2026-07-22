@@ -1,0 +1,89 @@
+[
+  {
+    "battery": {
+      "format": "{capacity}% {icon}",
+      "format-charging": "{capacity}% 󰂄",
+      "format-icons": [
+        "󰁺",
+        "󰁼",
+        "󰁾",
+        "󰂀",
+        "󰂂",
+        "󰁹"
+      ],
+      "states": {
+        "critical": 15,
+        "warning": 30
+      }
+    },
+    "clock": {
+      "format": "{:%H:%M}",
+      "format-alt": "{:%Y-%m-%d (%a) %H:%M}",
+      "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+    "custom/notification": {
+      "escape": true,
+      "exec": "swaync-client -swb",
+      "exec-if": "which swaync-client",
+      "format": "{icon}",
+      "format-icons": {
+        "dnd-none": "󰂛",
+        "dnd-notification": "󰂛",
+        "none": "󰂜",
+        "notification": "󰂚"
+      },
+      "on-click": "swaync-client -t -sw",
+      "on-click-right": "swaync-client -d -sw",
+      "return-type": "json",
+      "tooltip": false
+    },
+    "custom/power": {
+      "format": "󰐥",
+      "on-click": "$HOME/.config/hypr/scripts/powermenu.sh",
+      "tooltip": false
+    },
+    "height": 46,
+    "hyprland/workspaces": {
+      "format": "{id}",
+      "on-click": "activate"
+    },
+    "layer": "top",
+    "modules-center": [
+      "clock"
+    ],
+    "modules-left": [
+      "hyprland/workspaces"
+    ],
+    "modules-right": [
+      "pulseaudio",
+      "network",
+      "battery",
+      "tray",
+      "custom/notification",
+      "custom/power"
+    ],
+    "network": {
+      "format-disconnected": "󰤭",
+      "format-ethernet": "󰈀",
+      "format-wifi": "{essid} 󰤨",
+      "tooltip-format-wifi": "{signalStrength}%"
+    },
+    "position": "top",
+    "pulseaudio": {
+      "format": "{volume}% {icon}",
+      "format-icons": {
+        "default": [
+          "󰕿",
+          "󰖀",
+          "󰕾"
+        ]
+      },
+      "format-muted": "󰸈",
+      "on-click": "pavucontrol"
+    },
+    "spacing": 4,
+    "tray": {
+      "spacing": 8
+    }
+  }
+]

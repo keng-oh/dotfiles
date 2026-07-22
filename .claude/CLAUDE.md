@@ -1,42 +1,49 @@
 # dotfiles プロジェクト
 
-Nix + Home Managerによるクロスプラットフォーム開発環境設定リポジトリ。
-現在の主な使用環境: Arch Linux (CachyOS) + Hyprland。
+chezmoi + pacman/paru による開発環境設定リポジトリ。
+使用環境: Arch Linux (CachyOS) + Hyprland。
+(以前は Nix + Home Manager 管理。移行中の手順は `MIGRATION.md` 参照)
 
 ## 構成
 
-- `flake.nix` - Nix Flake エントリポイント（arch / ubuntu / ubuntu-server / mac）
-- `common.nix` - 全プラットフォーム共通設定
-- `modules/` - プラットフォーム別モジュール
-  - `arch.nix` - Arch Linux固有設定（メイン）
-  - `hyprland.nix` - Hyprland + Waybar + Mako + テーマ設定
-  - `darwin.nix` - macOS固有設定
-  - `ubuntu.nix` / `ubuntu-server.nix` - Ubuntu固有設定
-  - `common/` - 共通モジュール群（git, zsh, cli-tools, wezterm, zellij）
-- `hypr/` - Hyprland設定ファイル（hyprland.conf）
-- `wezterm/` - WezTerm設定ファイル
-- `zellij/` - Zellij設定ファイル
-- `fcitx5/` - fcitx5設定ファイル（make switchでコピー適用）
-- `Makefile` - セットアップ・管理用コマンド
+- `.chezmoiroot` - chezmoiのソースを `home/` に指定
+- `home/` - chezmoiソースディレクトリ(`~` に展開される)
+  - `dot_zshrc` / `dot_zshenv` - zsh設定・環境変数
+  - `dot_config/hypr/` - Hyprland設定(hyprland.conf, powermenu, 壁紙スクリプト)
+  - `dot_config/waybar/` `wofi/` `swaync/` - デスクトップUI設定
+  - `dot_config/wezterm/` `zellij/` - ターミナル設定
+  - `dot_config/fcitx5/` - 日本語入力設定(コピー配置なのでfcitx5が書き込み可能)
+  - `dot_config/packages/pacman.txt` / `aur.txt` - パッケージリスト
+  - `private_dot_ssh/` - SSH設定と公開鍵(秘密鍵は1Password管理でマシン上に無い)
+  - `.chezmoiscripts/` - セットアップスクリプト(run_once/run_onchange)
+  - `.chezmoiremove` - 旧Home Manager残骸の削除リスト
+- `wallpapers/` - 壁紙(スクリプトから `~/repos/dotfiles/wallpapers` 参照)
+- `init.sh` - 新規マシン用ブートストラップ
+- `Makefile` - 管理用コマンド
+
+chezmoiのソースディレクトリはこのリポジトリ自体
+(`~/.config/chezmoi/chezmoi.toml` の `sourceDir` で指定)。
 
 ## よく使うコマンド
 
-- `make switch` - 設定を適用
-- `make update` - flake更新 + 適用
-- `make check` - 設定チェック（適用せず）
-- `make install` - 初回セットアップ
+- `make switch` (= `chezmoi apply`) - 設定を適用
+- `make diff` (= `chezmoi diff`) - 適用される差分を確認
+- `make update` - リポジトリ + パッケージ更新
+- `make install` - 初回セットアップ(新規マシン)
 
 ## 編集時の注意
 
-- Nix式の構文を守ること（`flake.nix`, `modules/*.nix`）
-- Arch固有の設定は `modules/arch.nix`、macOS固有は `modules/darwin.nix`
-- Hyprland関連（waybar, mako, テーマ等）は `modules/hyprland.nix`
-- 変更後は `make check` で構文チェックしてから `make switch` で適用
+- 設定ファイルの編集は `home/` 以下のソースを直接編集し、`chezmoi apply` で反映
+- パッケージ追加は `home/dot_config/packages/pacman.txt`(公式)または `aur.txt`(AUR)に追記
+  - リスト変更時は apply で自動インストールされる(`run_onchange_before_10-packages.sh.tmpl`)
+  - 追加前に `paru -Si <名前>` で実在確認すること
+- `home/` 内のファイル名はchezmoi規約(`dot_` = `.`、`executable_` = 実行可能、
+  `private_` = パーミッション制限)
+- 適用前に `chezmoi diff` で差分確認するのが安全
 
 ## パッケージ管理の方針
 
-- 基本は Nix (home.packages) で管理
-- GUIアプリで Nix 版が GPU/OpenGL 問題を起こす場合は paru（AUR）で管理
-  - PAM/D-Bus等システム統合が必要なパッケージ（Nix版だと`/usr/lib/security`等の標準パスに統合ファイルが置かれず機能しない）も同様に paru 管理にする
-  - 現在 paru 管理: `google-chrome`, `wezterm-git`, `ttf-hackgen`, `xdg-desktop-portal-hyprland`, `docker`, `docker-compose`, `claude-desktop`, `gnome-keyring`
-- fcitx5設定は `fcitx5/` 以下で管理し、make switch 時にコピー（シンボリックリンクにすると fcitx5 が書き込めないため）
+- 公式リポジトリ(CachyOS含む)にあるものは `pacman.txt`、AURのみは `aur.txt`
+- Tailscaleのみ公式インストールスクリプト経由(`run_once_after_20-tailscale.sh`)
+- Android SDKは `/opt/android-sdk` にAURパッケージで配置し、
+  初期化は `run_once_after_40-android-sdk.sh` が行う

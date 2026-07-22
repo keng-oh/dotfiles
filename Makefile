@@ -1,30 +1,9 @@
-.PHONY: help install update switch check clean info backup git-push sddm-setup
-
-# シェルをBashに指定
-SHELL := /bin/bash
+.PHONY: help install switch diff update doctor git-push
 
 # デフォルトターゲット
 .DEFAULT_GOAL := help
 
-# OSの検出（環境変数CONFIGで上書き可能）
-UNAME := $(shell uname -s)
-ifdef CONFIG
-    SYSTEM := $(CONFIG)
-else ifeq ($(UNAME),Linux)
-    ifneq ($(wildcard /etc/arch-release),)
-        SYSTEM := arch
-    else
-        SYSTEM := ubuntu
-    endif
-else ifeq ($(UNAME),Darwin)
-    SYSTEM := mac
-else
-    $(error Unsupported OS: $(UNAME))
-endif
-
-# 設定ディレクトリ
 CONFIG_DIR := $(HOME)/repos/dotfiles
-FLAKE_PATH := $(CONFIG_DIR)\#$(SYSTEM)
 
 help: ## ヘルプを表示
 	@echo "利用可能なコマンド:"
@@ -35,63 +14,21 @@ install: ## 初回セットアップ
 	@bash $(CONFIG_DIR)/init.sh
 
 switch: ## 設定を適用
-	@echo "==> Home Manager設定を適用中..."
-	@if command -v home-manager >/dev/null 2>&1; then \
-		home-manager switch --impure -b backup --flake $(FLAKE_PATH); \
-	else \
-		cd $(CONFIG_DIR) && nix run home-manager/master --impure -- switch --impure -b backup --flake $(FLAKE_PATH); \
-	fi
+	@chezmoi apply
 	@echo "✓ 設定を適用しました"
 
-update: ## flakeとAURパッケージを更新して設定を適用
-	@echo "==> flakeを更新中..."
-	@cd $(CONFIG_DIR) && nix flake update --impure
-	@echo "==> 設定を適用中..."
-	@if command -v home-manager >/dev/null 2>&1; then \
-		home-manager switch --impure -b backup --flake $(FLAKE_PATH); \
-	else \
-		cd $(CONFIG_DIR) && nix run home-manager/master --impure -- switch --impure -b backup --flake $(FLAKE_PATH); \
-	fi
-	@if command -v paru >/dev/null 2>&1; then \
-		echo "==> AURパッケージ(paru)を更新中..."; \
-		paru -Syu; \
-	fi
+diff: ## 適用される差分を表示（適用せず）
+	@chezmoi diff
+
+update: ## リポジトリとパッケージを更新して設定を適用
+	@echo "==> dotfilesを更新中..."
+	@chezmoi update
+	@echo "==> パッケージ(pacman/AUR)を更新中..."
+	@paru -Syu
 	@echo "✓ 更新完了"
 
-
-check: ## 設定をチェック（適用せず）
-	@echo "==> 設定をチェック中..."
-	@cd $(CONFIG_DIR) && nix flake check --impure
-	@echo "✓ 設定に問題ありません"
-
-clean: ## 古い世代を削除
-	@echo "==> 古い世代を削除中..."
-	@home-manager expire-generations "-7 days"
-	@nix-collect-garbage -d
-	@echo "✓ クリーンアップ完了"
-
-info: ## システム情報を表示
-	@echo "System: $(SYSTEM)"
-	@echo "Config: $(FLAKE_PATH)"
-	@echo "Nix version: $$(nix --version)"
-	@if command -v home-manager >/dev/null 2>&1; then \
-		echo "Home Manager: installed"; \
-	else \
-		echo "Home Manager: not installed"; \
-	fi
-
-backup: ## 現在の設定をバックアップ
-	@echo "==> バックアップ作成中..."
-	@tar -czf $(HOME)/home-manager-backup-$$(date +%Y%m%d-%H%M%S).tar.gz -C $(HOME)/.config home-manager
-	@echo "✓ バックアップ完了: ~/home-manager-backup-*.tar.gz"
-
-sddm-setup: ## SDDMテーマを設定（要sudo）
-	@echo "==> SDDM astronaut テーマを設定中..."
-	@sudo mkdir -p /etc/sddm.conf.d
-	@printf '[Theme]\nCurrent=sddm-astronaut-theme\n' | sudo tee /etc/sddm.conf.d/theme.conf
-	@sudo rm -rf /usr/share/sddm/themes/sddm-astronaut-theme
-	@sudo cp -r $(HOME)/.nix-profile/share/sddm/themes/sddm-astronaut-theme /usr/share/sddm/themes/
-	@echo "✓ SDDM テーマを設定しました（次回ログイン画面から反映）"
+doctor: ## chezmoiの状態を診断
+	@chezmoi doctor
 
 git-push: ## Gitにコミット＆プッシュ
 	@cd $(CONFIG_DIR) && \

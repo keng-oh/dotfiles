@@ -1,0 +1,33 @@
+Host github.com
+  HostName github.com
+  IdentitiesOnly yes
+  IdentityFile ~/.ssh/github.pub
+  Port 22
+  User git
+
+Host pve01
+  HostName 192.168.0.200
+  IdentitiesOnly yes
+  IdentityFile ~/.ssh/proxmox.pub
+  Port 22
+  User root
+
+Host pve01-develop
+  HostName 192.168.2.101
+  IdentitiesOnly yes
+  IdentityFile ~/.ssh/proxmox_dev.pub
+  Port 22
+  User dev
+
+Host *
+  AddKeysToAgent no
+  Compression no
+  ControlMaster no
+  ControlPath ~/.ssh/master-%r@%n:%p
+  ControlPersist no
+  ForwardAgent no
+  HashKnownHosts no
+  IdentityAgent ~/.1password/agent.sock
+  ServerAliveCountMax 3
+  ServerAliveInterval 0
+  UserKnownHostsFile ~/.ssh/known_hosts

@@ -1,0 +1,7 @@
+# Home Manager の残骸(apply時に削除される)
+.zprofile
+.config/environment.d/10-home-manager.conf
+.config/systemd/user/tray.target
+.config/systemd/user/fcitx5-daemon.service
+.config/systemd/user/graphical-session.target.wants/fcitx5-daemon.service
+.config/direnv/lib/hm-nix-direnv.sh

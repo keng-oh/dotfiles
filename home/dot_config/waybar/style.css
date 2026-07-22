@@ -1,0 +1,96 @@
+* {
+  font-family: "HackGenNerd Console", "HackGenNerd", monospace;
+  font-size: 13px;
+  min-height: 0;
+  border: none;
+  border-radius: 0;
+}
+
+window#waybar {
+  background-color: transparent;
+  color: #cdd6f4;
+}
+
+/* 左・中央・右グループをそれぞれ角丸ピルに */
+.modules-left,
+.modules-center,
+.modules-right {
+  background-color: rgba(30, 30, 46, 0.88);
+  border-radius: 12px;
+  margin: 5px 4px;
+  padding: 0 6px;
+}
+
+window#secondBar .modules-center,
+window#secondBar .modules-right {
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+#workspaces {
+  background: transparent;
+  padding: 0 2px;
+}
+
+#workspaces button {
+  padding: 0 8px;
+  color: #6c7086;
+  background: transparent;
+  border-radius: 8px;
+  margin: 3px 2px;
+  min-height: 24px;
+}
+
+#workspaces button.active {
+  color: #89b4fa;
+  background: rgba(137, 180, 250, 0.2);
+}
+
+#workspaces button:hover {
+  background: rgba(137, 180, 250, 0.1);
+  color: #cdd6f4;
+}
+
+#clock,
+#battery,
+#network,
+#pulseaudio,
+#tray {
+  padding: 0 12px;
+  color: #cdd6f4;
+}
+
+#battery.warning {
+  color: #fab387;
+}
+
+#battery.critical {
+  color: #f38ba8;
+}
+
+#custom-notification {
+  padding: 0 12px;
+  color: #cdd6f4;
+  font-size: 15px;
+}
+
+#custom-notification.notification {
+  color: #fab387;
+}
+
+#custom-notification:hover {
+  background: rgba(250, 179, 135, 0.15);
+  border-radius: 4px;
+}
+
+#custom-power {
+  padding: 0 14px;
+  color: #f38ba8;
+  font-size: 15px;
+  border-radius: 0 12px 12px 0;
+}
+
+#custom-power:hover {
+  background: rgba(243, 139, 168, 0.15);
+}

@@ -15,6 +15,9 @@ Nix + Home Manager による管理をやめ、chezmoi + pacman/paru に移行す
   多数の `/nix/store` へのシンボリックリンク(`.zshrc`, `.zshenv`, `.zprofile`, `.gtkrc-2.0`, `~/.config` 以下)
 - **注意: 現在稼働中のHyprlandセッション・zsh・fcitx5はすべてNix製バイナリ。**
   `/nix` を先に消すとセッションもシェルも即死する。必ず下記の順番を守ること。
+- **重要: ログインシェルが `/home/keng/.nix-profile/bin/zsh` になっている**
+  (`/etc/shells` にも同パスが登録済み)。`/nix` を消す前に必ず
+  `sudo usermod -s /usr/bin/zsh keng` で切り替えること。忘れるとログイン不能になる。
 
 ## 全体の流れ
 
@@ -274,6 +277,12 @@ ls -la ~/.zshrc ~/.zshenv ~/.ssh/config
 
 ## Phase 6: Nix無効化テスト(削除前の安全確認)
 
+**先にログインシェルを切り替える(必須):**
+
+```sh
+sudo usermod -s /usr/bin/zsh keng
+```
+
 **いきなり消さず、リネームで無効化して数日運用する。**
 
 ```sh
@@ -296,6 +305,9 @@ sudo rm -rf /nix.disabled
 
 # 2. /etc のシェルフック(「# Nix」〜「# End Nix」のブロックを削除)
 sudo sed -i '/^# Nix$/,/^# End Nix$/d' /etc/zsh/zshrc /etc/bashrc
+
+# 2b. /etc/shells から nix の zsh を削除
+sudo sed -i '\|/.nix-profile/bin/zsh|d' /etc/shells
 
 # 3. ホームの残骸
 rm -rf ~/.nix-channels ~/.nix-defexpr ~/.nix-profile \

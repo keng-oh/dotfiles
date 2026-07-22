@@ -1,0 +1,27 @@
+[core]
+	editor = nvim
+
+[gpg]
+	format = openpgp
+
+[gpg "openpgp"]
+	program = gpg
+
+[init]
+	defaultBranch = main
+
+[interactive]
+	diffFilter = delta --color-only
+
+[pager]
+	blame = delta
+	diff = delta
+	log = delta
+	show = delta
+
+[pull]
+	rebase = false
+
+[user]
+	email = contact@ken-g.dev
+	name = KENG
