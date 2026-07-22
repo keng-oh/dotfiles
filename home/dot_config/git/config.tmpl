@@ -10,6 +10,7 @@
 [init]
 	defaultBranch = main
 
+{{ if eq .chezmoi.osRelease.id "cachyos" -}}
 [interactive]
 	diffFilter = delta --color-only
 
@@ -19,6 +20,7 @@
 	log = delta
 	show = delta
 
+{{ end -}}
 [pull]
 	rebase = false
 

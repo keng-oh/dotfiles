@@ -1,11 +1,13 @@
 #!/bin/bash
-# パッケージ一括インストール（リスト変更時に再実行される）
+# パッケージ一括インストール(リスト変更時に再実行される)
 # pacman.txt hash: {{ include "dot_config/packages/pacman.txt" | sha256sum }}
 # aur.txt hash: {{ include "dot_config/packages/aur.txt" | sha256sum }}
+# apt.txt hash: {{ include "dot_config/packages/apt.txt" | sha256sum }}
 set -euo pipefail
 
 pkgdir="{{ .chezmoi.sourceDir }}/dot_config/packages"
 
+{{ if eq .chezmoi.osRelease.id "cachyos" -}}
 # ローリングリリースではDBが古いままの -S はミラー404や部分更新を招くため、
 # インストール前に必ず全体を同期・更新する
 echo "==> pacman: データベース同期 + システム更新"
@@ -14,9 +16,21 @@ sudo pacman -Syu --noconfirm
 echo "==> pacman: 公式パッケージをインストール中"
 grep -vE '^\s*(#|$)' "$pkgdir/pacman.txt" | sudo pacman -S --needed --noconfirm -
 
-if command -v paru >/dev/null 2>&1; then
+# AURビルドはrootでは実行できないため、CI(rootコンテナ)ではスキップされる
+if command -v paru >/dev/null 2>&1 && [ "$(id -u)" != "0" ]; then
   echo "==> paru: AURパッケージをインストール中"
   grep -vE '^\s*(#|$)' "$pkgdir/aur.txt" | paru -S --needed --noconfirm -
 else
-  echo "!! paru が見つかりません。AURパッケージはスキップしました" >&2
+  echo "!! paru が無いかroot実行のため、AURパッケージはスキップしました" >&2
 fi
+{{- else -}}
+echo "==> apt: パッケージをインストール中"
+sudo apt-get update -qq
+grep -vE '^\s*(#|$)' "$pkgdir/apt.txt" | xargs sudo apt-get install -y -qq
+
+# starship はUbuntu標準リポジトリに無いため公式スクリプトで導入
+if ! command -v starship >/dev/null 2>&1; then
+  echo "==> starship を公式スクリプトでインストール中"
+  curl -sS https://starship.rs/install.sh | sh -s -- -y
+fi
+{{- end }}

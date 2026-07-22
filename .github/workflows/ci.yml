@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  ubuntu-server:
+    name: Apply & Verify (Ubuntu / server profile)
+    runs-on: ubuntu-latest
+    env:
+      CI: "true"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install chezmoi
+        run: sh -c "$(curl -fsSL get.chezmoi.io)" -- -b /usr/local/bin
+
+      - name: chezmoi apply
+        run: chezmoi apply --source "$GITHUB_WORKSPACE" --verbose
+
+      - name: Verify
+        run: |
+          set -eux
+          # 設定ファイルが実ファイルとして配置されている
+          test -f ~/.zshrc
+          test -f ~/.zshenv
+          test -f ~/.config/zellij/config.kdl
+          test -f ~/.config/git/config
+          # サーバープロファイルではデスクトップ系・SSH設定が除外されている
+          test ! -e ~/.config/hypr
+          test ! -e ~/.config/waybar
+          test ! -e ~/.config/fcitx5
+          test ! -e ~/.ssh/config
+          # delta設定はArch専用(無い環境でgitが壊れないこと)
+          ! grep -q delta ~/.config/git/config
+          git status
+          # apt.txt のツールが入っている
+          command -v rg fzf zoxide direnv batcat fdfind starship gh
+          # zshrcが正常にロードできる
+          timeout 30 zsh -ic 'echo zshrc-ok'
+
+  cachyos-desktop:
+    name: Apply & Verify (CachyOS / desktop profile)
+    runs-on: ubuntu-latest
+    container:
+      image: cachyos/cachyos:latest
+    env:
+      CI: "true"
+      USER: root
+    steps:
+      - name: Install prerequisites
+        run: pacman -Syu --noconfirm sudo git chezmoi
+
+      - uses: actions/checkout@v4
+
+      - name: chezmoi apply
+        run: chezmoi apply --source "$GITHUB_WORKSPACE" --verbose
+
+      - name: Verify
+        run: |
+          set -eux
+          # デスクトップ設定一式が配置されている
+          test -f ~/.zshrc
+          test -f ~/.config/hypr/hyprland.conf
+          test -f ~/.config/hypr/hypridle.conf
+          test -x ~/.config/hypr/scripts/powermenu.sh
+          test -f ~/.config/waybar/config
+          test -f ~/.config/fcitx5/config
+          test -f ~/.ssh/config
+          # delta設定が有効
+          grep -q delta ~/.config/git/config
+          # pacman.txt の全パッケージがインストールされている(名前の実在検証)
+          grep -vE '^\s*(#|$)' "$GITHUB_WORKSPACE/home/dot_config/packages/pacman.txt" | \
+            xargs pacman -Q > /dev/null
+          # 主要バイナリ
+          command -v hyprland waybar wofi fcitx5 starship zellij
+          # zshrcが正常にロードできる
+          timeout 30 zsh -ic 'echo zshrc-ok'

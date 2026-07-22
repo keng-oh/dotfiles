@@ -4,7 +4,20 @@
 set -euo pipefail
 
 echo "==> git / chezmoi をインストール"
-sudo pacman -S --needed --noconfirm git chezmoi
+if command -v pacman >/dev/null 2>&1; then
+  sudo pacman -S --needed --noconfirm git chezmoi
+elif command -v apt-get >/dev/null 2>&1; then
+  sudo apt-get update -qq
+  sudo apt-get install -y -qq git curl
+  # chezmoiはaptに無いため公式スクリプトで /usr/local/bin に導入
+  if ! command -v chezmoi >/dev/null 2>&1; then
+    sh -c "$(curl -fsSL get.chezmoi.io)" -- -b /usr/local/bin || \
+      sudo sh -c "$(curl -fsSL get.chezmoi.io)" -- -b /usr/local/bin
+  fi
+else
+  echo "!! 未対応のディストリビューションです" >&2
+  exit 1
+fi
 
 if [ ! -d "$HOME/repos/dotfiles" ]; then
   echo "==> dotfiles をクローン"

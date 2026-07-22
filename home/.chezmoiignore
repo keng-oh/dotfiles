@@ -1,0 +1,25 @@
+{{ if ne .chezmoi.osRelease.id "cachyos" }}
+# ---- デスクトップ(CachyOS)専用。サーバー等には配置しない ----
+
+# デスクトップUI・日本語入力・テーマ
+.gtkrc-2.0
+.config/hypr/**
+.config/waybar/**
+.config/wofi/**
+.config/swaync/**
+.config/fcitx5/**
+.config/gtk-3.0/**
+.config/gtk-4.0/**
+.config/wezterm/**
+.config/environment.d/**
+
+# SSH設定は1Passwordエージェント前提のためワークステーション専用
+.ssh/**
+
+# Arch専用セットアップスクリプト
+.chezmoiscripts/00-multilib.sh
+.chezmoiscripts/30-services.sh
+.chezmoiscripts/40-android-sdk.sh
+.chezmoiscripts/50-sddm-theme.sh
+.chezmoiscripts/60-dconf.sh
+{{ end }}
