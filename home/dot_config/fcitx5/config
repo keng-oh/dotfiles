@@ -21,7 +21,7 @@ ModifierOnlyKeyTimeout=250
 0=
 
 [Hotkey/AltTriggerKeys]
-0=Shift_L
+0=
 
 [Hotkey/EnumerateGroupForwardKeys]
 0=
@@ -54,7 +54,7 @@ ShareInputState=No
 # Show preedit in application
 PreeditEnabledByDefault=True
 # Show Input Method Information when switch input method
-ShowInputMethodInformation=True
+ShowInputMethodInformation=False
 # Show Input Method Information when changing focus
 showInputMethodInformationWhenFocusIn=False
 # Show compact input method information

@@ -1,8 +1,8 @@
 [
   {
     "battery": {
-      "format": "{capacity}% {icon}",
-      "format-charging": "{capacity}% 󰂄",
+      "format": "{capacity}% <span size='12pt'>{icon}</span>",
+      "format-charging": "{capacity}% <span size='12pt'>󰂄</span>",
       "format-icons": [
         "󰁺",
         "󰁼",
@@ -15,6 +15,49 @@
         "critical": 15,
         "warning": 30
       }
+    },
+    "idle_inhibitor": {
+      "format": "{icon}",
+      "format-icons": {
+        "activated": "󰅶",
+        "deactivated": "󰾪"
+      },
+      "tooltip-format-activated": "スリープ防止: 有効",
+      "tooltip-format-deactivated": "スリープ防止: 無効"
+    },
+    "custom/tailscale": {
+      "exec": "$HOME/.config/waybar/scripts/tailscale-status.sh",
+      "return-type": "json",
+      "interval": 5,
+      "format": "{}"
+    },
+    "cpu": {
+      "format": "{usage}% <span size='12pt'>󰘚</span>",
+      "interval": 3,
+      "states": {
+        "warning": 70,
+        "critical": 90
+      },
+      "on-click": "wezterm start -- btop",
+      "tooltip": false
+    },
+    "memory": {
+      "format": "{percentage}% <span size='12pt'>󰍛</span>",
+      "interval": 3,
+      "states": {
+        "warning": 70,
+        "critical": 90
+      },
+      "on-click": "wezterm start -- btop",
+      "tooltip-format": "{used:0.1f} / {total:0.1f} GiB"
+    },
+    "temperature": {
+      "format": "{temperatureC}°C <span size='12pt'>󰔏</span>",
+      "interval": 3,
+      "critical-threshold": 85,
+      "hwmon-path-abs": "/sys/devices/platform/coretemp.0/hwmon",
+      "input-filename": "temp1_input",
+      "tooltip": false
     },
     "clock": {
       "format": "{:%H:%M}",
@@ -43,34 +86,46 @@
       "tooltip": false
     },
     "height": 46,
+    "custom/window": {
+      "exec": "$HOME/.config/waybar/scripts/window-marquee.sh",
+      "escape": true,
+      "tooltip": false
+    },
     "hyprland/workspaces": {
       "format": "{id}",
       "on-click": "activate"
     },
     "layer": "top",
     "modules-center": [
-      "clock"
+      "hyprland/workspaces",
+      "custom/window"
     ],
     "modules-left": [
-      "hyprland/workspaces"
+      "battery",
+      "cpu",
+      "memory",
+      "temperature",
+      "network"
     ],
     "modules-right": [
+      "clock",
       "pulseaudio",
-      "network",
-      "battery",
       "tray",
+      "custom/tailscale",
+      "idle_inhibitor",
       "custom/notification",
       "custom/power"
     ],
     "network": {
-      "format-disconnected": "󰤭",
-      "format-ethernet": "󰈀",
-      "format-wifi": "{essid} 󰤨",
+      "interval": 3,
+      "format-disconnected": "<span size='16pt'>󰤭</span>",
+      "format-ethernet": "<span size='16pt'>󰈀</span> {bandwidthDownBytes} <span size='12pt'>󰇚</span> {bandwidthUpBytes} <span size='12pt'>󰕒</span>",
+      "format-wifi": "{essid} <span size='16pt'>󰤨</span> {bandwidthDownBytes} <span size='12pt'>󰇚</span> {bandwidthUpBytes} <span size='12pt'>󰕒</span>",
       "tooltip-format-wifi": "{signalStrength}%"
     },
     "position": "top",
     "pulseaudio": {
-      "format": "{volume}% {icon}",
+      "format": "{volume}% <span size='12pt'>{icon}</span>",
       "format-icons": {
         "default": [
           "󰕿",
@@ -78,7 +133,7 @@
           "󰕾"
         ]
       },
-      "format-muted": "󰸈",
+      "format-muted": "<span size='12pt'>󰸈</span>",
       "on-click": "pavucontrol"
     },
     "spacing": 4,

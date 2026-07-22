@@ -1,0 +1,48 @@
+* {
+  font-family: "HackGenNerd Console", monospace;
+  font-size: 15px;
+}
+
+window {
+  background-color: rgba(30, 30, 46, 0.75);
+}
+
+button {
+  color: #cdd6f4;
+  background-color: rgba(30, 30, 46, 0.92);
+  border: 2px solid #45475a;
+  border-radius: 16px;
+  margin: 14px;
+  min-width: 180px;
+  min-height: 180px;
+  background-repeat: no-repeat;
+  background-position: center 30%;
+  background-size: 28%;
+}
+
+button:focus,
+button:active,
+button:hover {
+  background-color: rgba(137, 180, 250, 0.15);
+  border-color: #89b4fa;
+}
+
+#lock {
+  background-image: image(url("/usr/share/wlogout/icons/lock.png"));
+}
+
+#logout {
+  background-image: image(url("/usr/share/wlogout/icons/logout.png"));
+}
+
+#suspend {
+  background-image: image(url("/usr/share/wlogout/icons/suspend.png"));
+}
+
+#reboot {
+  background-image: image(url("/usr/share/wlogout/icons/reboot.png"));
+}
+
+#shutdown {
+  background-image: image(url("/usr/share/wlogout/icons/shutdown.png"));
+}

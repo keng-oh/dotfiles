@@ -56,9 +56,48 @@ window#secondBar .modules-right {
 #battery,
 #network,
 #pulseaudio,
+#cpu,
+#memory,
+#temperature,
 #tray {
   padding: 0 12px;
   color: #cdd6f4;
+}
+
+#custom-window {
+  padding: 0 10px;
+  color: #a6adc8;
+}
+
+#idle_inhibitor {
+  padding: 0 10px;
+  color: #6c7086;
+  font-size: 21px;
+}
+
+#idle_inhibitor.activated {
+  color: #fab387;
+}
+
+#custom-tailscale {
+  padding: 0 10px;
+  color: #6c7086;
+  font-size: 21px;
+}
+
+#custom-tailscale.connected {
+  color: #94e2d5;
+}
+
+#cpu.warning,
+#memory.warning {
+  color: #fab387;
+}
+
+#cpu.critical,
+#memory.critical,
+#temperature.critical {
+  color: #f38ba8;
 }
 
 #battery.warning {
@@ -72,7 +111,7 @@ window#secondBar .modules-right {
 #custom-notification {
   padding: 0 12px;
   color: #cdd6f4;
-  font-size: 15px;
+  font-size: 21px;
 }
 
 #custom-notification.notification {
@@ -87,7 +126,7 @@ window#secondBar .modules-right {
 #custom-power {
   padding: 0 14px;
   color: #f38ba8;
-  font-size: 15px;
+  font-size: 21px;
   border-radius: 0 12px 12px 0;
 }
 

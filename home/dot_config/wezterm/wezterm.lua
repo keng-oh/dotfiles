@@ -17,7 +17,7 @@ config.font_size = 12.0
 
 -- デフォルトシェルをzshに設定
 local home = os.getenv('HOME')
-config.default_prog = { home .. '/.nix-profile/bin/zsh', '-l' }
+config.default_prog = { '/usr/bin/zsh', '-l' }
 
 -- フロントエンド設定（EGLエラー対策）
 config.front_end = "Software"
