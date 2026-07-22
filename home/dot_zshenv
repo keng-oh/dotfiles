@@ -1,0 +1,22 @@
+# 環境変数（全zshセッション共通）
+
+# ロケール（日本語ファイル名対応）
+export LANG=ja_JP.UTF-8
+export LC_ALL=ja_JP.UTF-8
+
+# 日本語入力（fcitx5）
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS=@im=fcitx
+export SDL_IM_MODULE=fcitx
+export GLFW_IM_MODULE=ibus
+
+# テーマ
+export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
+export QT_QPA_PLATFORMTHEME=gtk3
+
+# Flutter / Android 開発
+export ANDROID_HOME=/opt/android-sdk
+export ANDROID_SDK_ROOT=/opt/android-sdk
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+export PATH="/opt/android-sdk/cmdline-tools/latest/bin:/opt/android-sdk/platform-tools:/opt/android-sdk/emulator:$PATH"

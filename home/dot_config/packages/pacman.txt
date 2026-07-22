@@ -1,0 +1,105 @@
+# 公式 / CachyOS リポジトリのパッケージ
+# (インストール: grep -vE '^\s*(#|$)' pacman.txt | sudo pacman -S --needed -)
+
+# CLI essentials
+git
+neovim
+ripgrep
+fd
+bat
+eza
+fzf
+jq
+git-delta
+zoxide
+zellij
+htop
+btop
+curl
+wget
+tree
+github-cli
+tealdeer
+lazygit
+lazydocker
+navi
+yazi
+gnupg
+
+# シェル
+zsh
+zsh-syntax-highlighting
+zsh-autosuggestions
+starship
+direnv
+
+# 開発ツール
+nodejs-lts-jod
+npm
+python
+uv
+php
+ruby
+go
+jdk17-openjdk
+
+# Docker
+docker
+docker-compose
+
+# AI
+claude-code
+
+# dotfiles管理
+chezmoi
+
+# デスクトップアプリ
+discord
+obsidian
+blueman
+wtype
+pavucontrol
+
+# キーリング
+gnome-keyring
+libsecret
+gcr
+
+# 日本語フォント
+noto-fonts-cjk
+
+# 日本語入力
+fcitx5
+fcitx5-gtk
+fcitx5-qt
+fcitx5-mozc
+fcitx5-configtool
+
+# Hyprland エコシステム
+hyprland
+xdg-desktop-portal-hyprland
+hyprlock
+hypridle
+waybar
+wofi
+awww
+grimblast-git
+wl-clipboard
+cliphist
+brightnessctl
+playerctl
+network-manager-applet
+polkit-gnome
+swaync
+qt5-wayland
+qt6-wayland
+
+# テーマ
+adw-gtk-theme
+papirus-icon-theme
+
+# ディスプレイマネージャ
+sddm
+
+# Android 実機デバッグ
+android-udev

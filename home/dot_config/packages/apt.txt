@@ -1,0 +1,27 @@
+# Ubuntu / Debian サーバー用パッケージ(apt)
+# eza / zellij / lazygit / delta 等はUbuntu標準リポジトリに無いため未収載
+# (gitconfigのdelta設定はテンプレートでArch専用に分岐済み。
+#  starshipは公式スクリプトでインストールされる)
+
+# CLI essentials
+git
+neovim
+ripgrep
+fd-find
+bat
+fzf
+jq
+zoxide
+htop
+btop
+curl
+wget
+tree
+gh
+unzip
+
+# シェル
+zsh
+zsh-syntax-highlighting
+zsh-autosuggestions
+direnv

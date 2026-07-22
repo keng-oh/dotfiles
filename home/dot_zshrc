@@ -1,0 +1,96 @@
+# 補完
+autoload -U compinit && compinit
+
+# 自動サジェスト(Arch と Ubuntu でパスが異なる)
+for _f in /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh \
+          /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh; do
+  [ -f "$_f" ] && source "$_f" && break
+done
+ZSH_AUTOSUGGEST_STRATEGY=(history)
+
+# 履歴
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=10000
+SAVEHIST=10000
+setopt HIST_FCNTL_LOCK HIST_IGNORE_DUPS HIST_IGNORE_SPACE SHARE_HISTORY
+
+# ツール統合
+eval "$(zoxide init zsh)"
+alias cd="z"
+if fzf --zsh >/dev/null 2>&1; then
+  source <(fzf --zsh)   # fzf 0.48+ (Arch)
+elif [ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]; then
+  source /usr/share/doc/fzf/examples/key-bindings.zsh   # Ubuntuの旧fzf
+fi
+eval "$(starship init zsh)"
+eval "$(direnv hook zsh)"
+
+# yazi（終了時にカレントディレクトリを引き継ぐ）
+function yy() {
+  local tmp="$(mktemp -t "yazi-cwd.XXXXX")"
+  command yazi "$@" --cwd-file="$tmp"
+  if cwd="$(<"$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+    builtin cd -- "$cwd"
+  fi
+  rm -f -- "$tmp"
+}
+
+# ls系(ezaが無い環境では素のlsのまま)
+if command -v eza >/dev/null; then
+  alias ls="eza"
+  alias ll="eza -la"
+  alias la="eza -a"
+  alias lt="eza -T"
+else
+  alias ll="ls -la"
+  alias la="ls -a"
+fi
+
+# cat系(Ubuntuではbatのバイナリ名がbatcat)
+if command -v bat >/dev/null; then
+  alias cat="bat"
+elif command -v batcat >/dev/null; then
+  alias cat="batcat"
+  alias bat="batcat"
+fi
+
+# fd(Ubuntuではfdfind)
+if ! command -v fd >/dev/null && command -v fdfind >/dev/null; then
+  alias fd="fdfind"
+fi
+
+# git系
+alias g="git"
+alias gs="git status"
+alias ga="git add"
+alias gc="git commit"
+alias gp="git push"
+alias gl="git pull"
+alias gd="git diff"
+alias gco="git checkout"
+alias gb="git branch"
+alias glog="git log --oneline --graph --decorate"
+
+# chezmoi系
+alias cza="chezmoi apply"
+alias czd="chezmoi diff"
+alias dots="chezmoi cd"
+
+# cd系
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+
+# その他便利系
+alias c="clear"
+alias h="history"
+alias ports="sudo netstat -tulanp"
+alias update="paru -Syu"
+
+# シンタックスハイライト（最後にsourceする必要がある。ArchとUbuntuでパスが異なる）
+for _f in /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+          /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh; do
+  [ -f "$_f" ] && source "$_f" && break
+done
+unset _f
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main)
