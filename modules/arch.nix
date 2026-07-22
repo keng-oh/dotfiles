@@ -87,6 +87,7 @@
       docker
       docker-compose
       claude-desktop
+      gnome-keyring
       android-sdk-cmdline-tools-latest
       android-sdk-platform-tools
       android-sdk-build-tools

@@ -18,6 +18,7 @@
     # 開発ツール
     nodejs_22
     python311
+    uv
     php83
     ruby
     go

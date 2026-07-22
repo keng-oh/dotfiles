@@ -43,7 +43,7 @@ switch: ## 設定を適用
 	fi
 	@echo "✓ 設定を適用しました"
 
-update: ## flakeを更新して設定を適用
+update: ## flakeとAURパッケージを更新して設定を適用
 	@echo "==> flakeを更新中..."
 	@cd $(CONFIG_DIR) && nix flake update --impure
 	@echo "==> 設定を適用中..."
@@ -51,6 +51,10 @@ update: ## flakeを更新して設定を適用
 		home-manager switch --impure -b backup --flake $(FLAKE_PATH); \
 	else \
 		cd $(CONFIG_DIR) && nix run home-manager/master --impure -- switch --impure -b backup --flake $(FLAKE_PATH); \
+	fi
+	@if command -v paru >/dev/null 2>&1; then \
+		echo "==> AURパッケージ(paru)を更新中..."; \
+		paru -Syu; \
 	fi
 	@echo "✓ 更新完了"
 

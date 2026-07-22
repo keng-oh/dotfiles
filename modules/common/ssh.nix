@@ -5,6 +5,13 @@
     enable = true;
     enableDefaultConfig = false;
     settings = {
+      "github.com" = {
+        HostName = "github.com";
+        User = "git";
+        Port = 22;
+        IdentitiesOnly = true;
+        IdentityFile = "~/.ssh/github.pub";
+      };
       "pve01" = {
         HostName = "192.168.0.200";
         User = "root";
