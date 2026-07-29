@@ -11,6 +11,18 @@ window#waybar {
   color: #cdd6f4;
 }
 
+/* ホバー時に出る詳細(ツールチップ) */
+tooltip {
+  background-color: rgba(30, 30, 46, 0.96);
+  border: 2px solid #45475a;
+  border-radius: 12px;
+}
+
+tooltip label {
+  color: #cdd6f4;
+  padding: 4px;
+}
+
 /* 左・中央・右グループをそれぞれ角丸ピルに */
 .modules-left,
 .modules-center,
@@ -87,6 +99,20 @@ window#secondBar .modules-right {
 
 #custom-tailscale.connected {
   color: #94e2d5;
+}
+
+#custom-docker {
+  padding: 0 10px;
+  color: #6c7086;
+  font-size: 21px;
+}
+
+#custom-docker.running {
+  color: #89b4fa;
+}
+
+#custom-docker.error {
+  color: #f38ba8;
 }
 
 #cpu.warning,

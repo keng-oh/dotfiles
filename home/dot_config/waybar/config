@@ -31,6 +31,13 @@
       "interval": 5,
       "format": "{}"
     },
+    "custom/docker": {
+      "exec": "$HOME/.config/waybar/scripts/docker-status.sh",
+      "return-type": "json",
+      "interval": 10,
+      "format": "{}",
+      "on-click": "$HOME/.config/waybar/scripts/docker-popup.sh"
+    },
     "cpu": {
       "format": "{usage}% <span size='12pt'>󰘚</span>",
       "interval": 3,
@@ -111,6 +118,7 @@
       "clock",
       "pulseaudio",
       "tray",
+      "custom/docker",
       "custom/tailscale",
       "idle_inhibitor",
       "custom/notification",
