@@ -59,6 +59,14 @@ obsidian
 blueman
 wtype
 pavucontrol
+rpi-imager
+xorg-xhost
+
+# 内蔵カメラ(Intel IPU7 / MIPI)をlibcamera経由で使えるようにする
+libcamera
+libcamera-ipa
+libcamera-tools
+pipewire-libcamera
 
 # キーリング
 gnome-keyring
