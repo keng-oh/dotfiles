@@ -1,0 +1,26 @@
+[Unit]
+Description=rclone: Google Drive を ~/mnt/gdrive にマウント
+Documentation=https://rclone.org/commands/rclone_mount/
+After=network-online.target
+Wants=network-online.target
+# 認証情報(OAuthトークン)を含むrclone.confが必要。
+# 設定は `rclone config` で行い、リポジトリには含めない(秘匿情報のため)
+AssertPathExists=%h/.config/rclone/rclone.conf
+
+[Service]
+Type=notify
+ExecStartPre=/usr/bin/mkdir -p %h/mnt/gdrive
+ExecStart=/usr/bin/rclone mount gdrive: %h/mnt/gdrive \
+  --vfs-cache-mode full \
+  --vfs-cache-max-size 2G \
+  --vfs-cache-max-age 24h \
+  --dir-cache-time 1h \
+  --poll-interval 1m \
+  --umask 022 \
+  --log-level INFO
+ExecStop=/usr/bin/fusermount3 -u %h/mnt/gdrive
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=default.target

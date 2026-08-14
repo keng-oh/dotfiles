@@ -47,8 +47,14 @@ jdk17-openjdk
 docker
 docker-compose
 
+# クラウドストレージ(Google Drive等をFUSEマウント)
+rclone
+
 # AI
 claude-code
+
+# ターミナル
+wezterm
 
 # dotfiles管理
 chezmoi
@@ -57,6 +63,10 @@ chezmoi
 discord
 obsidian
 blueman
+
+# ファイルマネージャ(Super+Eはdolphinを起動する)
+dolphin
+nautilus
 wtype
 pavucontrol
 rpi-imager

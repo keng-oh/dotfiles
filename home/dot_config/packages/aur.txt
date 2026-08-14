@@ -7,9 +7,6 @@ visual-studio-code-bin
 # ブラウザ
 google-chrome
 
-# ターミナル
-wezterm-git
-
 # フォント
 ttf-hackgen
 
@@ -18,6 +15,7 @@ spotify
 
 # パスワード管理
 1password
+1password-cli
 
 # AI
 claude-desktop

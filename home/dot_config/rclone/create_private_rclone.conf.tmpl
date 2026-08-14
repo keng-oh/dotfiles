@@ -1,0 +1,18 @@
+{{/*
+  rcloneの設定。OAuthトークン等の秘匿情報は1Passwordから取得する。
+
+  `create_` プレフィックスにより「ファイルが無いときだけ作成」される。
+  rcloneはアクセストークン更新時にこのファイルを自分で書き換えるため、
+  通常の管理にすると毎回chezmoiと衝突する。新規マシンでの復元だけを担当させる。
+
+  1Password側に以下のアイテムが必要:
+    Vault : Private
+    Title : rclone-gdrive
+    Field : client_id / client_secret / token
+*/ -}}
+[gdrive]
+type = drive
+scope = drive
+client_id = {{ onepasswordRead "op://Private/rclone-gdrive/client_id" }}
+client_secret = {{ onepasswordRead "op://Private/rclone-gdrive/client_secret" }}
+token = {{ onepasswordRead "op://Private/rclone-gdrive/token" }}
