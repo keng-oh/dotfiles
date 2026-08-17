@@ -1,8 +1,8 @@
 [
   {
     "battery": {
-      "format": "{capacity}% <span size='12pt'>{icon}</span>",
-      "format-charging": "{capacity}% <span size='12pt'>󰂄</span>",
+      "format": "{capacity}% {icon}",
+      "format-charging": "{capacity}% 󰂄",
       "format-icons": [
         "󰁺",
         "󰁼",
@@ -38,7 +38,7 @@
       "format": "{}"
     },
     "cpu": {
-      "format": "{usage}% <span size='12pt'>󰘚</span>",
+      "format": "{usage}% 󰘚",
       "interval": 3,
       "states": {
         "warning": 70,
@@ -48,7 +48,7 @@
       "tooltip": false
     },
     "memory": {
-      "format": "{percentage}% <span size='12pt'>󰍛</span>",
+      "format": "{percentage}% 󰍛",
       "interval": 3,
       "states": {
         "warning": 70,
@@ -58,7 +58,7 @@
       "tooltip-format": "{used:0.1f} / {total:0.1f} GiB"
     },
     "temperature": {
-      "format": "{temperatureC}°C <span size='12pt'>󰔏</span>",
+      "format": "{temperatureC}°C 󰔏",
       "interval": 3,
       "critical-threshold": 85,
       "hwmon-path-abs": "/sys/devices/platform/coretemp.0/hwmon",
@@ -92,9 +92,9 @@
       "tooltip": false
     },
     "height": 46,
-    "custom/window": {
-      "exec": "$HOME/.config/waybar/scripts/window-marquee.sh",
-      "escape": true,
+    "hyprland/window": {
+      "format": "{class}",
+      "separate-outputs": false,
       "tooltip": false
     },
     "hyprland/workspaces": {
@@ -104,7 +104,7 @@
     "layer": "top",
     "modules-center": [
       "hyprland/workspaces",
-      "custom/window"
+      "hyprland/window"
     ],
     "modules-left": [
       "battery",
@@ -125,14 +125,14 @@
     ],
     "network": {
       "interval": 3,
-      "format-disconnected": "<span size='16pt'>󰤭</span>",
-      "format-ethernet": "<span size='16pt'>󰈀</span> {bandwidthDownBytes} <span size='12pt'>󰇚</span> {bandwidthUpBytes} <span size='12pt'>󰕒</span>",
-      "format-wifi": "{essid} <span size='16pt'>󰤨</span> {bandwidthDownBytes} <span size='12pt'>󰇚</span> {bandwidthUpBytes} <span size='12pt'>󰕒</span>",
+      "format-disconnected": "󰤭",
+      "format-ethernet": "󰈀 {bandwidthDownBytes} 󰇚 {bandwidthUpBytes} 󰕒",
+      "format-wifi": "{essid} 󰤨 {bandwidthDownBytes} 󰇚 {bandwidthUpBytes} 󰕒",
       "tooltip-format-wifi": "{signalStrength}%"
     },
     "position": "top",
     "pulseaudio": {
-      "format": "{volume}% <span size='12pt'>{icon}</span>",
+      "format": "{volume}% {icon}",
       "format-icons": {
         "default": [
           "󰕿",
@@ -140,7 +140,7 @@
           "󰕾"
         ]
       },
-      "format-muted": "<span size='12pt'>󰸈</span>",
+      "format-muted": "󰸈",
       "on-click": "pavucontrol"
     },
     "spacing": 4,

@@ -1,0 +1,57 @@
+* {
+  font-family: 'HackGen Console NF', monospace;
+  font-size: 17px;
+}
+
+window {
+  background-color: rgba(30, 30, 46, 0.94);
+  border: 2px solid #89b4fa;
+  border-radius: 16px;
+}
+
+#input {
+  background-color: #313244;
+  color: #cdd6f4;
+  border: none;
+  border-radius: 10px;
+  padding: 6px 12px;
+  margin: 8px 8px 6px 8px;
+  outline: none;
+}
+
+#input placeholder {
+  color: #6c7086;
+}
+
+#inner-box {
+  margin: 0 8px;
+}
+
+#outer-box {
+  padding: 4px;
+}
+
+#scroll {
+  margin: 0;
+}
+
+/* wofiは--linesとフォント高さから全体の高さを決めるため、
+   ここで余白を大きく取ると計算からはみ出して一覧がスクロールしてしまう。
+   余白は控えめにしておく */
+#entry {
+  background-color: transparent;
+  color: #cdd6f4;
+  border-radius: 10px;
+  padding: 6px 14px;
+  margin: 2px 0;
+}
+
+#entry:selected,
+#entry:hover {
+  background-color: rgba(137, 180, 250, 0.18);
+  color: #89b4fa;
+}
+
+#text {
+  color: inherit;
+}

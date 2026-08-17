@@ -53,9 +53,6 @@ rclone
 # AI
 claude-code
 
-# ターミナル
-wezterm
-
 # dotfiles管理
 chezmoi
 

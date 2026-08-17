@@ -7,6 +7,11 @@ visual-studio-code-bin
 # ブラウザ
 google-chrome
 
+# ターミナル
+# 公式リポジトリのweztermは20240203版で古く、現在のHyprlandでは
+# Waylandネイティブ起動時に無言でクラッシュするためnightlyのビルド済み版を使う
+wezterm-nightly-bin
+
 # フォント
 ttf-hackgen
 

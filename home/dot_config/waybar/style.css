@@ -1,5 +1,5 @@
 * {
-  font-family: "HackGenNerd Console", "HackGenNerd", monospace;
+  font-family: 'HackGen Console NF', monospace;
   font-size: 13px;
   min-height: 0;
   border: none;
@@ -76,7 +76,7 @@ window#secondBar .modules-right {
   color: #cdd6f4;
 }
 
-#custom-window {
+#window {
   padding: 0 10px;
   color: #a6adc8;
 }
@@ -84,7 +84,6 @@ window#secondBar .modules-right {
 #idle_inhibitor {
   padding: 0 10px;
   color: #6c7086;
-  font-size: 21px;
 }
 
 #idle_inhibitor.activated {
@@ -94,7 +93,6 @@ window#secondBar .modules-right {
 #custom-tailscale {
   padding: 0 10px;
   color: #6c7086;
-  font-size: 21px;
 }
 
 #custom-tailscale.connected {
@@ -104,7 +102,6 @@ window#secondBar .modules-right {
 #custom-docker {
   padding: 0 10px;
   color: #6c7086;
-  font-size: 21px;
 }
 
 #custom-docker.running {
@@ -137,7 +134,6 @@ window#secondBar .modules-right {
 #custom-notification {
   padding: 0 12px;
   color: #cdd6f4;
-  font-size: 21px;
 }
 
 #custom-notification.notification {
@@ -152,7 +148,6 @@ window#secondBar .modules-right {
 #custom-power {
   padding: 0 14px;
   color: #f38ba8;
-  font-size: 21px;
   border-radius: 0 12px 12px 0;
 }
 
