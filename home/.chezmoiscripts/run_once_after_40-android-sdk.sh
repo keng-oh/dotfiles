@@ -28,4 +28,13 @@ if [ -x "$AVDMANAGER" ] && [ ! -d "$HOME/.android/avd/flutter_emulator.avd" ]; t
     --path "$HOME/.android/avd/flutter_emulator.avd" \
     -n flutter_emulator \
     -k "system-images;android-36;google_apis_playstore;x86_64" >/dev/null 2>&1 || true
+
+  # avdmanagerの既定はGPU無効(ソフトウェア描画)で極端に遅いため有効化する
+  AVD_CONFIG="$HOME/.android/avd/flutter_emulator.avd/config.ini"
+  if [ -f "$AVD_CONFIG" ]; then
+    sed -i 's/^hw\.gpu\.enabled=.*/hw.gpu.enabled=yes/' "$AVD_CONFIG"
+    sed -i 's/^hw\.gpu\.mode=.*/hw.gpu.mode=host/' "$AVD_CONFIG"
+    grep -q '^hw\.gpu\.enabled=' "$AVD_CONFIG" || echo 'hw.gpu.enabled=yes' >> "$AVD_CONFIG"
+    grep -q '^hw\.gpu\.mode='    "$AVD_CONFIG" || echo 'hw.gpu.mode=host'    >> "$AVD_CONFIG"
+  fi
 fi
