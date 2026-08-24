@@ -60,6 +60,8 @@ chezmoi
 discord
 obsidian
 blueman
+vivaldi
+vivaldi-ffmpeg-codecs
 
 # ファイルマネージャ(Super+Eはdolphinを起動する)
 dolphin

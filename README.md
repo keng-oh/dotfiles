@@ -20,8 +20,15 @@ curl -fsSL https://raw.githubusercontent.com/keng-oh/dotfiles/master/init.sh | b
 
 完了後、再ログインすると Hyprland セッション + zsh が有効になります。
 
-残る手動ステップ: 1Password ログイン(SSH エージェント)、`tailscale up`、
-`gh auth login`、各アプリのログイン。
+残る手動ステップ:
+
+1. 1Password ログイン(SSH エージェント)
+2. `make switch`(初回applyは1Password未ログインで一部失敗するため)
+3. `tailscale up`
+4. `gh auth login`
+5. 各アプリのログイン
+6. `systemctl --user enable --now rclone-gdrive.service`(Google Drive マウント)
+7. `systemctl --user enable --now ntfy-client.service`(スマホ通知の購読)
 
 ## 日常的な使い方
 
@@ -64,18 +71,18 @@ dotfiles/
 
 ## キーバインド(Hyprland)
 
-| キー | 動作 |
-|------|------|
-| `SUPER + Return` | WezTerm |
-| `SUPER + R` | wofi(アプリランチャー) |
-| `SUPER + B` | Chrome |
-| `SUPER + Q` | ウィンドウを閉じる |
-| `SUPER + F` | フルスクリーン |
-| `SUPER + V` | クリップボード履歴 |
-| `SUPER + H/J/K/L` | フォーカス移動 |
-| `SUPER + SHIFT + H/J/K/L` | ウィンドウ移動 |
-| `SUPER + ALT + H/J/K/L` | ウィンドウリサイズ |
-| `SUPER + 1〜0` | ワークスペース切替 |
-| `SUPER + SHIFT + 1〜0` | ウィンドウをワークスペースへ移動 |
-| `SUPER + CTRL + L` | スクリーンロック |
-| `Print` | スクリーンショット(範囲選択) |
+| キー                      | 動作                             |
+| ------------------------- | -------------------------------- |
+| `SUPER + Return`          | WezTerm                          |
+| `SUPER + R`               | wofi(アプリランチャー)           |
+| `SUPER + B`               | Chrome                           |
+| `SUPER + Q`               | ウィンドウを閉じる               |
+| `SUPER + F`               | フルスクリーン                   |
+| `SUPER + V`               | クリップボード履歴               |
+| `SUPER + H/J/K/L`         | フォーカス移動                   |
+| `SUPER + SHIFT + H/J/K/L` | ウィンドウ移動                   |
+| `SUPER + ALT + H/J/K/L`   | ウィンドウリサイズ               |
+| `SUPER + 1〜0`            | ワークスペース切替               |
+| `SUPER + SHIFT + 1〜0`    | ウィンドウをワークスペースへ移動 |
+| `SUPER + CTRL + L`        | スクリーンロック                 |
+| `Print`                   | スクリーンショット(範囲選択)     |

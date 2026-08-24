@@ -39,3 +39,6 @@ android-sdk-cmdline-tools-latest
 android-sdk-platform-tools
 android-sdk-build-tools
 android-emulator
+
+# ntfy(スマホ通知の受信クライアント。本家ntfy.shのバイナリ版)
+ntfysh-bin

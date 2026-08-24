@@ -1,0 +1,12 @@
+# ntfyサーバーへの接続設定。
+# subscriberユーザーは1Password(Private/ntfy-subscriber)で管理し、
+# パスワードはリポジトリに含めない
+default-host: https://ntfy.ken-g.dev
+default-user: subscriber
+default-password: {{ onepasswordRead "op://Private/ntfy-subscriber/password" }}
+# コマンド未指定だとデスクトップ通知は出ないため、notify-send経由でswaync(通知センター)へ流す
+default-command: notify-send -a ntfy "$t" "$m"
+
+subscribe:
+  - topic: home-alerts
+  - topic: anisonar-alerts

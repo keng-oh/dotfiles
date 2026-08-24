@@ -14,7 +14,7 @@ install: ## 初回セットアップ
 	@bash $(CONFIG_DIR)/init.sh
 
 switch: ## 設定を適用
-	@chezmoi apply
+	@chezmoi apply -k
 	@echo "✓ 設定を適用しました"
 
 diff: ## 適用される差分を表示（適用せず）
@@ -22,7 +22,7 @@ diff: ## 適用される差分を表示（適用せず）
 
 update: ## リポジトリとパッケージを更新して設定を適用
 	@echo "==> dotfilesを更新中..."
-	@chezmoi update
+	@chezmoi update -k
 	@echo "==> パッケージ(pacman/AUR)を更新中..."
 	@paru -Syu
 	@echo "✓ 更新完了"

@@ -30,7 +30,11 @@ mkdir -p "$HOME/.config/chezmoi"
 printf 'sourceDir = "~/repos/dotfiles"\n' > "$HOME/.config/chezmoi/chezmoi.toml"
 
 echo "==> 適用(パッケージインストール・セットアップスクリプト・設定配置)"
-chezmoi apply
+# -k: 1Password未ログインなど後続の手動ステップに依存するファイル(rclone.conf等)で
+#     エラーになっても、他のファイルの適用は続行する。
+# それでも該当ファイル分のエラーで終了コードが非ゼロになるため、
+# set -e で止まらないよう結果に関わらず続行する(手動ステップ完了後にmake switchで再適用する前提)
+chezmoi apply -k || echo "!! 一部のファイルが未適用です(1Password等の手動ステップ完了後に make switch で再適用してください)" >&2
 
 if [ "$(getent passwd "$USER" | cut -d: -f7)" != "/usr/bin/zsh" ]; then
   echo "==> デフォルトシェルを /usr/bin/zsh に変更"
