@@ -85,7 +85,13 @@ alias ....="cd ../../.."
 alias c="clear"
 alias h="history"
 alias ports="sudo netstat -tulanp"
-alias update="paru -Syu"
+
+# システム更新(Arch は paru、Debian 系は apt)
+if command -v paru >/dev/null; then
+  alias update="paru -Syu"
+elif command -v apt >/dev/null; then
+  alias update="sudo apt update && sudo apt upgrade"
+fi
 
 # シンタックスハイライト（最後にsourceする必要がある。ArchとUbuntuでパスが異なる）
 for _f in /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \

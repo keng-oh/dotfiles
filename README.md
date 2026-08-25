@@ -49,7 +49,8 @@ dotfiles/
 ├── Makefile                     # 日常操作用
 ├── .chezmoiroot                 # chezmoi ソースを home/ に指定
 ├── home/                        # chezmoi ソース(~ に展開される)
-│   ├── dot_zshrc / dot_zshenv   # zsh 設定・環境変数
+│   ├── dot_zshrc                # zsh 設定
+│   ├── dot_zshenv.tmpl          # 環境変数(デスクトップ用は CachyOS 分岐)
 │   ├── private_dot_ssh/         # SSH 設定と公開鍵(秘密鍵は 1Password)
 │   ├── .chezmoiscripts/         # セットアップスクリプト(run_once / run_onchange)
 │   └── dot_config/

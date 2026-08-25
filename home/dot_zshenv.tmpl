@@ -1,8 +1,14 @@
 # 環境変数（全zshセッション共通）
 
 # ロケール（日本語ファイル名対応）
+# LC_ALLは全てのLC_*を上書きし個別指定を効かなくするため使わない
+# （aptなどの出力が日本語になりgrep/awkが空振りする原因になる）
 export LANG=ja_JP.UTF-8
-export LC_ALL=ja_JP.UTF-8
+
+{{ if eq .chezmoi.osRelease.id "cachyos" -}}
+# ---- ここから下はデスクトップ(CachyOS)専用 ----
+# サーバー・Raspberry Pi では実体が無く、JAVA_HOMEのように
+# 誤ったパスを指すと逆に壊れるため配置しない
 
 # 日本語入力（fcitx5）
 export GTK_IM_MODULE=fcitx
@@ -22,3 +28,4 @@ export ANDROID_HOME=/opt/android-sdk
 export ANDROID_SDK_ROOT=/opt/android-sdk
 export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
 export PATH="/opt/android-sdk/cmdline-tools/latest/bin:/opt/android-sdk/platform-tools:/opt/android-sdk/emulator:$PATH"
+{{ end -}}

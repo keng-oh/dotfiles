@@ -8,7 +8,8 @@ chezmoi + pacman/paru による開発環境設定リポジトリ。
 
 - `.chezmoiroot` - chezmoiのソースを `home/` に指定
 - `home/` - chezmoiソースディレクトリ(`~` に展開される)
-  - `dot_zshrc` / `dot_zshenv` - zsh設定・環境変数
+  - `dot_zshrc` / `dot_zshenv.tmpl` - zsh設定・環境変数
+    (zshenvのデスクトップ用変数はCachyOS分岐内。サーバーには`LANG`のみ配置)
   - `dot_config/hypr/` - Hyprland設定(hyprland.conf, powermenu, 壁紙スクリプト)
   - `dot_config/waybar/` `wofi/` `swaync/` - デスクトップUI設定
   - `dot_config/wezterm/` `zellij/` - ターミナル設定
