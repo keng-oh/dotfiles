@@ -20,6 +20,24 @@ Raspberry Pi OS ではなく素の Debian 13。有効なリポジトリ:
 | pkgs.tailscale.com/stable/debian | trixie | main |
 | deb.nodesource.com/node_22.x | nodistro | main (arm64) |
 
+## 接続
+
+```bash
+ssh rpi-home
+```
+
+[`private_dot_ssh/config`](../home/private_dot_ssh/config) に定義済み。
+ユーザーは `pi-user`、鍵は 1Password の `rpi-home@pi-user`
+(`rpi_home.pub` は agent 上のどの鍵を使うかを選ぶためだけに置いてある)。
+
+`HostName` は LAN の IP ではなく Tailscale の MagicDNS 名を指定してある。
+宅内・外出先のどちらからでも同じ名前で繋がり、DHCP で LAN の IP が変わっても
+壊れないため。名前が引けなくなったら `tailscale status` で現在の
+Tailscale IP / LAN IP を確認する。
+
+なお `.ssh` は [`.chezmoiignore`](../home/.chezmoiignore) で非 CachyOS には配置されない。
+この設定が入るのはデスクトップ側だけで、Pi 自身には展開されない。
+
 ## dotfiles がこの環境でどう動くか
 
 chezmoi のテンプレートは `.chezmoi.osRelease.id` が `cachyos` かどうかで分岐する。
