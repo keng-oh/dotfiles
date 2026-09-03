@@ -77,6 +77,11 @@ libcamera-ipa
 libcamera-tools
 pipewire-libcamera
 
+# ファームウェア更新(LVFS経由でBIOS/デバイスFWを更新)
+# XPS 14 のハードロックアップ調査でBIOS更新の要否を確認するために導入。
+# 詳細は doc/xps-crash-2026-08.md
+fwupd
+
 # キーリング
 gnome-keyring
 libsecret
