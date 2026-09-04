@@ -1,7 +1,6 @@
 # Ubuntu / Debian サーバー用パッケージ(apt)
-# eza / zellij / lazygit / delta 等はUbuntu標準リポジトリに無いため未収載
-# (gitconfigのdelta設定はテンプレートでArch専用に分岐済み。
-#  starshipは公式スクリプトでインストールされる)
+# eza / zellij / lazygit / delta / yazi / navi 等は apt に無いため mise で管理
+# starship は公式スクリプトでインストール(run_onchange_before_10-packages.sh.tmpl)
 
 # CLI essentials
 git
@@ -20,8 +19,43 @@ tree
 gh
 unzip
 
+# 権限昇格(init.sh が未導入環境で最初に入れる。以後 apply で維持される)
+sudo
+
 # シェル
 zsh
 zsh-syntax-highlighting
 zsh-autosuggestions
 direnv
+
+# ロケール(.zshenvがLANG=ja_JP.UTF-8を設定するため生成が必要)
+locales
+
+# mise が ruby / php をソースからビルドするための依存
+# (node と go は公式ビルド配布なので不要)
+build-essential
+autoconf
+pkg-config
+libssl-dev
+libyaml-dev
+libreadline-dev
+zlib1g-dev
+libncurses-dev
+libffi-dev
+libgdbm-dev
+libxml2-dev
+libsqlite3-dev
+libonig-dev
+libcurl4-openssl-dev
+re2c
+bison
+# php の gd / zip / sodium / gmp 拡張に必要
+# (libpng等が入ると configure が --with-external-gd を選ぶため libgd-dev も要る)
+libgd-dev
+libpng-dev
+libjpeg-dev
+libfreetype6-dev
+libwebp-dev
+libzip-dev
+libsodium-dev
+libgmp-dev

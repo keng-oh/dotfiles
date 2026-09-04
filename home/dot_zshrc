@@ -14,7 +14,14 @@ HISTSIZE=10000
 SAVEHIST=10000
 setopt HIST_FCNTL_LOCK HIST_IGNORE_DUPS HIST_IGNORE_SPACE SHARE_HISTORY
 
+# mise（Debian でのツール管理）
+[ -x "$HOME/.local/bin/mise" ] && eval "$("$HOME/.local/bin/mise" activate zsh)"
+
 # ツール統合
+# zoxideのinit内の _z_cd は本体で `cd` を呼ぶ。zshはエイリアスを関数定義時に
+# 展開するため、alias cd="z" が残ったまま再sourceすると
+# _z_cd → z → _z_cd の無限再帰になる。init前に必ずaliasを外す
+unalias cd 2>/dev/null
 eval "$(zoxide init zsh)"
 alias cd="z"
 if fzf --zsh >/dev/null 2>&1; then
@@ -22,7 +29,7 @@ if fzf --zsh >/dev/null 2>&1; then
 elif [ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]; then
   source /usr/share/doc/fzf/examples/key-bindings.zsh   # Ubuntuの旧fzf
 fi
-eval "$(starship init zsh)"
+command -v starship >/dev/null && eval "$(starship init zsh)"
 eval "$(direnv hook zsh)"
 
 # yazi（終了時にカレントディレクトリを引き継ぐ）
