@@ -19,6 +19,13 @@ Host pve01-develop
   Port 22
   User dev
 
+Host rpi-home
+  HostName rpi-home.tail0e4dda.ts.net
+  IdentitiesOnly yes
+  IdentityFile ~/.ssh/rpi_home.pub
+  Port 22
+  User pi-user
+
 Host *
   AddKeysToAgent no
   Compression no
