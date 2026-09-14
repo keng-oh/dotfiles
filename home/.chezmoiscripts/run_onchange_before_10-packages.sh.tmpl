@@ -28,9 +28,27 @@ echo "==> apt: パッケージをインストール中"
 sudo apt-get update -qq
 grep -vE '^\s*(#|$)' "$pkgdir/apt.txt" | xargs sudo apt-get install -y -qq
 
-# starship はUbuntu標準リポジトリに無いため公式スクリプトで導入
-if ! command -v starship >/dev/null 2>&1; then
+# LANG=ja_JP.UTF-8 を .zshenv で設定しているが、Debian 系は生成されていないと
+# apt や perl が毎回警告を出すため、無ければ生成する
+if ! locale -a 2>/dev/null | grep -qiE '^ja_JP\.(utf8|UTF-8)$'; then
+  echo "==> ja_JP.UTF-8 ロケールを生成中"
+  echo 'ja_JP.UTF-8 UTF-8' | sudo tee -a /etc/locale.gen >/dev/null
+  sudo locale-gen
+fi
+
+# starship はUbuntu標準リポジトリに無いため公式スクリプトで導入。
+# ~/.local/bin を直接見るのは、PATH 上に別管理(旧Nix等)の starship が
+# 残っていると「導入済み」と誤判定してスキップしてしまうため
+if [ ! -x "$HOME/.local/bin/starship" ]; then
   echo "==> starship を公式スクリプトでインストール中"
-  curl -sS https://starship.rs/install.sh | sh -s -- -y
+  curl -sS https://starship.rs/install.sh | sh -s -- -y -b "$HOME/.local/bin"
+fi
+
+# Claude Code は apt に無く、npm版はネイティブバイナリを別途落とすランチャーで
+# postinstall に依存するため、公式インストーラを使う。
+# インストーラは $HOME 配下に入れる作りなので sudo を付けてはいけない
+if [ ! -x "$HOME/.local/bin/claude" ]; then
+  echo "==> Claude Code を公式インストーラでインストール中"
+  curl -fsSL https://claude.ai/install.sh | bash
 fi
 {{- end }}

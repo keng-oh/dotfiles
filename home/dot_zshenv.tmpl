@@ -5,6 +5,21 @@
 # （aptなどの出力が日本語になりgrep/awkが空振りする原因になる）
 export LANG=ja_JP.UTF-8
 
+# ユーザーローカルのバイナリ（chezmoi・mise本体はここに入る）
+case ":$PATH:" in
+  *":$HOME/.local/bin:"*) ;;
+  *) export PATH="$HOME/.local/bin:$PATH" ;;
+esac
+
+# miseのshim（非対話シェルでもmise管理ツールを解決できるようにする。
+# 対話シェルでは.zshrcのmise activateが優先される）
+if [ -d "$HOME/.local/share/mise/shims" ]; then
+  case ":$PATH:" in
+    *":$HOME/.local/share/mise/shims:"*) ;;
+    *) export PATH="$HOME/.local/share/mise/shims:$PATH" ;;
+  esac
+fi
+
 {{ if eq .chezmoi.osRelease.id "cachyos" -}}
 # ---- ここから下はデスクトップ(CachyOS)専用 ----
 # サーバー・Raspberry Pi では実体が無く、JAVA_HOMEのように

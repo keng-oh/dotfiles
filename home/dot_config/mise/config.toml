@@ -1,0 +1,19 @@
+[tools]
+# apt に無いツール群 (非 CachyOS 環境向け)
+# CachyOS では pacman/AUR で管理するためこのスクリプトは実行されない
+delta = "latest"
+eza = "latest"
+lazydocker = "latest"
+lazygit = "latest"
+navi = "latest"
+yazi = "latest"
+zellij = "latest"
+
+# 言語ランタイム
+# CachyOS 側は pacman.txt の nodejs-lts-jod / go / ruby / php に対応
+# node と go は公式ビルド配布だが、ruby と php はソースからビルドされるため
+# 初回インストールに時間がかかる(ビルド依存は apt.txt 側で用意)
+node = "lts"
+go = "latest"
+ruby = "latest"
+php = "latest"

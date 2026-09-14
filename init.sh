@@ -3,6 +3,23 @@
 # curl -fsSL https://raw.githubusercontent.com/keng-oh/dotfiles/master/init.sh | bash
 set -euo pipefail
 
+# 以降のスクリプトはすべて sudo があることを前提にする。
+# Proxmox VE のように root が正規の管理者で sudo が入っていない環境があるため、
+# 分岐はここ1箇所に閉じ込めて最初に導入しておく。
+if ! command -v sudo >/dev/null 2>&1; then
+  if [ "$(id -u)" != "0" ]; then
+    echo "!! sudo が無く root でもないため続行できません" >&2
+    exit 1
+  fi
+  echo "==> sudo をインストール"
+  if command -v pacman >/dev/null 2>&1; then
+    pacman -S --needed --noconfirm sudo
+  elif command -v apt-get >/dev/null 2>&1; then
+    apt-get update -qq
+    apt-get install -y -qq sudo
+  fi
+fi
+
 echo "==> git / chezmoi をインストール"
 if command -v pacman >/dev/null 2>&1; then
   sudo pacman -S --needed --noconfirm git chezmoi

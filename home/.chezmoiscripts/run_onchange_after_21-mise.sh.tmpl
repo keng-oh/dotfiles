@@ -1,0 +1,21 @@
+#!/bin/bash
+# mise 本体のインストールとツールのセットアップ。
+#
+# config.toml のハッシュを埋めているのは、run_onchange がスクリプト自身の内容の
+# 変化しか見ないため。これが無いとツールを追加しても再実行されない
+# (10-packages が pacman/aur/apt の各リストに対して行っているのと同じ手法)。
+#
+# 配置後(after)に実行するのは ~/.config/mise/config.toml を読むため。
+# このファイル自体が chezmoi 管理下なので、配置前だと存在しない。
+#
+# mise/config.toml hash: {{ include "dot_config/mise/config.toml" | sha256sum }}
+set -euo pipefail
+[ -n "${CI:-}" ] && exit 0
+
+if [ ! -x "$HOME/.local/bin/mise" ]; then
+  echo "==> mise をインストール中"
+  curl -fsSL https://mise.run | sh
+fi
+
+echo "==> mise: ツールをインストール中"
+"$HOME/.local/bin/mise" install --yes

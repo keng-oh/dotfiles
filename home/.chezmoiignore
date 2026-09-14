@@ -16,10 +16,25 @@
 # SSH設定は1Passwordエージェント前提のためワークステーション専用
 .ssh/**
 
+# 1Password(op)で秘密を取得するためワークステーション専用
+# (systemdユニットもデスクトップ通知・GDriveマウント用途なので併せて除外)
+.config/ntfy/**
+.config/rclone/**
+.config/systemd/user/ntfy-client.service
+.config/systemd/user/rclone-gdrive.service
+
 # Arch専用セットアップスクリプト
 .chezmoiscripts/00-multilib.sh
 .chezmoiscripts/30-services.sh
 .chezmoiscripts/40-android-sdk.sh
 .chezmoiscripts/50-sddm-theme.sh
 .chezmoiscripts/60-dconf.sh
+{{ end }}
+
+{{ if eq .chezmoi.osRelease.id "cachyos" }}
+# ---- 非CachyOS専用。デスクトップには配置しない ----
+
+# apt環境ではmiseで補うツール群を、CachyOSではpacman/AURで管理する
+.chezmoiscripts/21-mise.sh
+.config/mise/**
 {{ end }}

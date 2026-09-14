@@ -11,6 +11,12 @@
 set -euo pipefail
 [ -n "${CI:-}" ] && exit 0
 
+# LXC などの非特権コンテナでは /sys や sysctl を書き換えられないためスキップする
+if [ -r /proc/1/environ ] && grep -qa 'container=' /proc/1/environ 2>/dev/null; then
+  echo "!! コンテナ環境のため vm tuning はスキップしました" >&2
+  exit 0
+fi
+
 # THP は sysctl では設定できないため tmpfiles 経由で /sys に書き込む
 sudo tee /etc/tmpfiles.d/99-transparent-hugepage.conf >/dev/null <<'EOF'
 w /sys/kernel/mm/transparent_hugepage/enabled - - - - madvise

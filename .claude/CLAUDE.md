@@ -1,6 +1,12 @@
 # dotfiles プロジェクト
 
-chezmoi によるマルチ環境の開発環境設定リポジトリ。
+chezmoi によるマルチ環境の開発環境設定リポジトリ。実際に配布しているのは現状2系統:
+
+- **デスクトップ**: Arch Linux (CachyOS) + Hyprland — パッケージは pacman / paru
+- **サーバー**: Debian / Ubuntu 系 (Proxmox VE ホストなど) — パッケージは apt、
+  apt に無いものは mise
+
+環境の判定は `.chezmoi.osRelease.id` が `cachyos` かどうかで行う。
 (以前は Nix + Home Manager 管理。移行中の手順は `MIGRATION.md` 参照)
 
 **単一OSを前提にしないこと。** 詳細は「実行環境の前提」を参照。
@@ -56,16 +62,20 @@ chezmoi によるマルチ環境の開発環境設定リポジトリ。
 - `.chezmoiroot` - chezmoiのソースを `home/` に指定
 - `home/` - chezmoiソースディレクトリ(`~` に展開される)
   - `dot_zshrc` / `dot_zshenv.tmpl` - zsh設定・環境変数
-    (zshenvのデスクトップ用変数はCachyOS分岐内。サーバーには`LANG`のみ配置)
+    (zshenvのデスクトップ用変数はCachyOS分岐内。サーバーには`LANG`と
+    `~/.local/bin`・mise shims の PATH のみ配置)
   - `dot_config/hypr/` - Hyprland設定(hyprland.conf, powermenu, 壁紙スクリプト)
   - `dot_config/waybar/` `wofi/` `swaync/` - デスクトップUI設定
   - `dot_config/wezterm/` `zellij/` - ターミナル設定
   - `dot_config/fcitx5/` - 日本語入力設定(コピー配置なのでfcitx5が書き込み可能)
-  - `dot_config/packages/pacman.txt` / `aur.txt` - パッケージリスト
+  - `dot_config/packages/pacman.txt` / `aur.txt` / `apt.txt` - パッケージリスト
+  - `dot_config/mise/config.toml` - mise管理ツール(サーバー用。CachyOSでは未配置)
   - `private_dot_ssh/` - SSH設定と公開鍵(秘密鍵は1Password管理でマシン上に無い)
   - `.chezmoiscripts/` - セットアップスクリプト(run_once/run_onchange)
+  - `.chezmoiignore` - **環境ごとの配置除外はすべてここに集約**
   - `.chezmoiremove` - 旧Home Manager残骸の削除リスト
 - `doc/` - メモ・調査記録
+  - `<マシン名>.md` - 配布先マシンごとの情報(下記「配布先マシン」参照)
   - `system-changes/` - リポジトリ外の変更台帳(1変更1ファイル)
   - `templates/` - 台帳エントリ・調査メモのテンプレート
 - `wallpapers/` - 壁紙(スクリプトから `~/repos/dotfiles/wallpapers` 参照)
@@ -79,7 +89,7 @@ chezmoiのソースディレクトリはこのリポジトリ自体
 
 - `make switch` (= `chezmoi apply`) - 設定を適用
 - `make diff` (= `chezmoi diff`) - 適用される差分を確認
-- `make update` - リポジトリ + パッケージ更新
+- `make update` - リポジトリ + パッケージ更新(paru前提のためCachyOS専用)
 - `make install` - 初回セットアップ(新規マシン)
 
 ## 実行環境の前提
@@ -96,6 +106,22 @@ Ubuntu / Pop!_OS、Raspberry Pi OS、macOS などが対象になりうる。
 
 これらを使う場合は、必ず分岐するか、対象外の環境では配布されないようにする。
 
+### 配布先マシン
+
+実際に dotfiles を展開しているマシンは `doc/` に1台1ファイルで記録する。
+**そのマシンで作業する前に該当ファイルを読むこと。** OS 固有の挙動だけでなく、
+「なぜこうなっているか」(意図的に管理外にしている設定など) が書いてある。
+
+| ファイル | マシン | 環境 |
+|---|---|---|
+| [`doc/proxmox.md`](../doc/proxmox.md) | `pve01` | Proxmox VE 8 / Debian 12 / amd64。自宅サーバー。root運用 |
+| [`doc/raspberrypi.md`](../doc/raspberrypi.md) | `rpi-home` | Debian 13 trixie / arm64 |
+
+デスクトップ (CachyOS) は本ファイルが前提にしている環境なので個別ファイルは無い。
+新しいマシンに展開したら、ここに1行足して `doc/<マシン名>.md` を作る。
+書く内容は「そのマシンで dotfiles がどう振る舞うか」と「ハマりどころ」に絞り、
+**そのマシンの上で動かしているサービスの構成は書かない**(このリポジトリの管轄外)。
+
 ### 分岐の仕組み
 
 | 手段 | 用途 |
@@ -107,7 +133,8 @@ Ubuntu / Pop!_OS、Raspberry Pi OS、macOS などが対象になりうる。
 現状の分岐は **「cachyos」か「それ以外」** の2分岐しかない。
 `.chezmoiignore` は非 cachyos に対してデスクトップUI・`.ssh`・Arch専用スクリプトを除外し、
 `run_onchange_before_10-packages.sh.tmpl` は cachyos なら pacman/paru、
-それ以外は apt を使う。
+それ以外は apt を使う。どちらにどう書き分けるかの方針は
+「環境ごとの分岐の書き方」を参照。
 
 ### 既知の制約
 
@@ -122,10 +149,11 @@ Ubuntu / Pop!_OS、Raspberry Pi OS、macOS などが対象になりうる。
 ## 編集時の注意
 
 - 設定ファイルの編集は `home/` 以下のソースを直接編集し、`chezmoi apply` で反映
-- パッケージ追加は対象OSのリストに追記する(下記「実行環境の前提」参照)
+- パッケージ追加は対象OSのリストに追記する(上記「実行環境の前提」参照)
   - Arch系: `pacman.txt`(公式)/ `aur.txt`(AUR)
-  - Debian系: `apt.txt`
-  - リスト変更時は apply で自動インストールされる(`run_onchange_before_10-packages.sh.tmpl`)
+  - Debian系: `apt.txt`。apt に無いものは `dot_config/mise/config.toml`
+  - リスト変更時は apply で自動インストールされる
+    (`run_onchange_before_10-packages.sh.tmpl` / `run_onchange_after_21-mise.sh.tmpl`)
   - 追加前に実在確認すること(`paru -Si <名前>` / `apt-cache show <名前>`)
 - `home/` 内のファイル名はchezmoi規約(`dot_` = `.`、`executable_` = 実行可能、
   `private_` = パーミッション制限)
@@ -158,9 +186,39 @@ chezmoi で管理できない場所(`/etc/` 配下、bootloader設定、systemd�
 
 ## パッケージ管理の方針
 
-- Arch系: 公式リポジトリ(CachyOS含む)にあるものは `pacman.txt`、AURのみは `aur.txt`
-- Debian系: `apt.txt`。標準リポジトリに無いものは公式スクリプト
-  (starship がこの例。`run_onchange_before_10-packages.sh.tmpl` 内で処理)
-- Tailscaleのみ公式インストールスクリプト経由(`run_once_after_20-tailscale.sh`)
+- **Arch系**: 公式リポジトリ(CachyOS含む)にあるものは `pacman.txt`、AURのみは `aur.txt`
+- **Debian系**: `apt.txt`。apt に無い CLI ツール(eza / zellij / lazygit /
+  lazydocker / delta / navi / yazi)と言語ランタイム(node / go / ruby / php)は
+  mise で管理する
+- 公式インストールスクリプト経由のもの:
+  - Tailscale(`run_once_after_20-tailscale.sh`。systemd/root統合が必要なため)
+  - starship と Claude Code(`run_onchange_before_10-packages.sh.tmpl` の apt 分岐。
+    npm版 Claude Code は postinstall 依存のランチャーなので使わない)
 - Android SDKは `/opt/android-sdk` にAURパッケージで配置し、
   初期化は `run_once_after_40-android-sdk.sh` が行う
+
+## 環境ごとの分岐の書き方
+
+**配置するかどうかの分岐は `.chezmoiignore` に書き、スクリプト内に
+OS判定を重複させない。** 両方に書くと片方だけ直したときにスクリプトが
+黙って何もしない状態になる。
+
+`.chezmoiignore` は2ブロック構成:
+
+- `{{ if ne ... "cachyos" }}` — デスクトップ専用のものをサーバーから除外
+  (Hyprland / waybar / fcitx5 等、`.ssh/**`、ntfy・rclone、Arch専用スクリプト)
+- `{{ if eq ... "cachyos" }}` — サーバー専用のものをデスクトップから除外
+  (mise関連)
+
+スクリプト内のテンプレート分岐は、**同一スクリプト内で処理内容が分かれる場合のみ**
+使う(例: `10-packages` の pacman 分岐と apt 分岐)。
+
+## sudo の扱い
+
+Proxmox VE のように **root が正規の管理者で sudo が入っていない**環境がある。
+分岐を各所に持たせず、`init.sh` の冒頭で sudo が無ければ導入し、
+以降のスクリプトはすべて `sudo` があることを前提に書く
+(`apt.txt` にも `sudo` を入れて維持する)。
+
+例外は Claude Code の公式インストーラで、`$HOME` 配下に入れる作りのため
+sudo を付けてはいけない。
