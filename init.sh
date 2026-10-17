@@ -43,8 +43,10 @@ if [ ! -d "$HOME/repos/dotfiles" ]; then
 fi
 
 echo "==> chezmoi のソースディレクトリを設定"
-mkdir -p "$HOME/.config/chezmoi"
-printf 'sourceDir = "~/repos/dotfiles"\n' > "$HOME/.config/chezmoi/chezmoi.toml"
+mkdir -p "$HOME/.config/chezmoi" "$HOME/.cache/chezmoi"
+# tempDir: /tmp が tmpfs だと ~ とファイルシステムが分かれ、
+#          chezmoi edit のハードリンクが張れない(chezmoi doctor が error になる)
+printf 'sourceDir = "~/repos/dotfiles"\ntempDir = "~/.cache/chezmoi"\n' > "$HOME/.config/chezmoi/chezmoi.toml"
 
 echo "==> 適用(パッケージインストール・セットアップスクリプト・設定配置)"
 # -k: 1Password未ログインなど後続の手動ステップに依存するファイル(rclone.conf等)で
