@@ -20,6 +20,12 @@ if [ -d "$HOME/.local/share/mise/shims" ]; then
   esac
 fi
 
+# エディタ（chezmoi edit / git commit などが参照する。未設定だと vi を探す）
+if command -v nvim >/dev/null; then
+  export EDITOR=nvim
+  export VISUAL=nvim
+fi
+
 {{ if eq .chezmoi.osRelease.id "cachyos" -}}
 # ---- ここから下はデスクトップ(CachyOS)専用 ----
 # サーバー・Raspberry Pi では実体が無く、JAVA_HOMEのように
