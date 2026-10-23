@@ -41,6 +41,9 @@ fi
 # 残っていると「導入済み」と誤判定してスキップしてしまうため
 if [ ! -x "$HOME/.local/bin/starship" ]; then
   echo "==> starship を公式スクリプトでインストール中"
+  # 新規マシンでは ~/.local/bin がまだ無く、インストーラが
+  # "does not appear to be a directory" で失敗して後続の Claude Code 導入まで止まる
+  mkdir -p "$HOME/.local/bin"
   curl -sS https://starship.rs/install.sh | sh -s -- -y -b "$HOME/.local/bin"
 fi
 
