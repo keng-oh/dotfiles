@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# claude-rc: run `claude remote-control` in a zellij session, or reattach to it.
+#
+#   claude-rc [name] [dir]
+#     name  zellij session name (default: basename of dir)
+#     dir   working directory   (default: current directory)
+#
+#   CLAUDE_RC_MODE  permission mode for spawned sessions (default: auto)
+#
+# Detach from zellij and the server keeps running; `claude-rc <name>` reattaches.
+# The session does not survive a reboot.
+set -euo pipefail
+
+for cmd in zellij claude; do
+  if ! command -v "$cmd" >/dev/null 2>&1; then
+    echo "claude-rc: $cmd not found" >&2
+    exit 1
+  fi
+done
+
+dir="$(cd "${2:-.}" && pwd)"
+name="${1:-$(basename "$dir")}"
+mode="${CLAUDE_RC_MODE:-auto}"
+
+# The initial command runs only when the session is created; otherwise this just attaches
+cd "$dir"
+exec zellij attach --create "$name" -- \
+  claude remote-control --name "$(hostname -s)-$name" --permission-mode "$mode"
