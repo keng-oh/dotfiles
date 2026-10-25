@@ -33,9 +33,17 @@ dir="$(cd "${2:-.}" && pwd)"
 name="${1:-$(basename "$dir")}"
 mode="${CLAUDE_RC_MODE:-auto}"
 
-if zellij list-sessions --short 2>/dev/null | grep -qxF "$name"; then
+# running / exited / "" (none). Exited sessions are still listed by zellij.
+# (list-sessions exits non-zero when there are no sessions at all)
+state="$(zellij list-sessions --no-formatting 2>/dev/null |
+  awk -v n="$name" '$1 == n { print (/EXITED/ ? "exited" : "running") }' || true)"
+
+if [ "$state" = running ]; then
   echo "claude-rc: session '$name' is already running"
 else
+  if [ "$state" = exited ]; then
+    zellij delete-session "$name" >/dev/null
+  fi
   # The session inherits the current directory
   cd "$dir"
   zellij attach --create-background "$name" -- \
