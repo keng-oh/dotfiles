@@ -1,15 +1,26 @@
 #!/usr/bin/env bash
-# claude-rc: run `claude remote-control` in a zellij session, or reattach to it.
+# claude-rc: run `claude remote-control` in a background zellij session.
 #
-#   claude-rc [name] [dir]
+#   claude-rc [-d] [name] [dir]
+#     -d    start only; do not attach
 #     name  zellij session name (default: basename of dir)
 #     dir   working directory   (default: current directory)
 #
 #   CLAUDE_RC_MODE  permission mode for spawned sessions (default: auto)
 #
-# Detach from zellij and the server keeps running; `claude-rc <name>` reattaches.
-# The session does not survive a reboot.
+# Starts the session if it is not running, then attaches when run from a terminal.
+# Without a terminal (or with -d) it only starts it. Detach from zellij and the
+# server keeps running; `claude-rc <name>` reattaches. Does not survive a reboot.
 set -euo pipefail
+
+# Non-interactive shells may lack these (claude: ~/.local/bin, zellij: mise)
+PATH="$HOME/.local/bin:$HOME/.local/share/mise/shims:$PATH"
+
+detach=false
+if [ "${1:-}" = "-d" ]; then
+  detach=true
+  shift
+fi
 
 for cmd in zellij claude; do
   if ! command -v "$cmd" >/dev/null 2>&1; then
@@ -22,7 +33,16 @@ dir="$(cd "${2:-.}" && pwd)"
 name="${1:-$(basename "$dir")}"
 mode="${CLAUDE_RC_MODE:-auto}"
 
-# The initial command runs only when the session is created; otherwise this just attaches
-cd "$dir"
-exec zellij attach --create "$name" -- \
-  claude remote-control --name "$(hostname -s)-$name" --permission-mode "$mode"
+if zellij list-sessions --short 2>/dev/null | grep -qxF "$name"; then
+  echo "claude-rc: session '$name' is already running"
+else
+  # The session inherits the current directory
+  cd "$dir"
+  zellij attach --create-background "$name" -- \
+    claude remote-control --name "$(hostname -s)-$name" --permission-mode "$mode"
+  echo "claude-rc: started session '$name' in $dir"
+fi
+
+if ! $detach && [ -t 0 ] && [ -t 1 ]; then
+  exec zellij attach "$name"
+fi
