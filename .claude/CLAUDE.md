@@ -74,6 +74,10 @@ chezmoi によるマルチ環境の開発環境設定リポジトリ。実際に
   - `dot_claude/modify_settings.json` - `~/.claude/settings.json` に全マシン共通の
     `permissions.deny` を足し込む modify スクリプト。Claude Code 自身も書き換えるファイルなので
     丸ごとは管理しない。足すだけで、ここから消しても配布先からは消えない
+  - `dot_claude/CLAUDE.md` - 全プロジェクト共通の作業ルール(ユーザーメモリ)。
+    このリポジトリ固有のことは書かず、本ファイルに書く
+  - `dot_claude/rules/` - ファイル種別ごとの規約(`paths:` に合うファイルを触ったときだけ読まれる)
+  - `dot_claude/output-styles/` - 出力スタイル。既定では使わず、`/config` で選んだときだけ有効
   - `dot_claude/skills/` - Claude Code のユーザー skill(全環境に配布)
     - `issue-*` / `wiki-tidy` - GitHub ISSUE ドリブン開発用。共通規約とスクリプトは
       `dot_claude/issue-flow/`(`conventions.md` が仕様の正)
