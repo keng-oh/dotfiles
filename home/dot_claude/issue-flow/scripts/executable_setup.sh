@@ -27,7 +27,15 @@ labels() {
 project() {
 	has_project_scope || [ $? -eq 2 ] || die "gh に project スコープが無い。ユーザーに gh auth refresh -s project を実行してもらう"
 
-	if ! load_project; then
+	rc=0
+	load_project || rc=$?
+	case $rc in
+	0) printf '使う Project: #%s「%s」\n' "$PROJECT_NUMBER" "$PROJECT_TITLE" ;;
+	1) ;;
+	*) die "$(project_error_message "$rc")" ;;
+	esac
+	if [ "$rc" -eq 1 ]; then
+		PROJECT_TITLE=$NAME
 		created=$(gh project create --owner "$OWNER" --title "$NAME" --format json)
 		PROJECT_NUMBER=$(printf '%s' "$created" | jq -r .number)
 		PROJECT_ID=$(printf '%s' "$created" | jq -r .id)

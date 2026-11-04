@@ -44,7 +44,7 @@ else
 	case $? in
 	1) row NG "gh スコープ" "project が無い。gh auth refresh -s project が必要" ;;
 	*)
-		row WARN "gh スコープ" "判定できない(環境変数のトークン?)。Project の確認で代用する"
+		row WARN "gh スコープ" "一覧が出ないトークン(fine-grained・環境変数など)。Project の確認で代用する"
 		project_ok=1
 		;;
 	esac
@@ -63,16 +63,18 @@ fi
 
 # ---- Project ----
 if [ "$project_ok" -eq 1 ]; then
-	if load_project; then
+	rc=0
+	load_project || rc=$?
+	if [ "$rc" -eq 0 ]; then
 		if load_status_field && status_options_ok; then
-			row OK "Project" "#$PROJECT_NUMBER「$NAME」Status 選択肢も規約どおり"
+			row OK "Project" "#$PROJECT_NUMBER「$PROJECT_TITLE」Status 選択肢も規約どおり"
 		elif [ -n "${STATUS_FIELD_ID:-}" ]; then
-			row NG "Project" "#$PROJECT_NUMBER の Status 選択肢が規約と違う: $(printf '%s' "$STATUS_OPTIONS" | jq -r '[.[].name] | join(", ")')"
+			row NG "Project" "#$PROJECT_NUMBER「$PROJECT_TITLE」の Status 選択肢が規約と違う: $(printf '%s' "$STATUS_OPTIONS" | jq -r '[.[].name] | join(", ")')"
 		else
-			row NG "Project" "#$PROJECT_NUMBER に Status フィールドが無い"
+			row NG "Project" "#$PROJECT_NUMBER「$PROJECT_TITLE」に Status フィールドが無い"
 		fi
 	else
-		row NG "Project" "リポジトリに link された「$NAME」という Project が無い"
+		row NG "Project" "$(project_error_message "$rc")"
 	fi
 else
 	row NG "Project" "スコープ不足で確認できない"

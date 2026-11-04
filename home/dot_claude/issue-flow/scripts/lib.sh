@@ -75,17 +75,40 @@ has_project_scope() {
 	printf '%s' "$_scopes" | grep -q "'project'"
 }
 
-# リポジトリに link された Project のうち、タイトルがリポジトリ名と一致するものを探す。
-# 見つかれば PROJECT_ID と PROJECT_NUMBER を設定して 0 を返す。
+# リポジトリに link された Project を探す。開いている Project が1つだけならそれを、
+# 複数あればタイトルがリポジトリ名と一致するものを使う。
+# 見つかれば PROJECT_ID / PROJECT_NUMBER / PROJECT_TITLE を設定する。
+#   0: 見つかった  1: 無い  2: トークンの権限不足などで読めない  3: 複数あって決められない
 load_project() {
-	_nodes=$(gh api graphql \
+	_res=$(gh api graphql \
 		-f query='query($o:String!,$r:String!){repository(owner:$o,name:$r){projectsV2(first:50){nodes{id number title closed}}}}' \
-		-F o="$OWNER" -F r="$NAME" \
-		--jq '.data.repository.projectsV2.nodes' 2>/dev/null) || return 1
-	_hit=$(printf '%s' "$_nodes" | jq -c --arg t "$NAME" '[.[] | select(.title == $t and (.closed | not))][0] // empty')
-	[ -n "$_hit" ] || return 1
+		-F o="$OWNER" -F r="$NAME" 2>/dev/null) || true
+	# 権限が無い Project は null になり errors に FORBIDDEN が入る
+	if [ -z "$_res" ] || printf '%s' "$_res" | jq -e '(.errors // []) | length > 0' >/dev/null; then
+		PROJECT_ERROR=$(printf '%s' "$_res" | jq -r '[.errors[]?.message] | unique | join("; ")' 2>/dev/null)
+		return 2
+	fi
+	_open=$(printf '%s' "$_res" | jq -c '[.data.repository.projectsV2.nodes[] | select(. != null and (.closed | not))]')
+	case $(printf '%s' "$_open" | jq length) in
+	0) return 1 ;;
+	1) _hit=$(printf '%s' "$_open" | jq -c '.[0]') ;;
+	*)
+		_hit=$(printf '%s' "$_open" | jq -c --arg t "$NAME" '[.[] | select(.title == $t)][0] // empty')
+		[ -n "$_hit" ] || return 3
+		;;
+	esac
 	PROJECT_ID=$(printf '%s' "$_hit" | jq -r .id)
 	PROJECT_NUMBER=$(printf '%s' "$_hit" | jq -r .number)
+	PROJECT_TITLE=$(printf '%s' "$_hit" | jq -r .title)
+}
+
+# load_project の失敗理由を人に読める文にする
+project_error_message() {
+	case $1 in
+	1) printf 'リポジトリに link された Project が無い' ;;
+	2) printf 'Project を読めない(トークンの権限不足: %s)。classic なら gh auth refresh -s project、fine-grained トークンなら Projects の権限を付ける' "${PROJECT_ERROR:-不明}" ;;
+	3) printf 'link された Project が複数あり、どれを使うか決められない(どれかのタイトルを「%s」にする)' "$NAME" ;;
+	esac
 }
 
 # Project の Status フィールドを読み込む: STATUS_FIELD_ID と STATUS_OPTIONS (JSON 配列)

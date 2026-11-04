@@ -26,7 +26,9 @@ load_repo
 # ---- 先に Project 側の前提を全部確認する ----
 fix="issue-setup skill で初期化してから再実行する"
 has_project_scope || [ $? -eq 2 ] || die "gh に project スコープが無い。$fix"
-load_project || die "リポジトリに link された Project「$NAME」が無い。$fix"
+rc=0
+load_project || rc=$?
+[ "$rc" -eq 0 ] || die "$(project_error_message "$rc")。$fix"
 load_status_field || die "Project #$PROJECT_NUMBER に Status フィールドが無い。$fix"
 option_id=$(printf '%s' "$STATUS_OPTIONS" | jq -r --arg n "$option_name" '.[] | select(.name == $n) | .id')
 [ -n "$option_id" ] || die "Project の Status に「$option_name」が無い。$fix"
