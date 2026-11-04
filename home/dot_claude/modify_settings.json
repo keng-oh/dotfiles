@@ -23,13 +23,15 @@ deny='[
   "Read(.env.*)",
   "Read(./secrets/**)",
   "Read(~/.ssh/**)",
-  "Read(~/.aws/**)"
+  "Read(~/.aws/**)",
+  "Bash(wget:*)"
 ]'
 
 # 全マシンで揃える設定。apply のたびにこの値で上書きする
 # (/config などで変えても戻る。変えたいときはここを直す)。
 # オブジェクト(env)は中身をマージするので、マシン固有の env は消えない。
 settings='{
+  "autoUpdates": true,
   "language": "japanese",
   "env": {
     "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "70"
