@@ -71,6 +71,9 @@ chezmoi によるマルチ環境の開発環境設定リポジトリ。実際に
   - `dot_config/packages/pacman.txt` / `aur.txt` / `apt.txt` - パッケージリスト
   - `dot_config/mise/config.toml` - mise管理ツール(サーバー用。CachyOSでは未配置)
   - `private_dot_ssh/` - SSH設定と公開鍵(秘密鍵は1Password管理でマシン上に無い)
+  - `dot_claude/modify_settings.json` - `~/.claude/settings.json` に全マシン共通の
+    `permissions.deny` を足し込む modify スクリプト。Claude Code 自身も書き換えるファイルなので
+    丸ごとは管理しない。足すだけで、ここから消しても配布先からは消えない
   - `dot_claude/skills/` - Claude Code のユーザー skill(全環境に配布)
     - `issue-*` / `wiki-tidy` - GitHub ISSUE ドリブン開発用。共通規約とスクリプトは
       `dot_claude/issue-flow/`(`conventions.md` が仕様の正)

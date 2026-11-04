@@ -1,0 +1,36 @@
+#!/bin/sh
+# ~/.claude/settings.json に、全マシン共通の拒否ルールだけを足し込む。
+#
+# settings.json は Claude Code 自身も書き換える(model・theme・承認したコマンドなど)ため、
+# ファイル丸ごとは管理しない。chezmoi の modify_ スクリプトとして、現在の内容を標準入力で
+# 受け取り、permissions.deny に下記を(重複なく)加えたものを標準出力に返す。
+# それ以外のキーには触れない。
+#
+# 注意: ここから行を消しても、配布済みの settings.json からは消えない(足すだけ)。
+#       撤去するときは各マシンの settings.json から手で消す。
+
+# gh の認証は人間だけが行う。Claude がスコープを足したり、トークンを読み出したり、
+# アカウントを切り替えたりしないようにする。
+deny='[
+  "Bash(gh auth login:*)",
+  "Bash(gh auth refresh:*)",
+  "Bash(gh auth token:*)",
+  "Bash(gh auth switch:*)",
+  "Bash(gh auth setup-git:*)",
+  "Read(~/.config/gh/**)",
+  "Edit(~/.config/gh/**)"
+]'
+
+current=$(cat)
+
+if ! command -v jq >/dev/null 2>&1; then
+	# jq がまだ無い(初回セットアップ直後など)。壊さないよう現状をそのまま返す
+	printf '%s' "$current"
+	exit 0
+fi
+
+[ -n "$current" ] || current='{}'
+
+printf '%s' "$current" | jq --argjson d "$deny" '
+	.permissions.deny = ((.permissions.deny // []) + ($d - (.permissions.deny // [])))
+'

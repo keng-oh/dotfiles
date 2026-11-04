@@ -32,7 +32,9 @@ description: GitHub ISSUE ドリブン開発(issue-flow)の前提を確認し、
    | Wiki | 下記「Wiki の準備」 |
 
    ユーザーに実行してもらうコマンドは、`! <コマンド>` の形でこのセッションから
-   実行できることも伝える。
+   実行できることも伝える。**`gh auth` 系は Claude が実行してはいけない**
+   (settings.json の deny で禁止している)。スコープの追加はユーザーの判断で行うもの。
+   必要なスコープは `project` だけで、それ以上を求めない。
 
 3. **テスト・lint の実行方法**を特定する。CLAUDE.md、Makefile、package.json、
    pyproject.toml、Cargo.toml、CI の設定(`.github/workflows/`)などから探す。
