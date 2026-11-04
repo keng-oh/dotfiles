@@ -1,5 +1,5 @@
 #!/bin/sh
-# ~/.claude/settings.json に、全マシン共通の拒否ルールだけを足し込む。
+# ~/.claude/settings.json に、全マシン共通の設定と拒否ルールだけを足し込む。
 #
 # settings.json は Claude Code 自身も書き換える(model・theme・承認したコマンドなど)ため、
 # ファイル丸ごとは管理しない。chezmoi の modify_ スクリプトとして、現在の内容を標準入力で
@@ -18,8 +18,25 @@ deny='[
   "Bash(gh auth switch:*)",
   "Bash(gh auth setup-git:*)",
   "Read(~/.config/gh/**)",
-  "Edit(~/.config/gh/**)"
+  "Edit(~/.config/gh/**)",
+  "Read(.env)",
+  "Read(.env.*)",
+  "Read(./secrets/**)",
+  "Read(~/.ssh/**)",
+  "Read(~/.aws/**)"
 ]'
+
+# 全マシンで揃える設定。apply のたびにこの値で上書きする
+# (/config などで変えても戻る。変えたいときはここを直す)。
+# オブジェクト(env)は中身をマージするので、マシン固有の env は消えない。
+settings='{
+  "language": "japanese",
+  "env": {
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "70"
+  },
+  "showTurnDuration": true,
+  "spinnerTipsEnabled": false
+}'
 
 current=$(cat)
 
@@ -31,6 +48,7 @@ fi
 
 [ -n "$current" ] || current='{}'
 
-printf '%s' "$current" | jq --argjson d "$deny" '
-	.permissions.deny = ((.permissions.deny // []) + ($d - (.permissions.deny // [])))
+printf '%s' "$current" | jq --argjson d "$deny" --argjson s "$settings" '
+	(. * $s)
+	| .permissions.deny = ((.permissions.deny // []) + ($d - (.permissions.deny // [])))
 '
