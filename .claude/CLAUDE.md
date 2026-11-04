@@ -99,7 +99,7 @@ chezmoiのソースディレクトリはこのリポジトリ自体
 
 - `make switch` (= `chezmoi apply`) - 設定を適用
 - `make diff` (= `chezmoi diff`) - 適用される差分を確認
-- `make update` - リポジトリ + パッケージ更新(paru前提のためCachyOS専用)
+- `make update` - リポジトリ + パッケージ更新(CachyOS は paru、Debian/Ubuntu 系は apt + mise)
 - `make install` - 初回セットアップ(新規マシン)
 
 ## 実行環境の前提

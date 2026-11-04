@@ -23,8 +23,22 @@ diff: ## 適用される差分を表示（適用せず）
 update: ## リポジトリとパッケージを更新して設定を適用
 	@echo "==> dotfilesを更新中..."
 	@chezmoi update -k
-	@echo "==> パッケージ(pacman/AUR)を更新中..."
-	@paru -Syu
+	@# 配布先はCachyOS(paru)とDebian/Ubuntu系(apt + mise)の2系統。
+	@# OSではなくコマンドの有無で判定し、どちらも無ければ失敗させる
+	@if command -v paru >/dev/null 2>&1; then \
+		echo "==> パッケージ(pacman/AUR)を更新中..."; \
+		paru -Syu; \
+	elif command -v apt-get >/dev/null 2>&1; then \
+		echo "==> パッケージ(apt)を更新中..."; \
+		sudo apt-get update && sudo apt-get upgrade; \
+		if [ -x "$(HOME)/.local/bin/mise" ]; then \
+			echo "==> mise管理ツールを更新中..."; \
+			"$(HOME)/.local/bin/mise" upgrade --yes; \
+		fi; \
+	else \
+		echo "!! 未対応のパッケージマネージャです(paru / apt-get が見つかりません)" >&2; \
+		exit 1; \
+	fi
 	@echo "✓ 更新完了"
 
 doctor: ## chezmoiの状態を診断

@@ -35,7 +35,7 @@ curl -fsSL https://raw.githubusercontent.com/keng-oh/dotfiles/master/init.sh | b
 ```bash
 make switch    # 設定を適用(= chezmoi apply)
 make diff      # 適用される差分を確認(= chezmoi diff)
-make update    # リポジトリ + パッケージ(pacman/AUR)更新
+make update    # リポジトリ + パッケージ更新(paru または apt + mise)
 make doctor    # chezmoi の状態診断
 ```
 
