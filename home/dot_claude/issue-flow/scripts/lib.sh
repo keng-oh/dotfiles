@@ -15,6 +15,7 @@ status:in-progress|1d76db|実装中
 status:in-review|5319e7|PR のレビュー待ち (issue-review)
 status:approved|c2e0c6|レビュー通過。人間のマージ待ち
 status:blocked|b60205|GitHub の外の要因で停止中 (理由はコメント)
+flow:running|ffffff|issue-run が担当エージェントを起動中 (二重起動の防止)
 priority:critical|b60205|すぐ対応する
 priority:high|d93f0b|次にやる
 priority:medium|fbca04|そのうちやる

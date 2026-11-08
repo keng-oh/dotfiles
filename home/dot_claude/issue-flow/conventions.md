@@ -1,7 +1,7 @@
 # issue-flow 共通規約
 
 GitHub ISSUE を軸に開発を進める skill 群(`issue-setup` / `issue-roadmap` / `issue-plan` /
-`issue-refine` / `issue-implement` / `issue-review` / `wiki-tidy`)が共有する決まり。
+`issue-refine` / `issue-implement` / `issue-review` / `issue-run` / `wiki-tidy`)が共有する決まり。
 各 skill は最初にこのファイルを読む。
 
 スクリプトは `~/.claude/issue-flow/scripts/` にある(以下 `$S` と書く)。
@@ -59,6 +59,7 @@ gh issue view <N> --json title,body,labels,parent,subIssues,blockedBy,comments
 | 優先度 | `priority:critical`(すぐ対応)/ `priority:high`(次にやる)/ `priority:medium`(そのうち)/ `priority:low`(余裕があれば) |
 | 種別 | `bug` / `enhancement` / `documentation`(GitHub 既定)/ `chore` / `refactor` / `epic` |
 | サイズ | `size:S`(1セッション)/ `size:M`(数セッション)/ `size:L`(分割を検討) |
+| 自動実行 | `flow:running`(`issue-run` がエージェントを起動中。付け外しは `issue-run` だけが行う) |
 
 個別 ISSUE には状態・優先度・種別を必ず1つずつ付ける。サイズは refine が付ける。
 
