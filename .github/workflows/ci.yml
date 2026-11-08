@@ -16,11 +16,14 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install chezmoi
-        # get.chezmoi.io がときどき 504 を返すため、リトライし、だめなら GitHub 上の同じスクリプトを使う
+        # get.chezmoi.io のインストーラは 504 で落ちることが続いたため、
+        # GitHub Releases の .deb を認証付きの gh で直接取得する
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          script=$(curl -fsSL --retry 3 --retry-all-errors https://get.chezmoi.io) ||
-            script=$(curl -fsSL --retry 3 --retry-all-errors https://raw.githubusercontent.com/twpayne/chezmoi/master/assets/scripts/install.sh)
-          sh -c "$script" -- -b /usr/local/bin
+          gh release download --repo twpayne/chezmoi --pattern 'chezmoi_*_linux_amd64.deb' --dir "$RUNNER_TEMP"
+          sudo dpkg -i "$RUNNER_TEMP"/chezmoi_*_linux_amd64.deb
+          chezmoi --version
 
       - name: chezmoi apply
         run: chezmoi apply --source "$GITHUB_WORKSPACE" --verbose
