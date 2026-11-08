@@ -3,7 +3,7 @@
 # Project の Status フィールドの更新を一括で行い、両者がずれないようにする。
 #
 #   set-status.sh <ISSUE番号> <状態>
-#   状態: triage | needs-refine | ready | in-progress | in-review | approved | blocked
+#   状態: triage | needs-refine | needs-approval | ready | in-progress | in-review | approved | blocked
 #
 # Project 側の前提(スコープ・Project・Status 選択肢)が揃っていなければ、
 # ラベルにも触れずに終了する(片方だけ変わるのを防ぐ)。
@@ -16,7 +16,7 @@ st=$2
 
 line=$(issue_flow_statuses | grep "^$st|" || true)
 [ -n "$line" ] && [ "$st" != done ] ||
-	die "不明な状態: $st (triage|needs-refine|ready|in-progress|in-review|approved|blocked)"
+	die "不明な状態: $st (triage|needs-refine|needs-approval|ready|in-progress|in-review|approved|blocked)"
 option_name=$(printf '%s' "$line" | cut -d'|' -f2)
 
 need_cmd gh

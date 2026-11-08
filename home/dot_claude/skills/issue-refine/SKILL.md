@@ -1,6 +1,6 @@
 ---
 name: issue-refine
-description: GitHub ISSUE を実装前に検討する。コードや外部仕様を調査し、対応可否を判断し、実装方針・変更対象ファイル・テスト方針を決めて ISSUE 本文を肉付けし、依存関係とサイズを登録して status:ready にする。再利用できる知見は Wiki に残す。「#123 を検討して」「この ISSUE を調査して」「実装方針を決めて」「着手できる状態にして」「needs-refine を片付けて」などで使う。
+description: GitHub ISSUE を実装前に検討する。コードや外部仕様を調査し、対応可否を判断し、実装方針・変更対象ファイル・テスト方針を決めて ISSUE 本文を肉付けし、依存関係とサイズを登録して status:needs-approval(人間の承認待ち)にする。再利用できる知見は Wiki に残す。「#123 を検討して」「この ISSUE を調査して」「実装方針を決めて」「着手できる状態にして」「needs-refine を片付けて」などで使う。
 model: opus
 argument-hint: "<ISSUE番号>"
 ---
@@ -18,8 +18,13 @@ argument-hint: "<ISSUE番号>"
 - 無ければ `gh issue list --label status:needs-refine --json number,title,labels` から
   優先度の高い順に候補を示し、ユーザーに選んでもらう
 
-対象が `status:needs-refine` / `status:triage` / `status:blocked` 以外なら、
-状態を伝えて続けるか確認する(ready 済みの見直しなどはありうる)。
+対象が `status:needs-refine` / `status:triage` / `status:blocked` / `status:needs-approval`
+以外なら、状態を伝えて続けるか確認する(ready 済みの見直しなどはありうる)。
+`in-progress` 以降のものは、実装・レビューが進行中なので本文を書き換えない
+(conventions.md §3「計画の見直しと進行中の ISSUE」)。
+
+差し戻しで `needs-refine` に戻ってきた ISSUE は、コメント(人間の指摘、implement や
+review が戻した理由)を必ず読み、それへの対応を本文に反映する。
 
 ## 手順
 
@@ -62,13 +67,14 @@ argument-hint: "<ISSUE番号>"
    話題に合うトピックページに追記し、出典としてこの ISSUE のフル URL を付ける。
    新しいページを作ったら `Home` にも載せる。最後に commit・push(docs 方式は commit のみ)
 
-7. **状態を決める**
-   - 未決事項が空で、未解決の blocked by が無い → `set-status.sh <N> ready`
-   - blocked by が残っている → `ready` にしてよい(implement が着手時に確認する)。
+7. **状態を決める**。**`ready` には自分でしない**(承認は人間が行う。conventions.md §3)
+   - 未決事項が空 → `set-status.sh <N> needs-approval`。ISSUE に「承認なら `ready` に、
+     直す点があればコメントして `needs-refine` に」と短くコメントする
+   - blocked by が残っていても `needs-approval` にしてよい(implement が着手時に確認する)。
      ただし報告で「#M 待ち」と伝える
-   - 未決事項が残っている → `ready` にしない
+   - 未決事項が残っている → `needs-approval` にしない(手順 3 のとおり `blocked`)
 
 8. 調査中に見つけたスコープ外の問題はフォローアップ起票する(conventions.md §7)。
 
-9. 変更報告(conventions.md §9)を出す。ready にした場合は
-   `/issue-implement <N>` を新しいセッションで実行するよう案内する。
+9. 変更報告(conventions.md §9)を出す。`needs-approval` にした場合は、本文を確認して
+   承認するよう案内する(承認後は `/issue-implement <N>` で実装に進む)。

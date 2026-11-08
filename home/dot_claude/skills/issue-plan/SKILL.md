@@ -45,7 +45,8 @@ argument-hint: "[エピック番号 | 起票したい内容]"
    受け入れ条件は**検証できる形**で書く(「いい感じにする」ではなく、何が起きれば合格か)
 5. 状態を付ける: `sh ~/.claude/issue-flow/scripts/set-status.sh <N> needs-refine`
    - 調査不要なほど明確で小さいもの(タイポ修正、設定値の変更など)は、
-     「実装方針」「変更対象ファイル」も埋めたうえで `ready` にしてよい
+     「実装方針」「変更対象ファイル」も埋めたうえで `needs-approval` にしてよい
+     (`ready` にはしない。承認は人間が行う。conventions.md §3)
 6. 分解中に気づいた順序の制約は、ISSUE 間なら blocked by で登録してよい
    (`gh issue edit <N> --add-blocked-by <M>`)。確信が無ければ refine に任せる
 
@@ -54,7 +55,7 @@ argument-hint: "[エピック番号 | 起票したい内容]"
 1. 要望から「背景・目的」「受け入れ条件」を書く。足りない情報はユーザーに聞く
    (バグなら再現手順・期待する動作・実際の動作)
 2. 属するエピックがあれば `--parent` を付ける
-3. 起票し、`set-status.sh <N> needs-refine`(または上記の条件で `ready`)
+3. 起票し、`set-status.sh <N> needs-refine`(または上記の条件で `needs-approval`)
 
 ## C. 棚卸し
 
@@ -63,11 +64,15 @@ argument-hint: "[エピック番号 | 起票したい内容]"
 2. 次を探して、修正案を表にまとめる:
    - 状態・優先度・種別のいずれかのラベルが無い / 状態ラベルが2つ以上ある
    - `status:triage` のまま放置されているもの
+   - `status:needs-approval` のまま承認されずに溜まっているもの
    - Roadmap の順序と優先度が食い違うもの
    - エピックに属すべきなのに親が無いもの
    - 長期間動きが無く、もう不要そうなもの
 3. ラベルの付け直しは自律で行ってよい(状態は `set-status.sh` で)。
    **close する案だけは**ユーザーに確認してから実行する
+4. `in-progress` / `in-review` / `approved` の ISSUE は、ラベルも本文も変えない。
+   気になる点があれば「影響あり」として報告に並べるだけにする
+   (conventions.md §3「計画の見直しと進行中の ISSUE」)
 
 ## 最後に
 

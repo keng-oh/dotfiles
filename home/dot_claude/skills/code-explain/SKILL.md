@@ -54,11 +54,14 @@ argument-hint: "commit [ref] | file <パス> | repo"
 ## 5. 出力
 
 **会話には要点だけ**を出す(概要・押さえるべき点3〜5個・保存先)。
-**全文はファイルに保存**する:
+**全文はファイルに保存**する。保存先は次の優先順で決める:
 
-```
-${CODE_EXPLAIN_DIR:-~/notes/code-explain}/<リポジトリ名>/<YYYY-MM-DD>-<対象>.md
-```
+1. 環境変数 `CODE_EXPLAIN_DIR` があれば `$CODE_EXPLAIN_DIR/<リポジトリ名>/<YYYY-MM-DD>-<対象>.md`
+2. `~/repos/notes`(Obsidian Vault)があれば `~/repos/notes/30_learning/code-explain/<リポジトリ名>/<YYYY-MM-DD>-<対象>.md`
+   - 先に `~/repos/notes/CLAUDE.md` を読み、その規約に従う(ファイル名は英語のみ、
+     フロントマター必須、本文は日本語、トップレベルフォルダは作らない)
+   - `tags` は `CLAUDE.md` のタグ一覧にある値だけを使い、無い値は勝手に足さない
+3. どちらも無ければ `~/notes/code-explain/<リポジトリ名>/<YYYY-MM-DD>-<対象>.md`
 
 - `<対象>` は `commit-<短縮ハッシュ>`、`file-<パスを - でつないだもの>`、`repo` のいずれか
 - ノートの冒頭に、リポジトリ名・対象・コミットハッシュ・日付・選んだレベルを書く

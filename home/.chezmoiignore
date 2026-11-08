@@ -31,6 +31,16 @@
 .chezmoiscripts/60-dconf.sh
 {{ end }}
 
+{{ if and (eq .chezmoi.osRelease.id "cachyos") (env "CI") }}
+# ---- CI(GitHub Actions)では配置しない ----
+# 1Password(op)が無いため、onepasswordRead を使うテンプレートの展開で apply 全体が失敗する。
+# 非CachyOS では上のブロックで既に除外されている
+.config/ntfy/**
+.config/rclone/**
+.config/systemd/user/ntfy-client.service
+.config/systemd/user/rclone-gdrive.service
+{{ end }}
+
 {{ if eq .chezmoi.osRelease.id "cachyos" }}
 # ---- 非CachyOS専用。デスクトップには配置しない ----
 

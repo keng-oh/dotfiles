@@ -62,7 +62,16 @@ argument-hint: "[検討したいテーマや見直したい点]"
    既存のエピックで不要になったものは、理由をコメントして `--reason "not planned"` で閉じる
    (サブ ISSUE が残っていればユーザーに扱いを確認する)。
 
-5. Wiki を commit・push する(`docs` 方式なら commit のみ)。
+5. **既存のロードマップを見直した場合は、影響を受ける ISSUE を洗い出す**。
+   変更したエピックの open なサブ ISSUE を状態ごとに分けて扱う
+   (conventions.md §3「計画の見直しと進行中の ISSUE」):
+   - `ready` 以前 → 見直しの対象。方針や完了の定義の変更で前提が崩れるものは、
+     ユーザーに確認したうえで、理由をコメントして `needs-refine` に戻すか閉じる。
+     優先度の付け直しもここで行う
+   - `in-progress` / `in-review` / `approved` → 状態も本文も変えない。
+     変更報告に「影響あり」として、何がどう食い違いそうかを添えて並べる
 
-6. 変更報告(conventions.md §9)を出し、次は `issue-plan` でエピックを
+6. Wiki を commit・push する(`docs` 方式なら commit のみ)。
+
+7. 変更報告(conventions.md §9)を出し、次は `issue-plan` でエピックを
    個別 ISSUE に分解するよう案内する。

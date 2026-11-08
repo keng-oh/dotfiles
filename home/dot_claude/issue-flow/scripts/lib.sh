@@ -9,11 +9,13 @@ issue_flow_labels() {
 	cat <<'EOF'
 status:triage|ededed|未整理。issue-plan で整理する
 status:needs-refine|fbca04|実装前の調査・方針決め待ち (issue-refine)
+status:needs-approval|f9a03f|方針の提案済み。人間の承認待ち (承認したら ready にする)
 status:ready|0e8a16|方針確定。実装に着手できる (issue-implement)
 status:in-progress|1d76db|実装中
 status:in-review|5319e7|PR のレビュー待ち (issue-review)
 status:approved|c2e0c6|レビュー通過。人間のマージ待ち
 status:blocked|b60205|GitHub の外の要因で停止中 (理由はコメント)
+flow:running|ffffff|issue-run が担当エージェントを起動中 (二重起動の防止)
 priority:critical|b60205|すぐ対応する
 priority:high|d93f0b|次にやる
 priority:medium|fbca04|そのうちやる
@@ -37,6 +39,7 @@ issue_flow_statuses() {
 	cat <<'EOF'
 triage|Triage|GRAY
 needs-refine|Needs refine|YELLOW
+needs-approval|Needs approval|ORANGE
 ready|Ready|GREEN
 in-progress|In progress|BLUE
 in-review|In review|PURPLE
