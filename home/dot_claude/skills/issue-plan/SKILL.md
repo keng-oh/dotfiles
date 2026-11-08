@@ -46,7 +46,8 @@ argument-hint: "[エピック番号 | 起票したい内容]"
 5. 状態を付ける: `sh ~/.claude/issue-flow/scripts/set-status.sh <N> needs-refine`
    - 調査不要なほど明確で小さいもの(タイポ修正、設定値の変更など)は、
      「実装方針」「変更対象ファイル」も埋めたうえで `needs-approval` にしてよい
-     (`ready` にはしない。承認は人間が行う。conventions.md §3)
+     (`ready` にはしない。承認は人間が行う。conventions.md §3)。
+     判断が要る点(conventions.md §10)があるものはこの扱いにせず、`needs-refine` にする
 6. 分解中に気づいた順序の制約は、ISSUE 間なら blocked by で登録してよい
    (`gh issue edit <N> --add-blocked-by <M>`)。確信が無ければ refine に任せる
 
