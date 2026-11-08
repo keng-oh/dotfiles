@@ -2,6 +2,9 @@
 # issue-flow の初期化処理。issue-setup skill からだけ呼ぶ。どれも何度実行しても安全。
 #
 #   setup.sh labels        不足しているラベルだけ作る(既存ラベルには触れない)
+#   setup.sh prune-labels [--yes]
+#                          規約に無い status:* ラベルを一覧する。--yes で削除する
+#                          (open な ISSUE に付いているものは消さない)
 #   setup.sh project       Project を作成/link し、Status の選択肢を規約に揃える
 #   setup.sh resync        open な ISSUE の status:* ラベルを Project の Status に反映し直す
 #   setup.sh enable-wiki   リポジトリの Wiki 機能を有効にする
@@ -22,6 +25,28 @@ labels() {
 		gh label create "$name" --color "$color" --description "$desc" >/dev/null
 		printf '作成: %s\n' "$name"
 	done
+}
+
+prune_labels() {
+	yes=0
+	[ "${1:-}" != --yes ] || yes=1
+	obsolete=$(obsolete_status_labels)
+	if [ -z "$obsolete" ]; then
+		printf '規約に無い status:* ラベルは無い\n'
+		return
+	fi
+	printf '%s\n' "$obsolete" | while IFS= read -r l; do
+		used=$(open_issues_with_label "$l")
+		if [ -n "$used" ]; then
+			printf '残す: %s(open な %s に付いている。先に set-status.sh で規約の状態に付け替える)\n' "$l" "$used" >&2
+		elif [ "$yes" -eq 1 ]; then
+			gh label delete "$l" --yes >/dev/null
+			printf '削除: %s\n' "$l"
+		else
+			printf '削除対象: %s\n' "$l"
+		fi
+	done
+	[ "$yes" -eq 1 ] || printf '(--yes を付けて実行すると削除する。close 済みの ISSUE からも外れる)\n'
 }
 
 project() {
@@ -67,6 +92,10 @@ resync() {
 		--jq '.[] | [.number, ([.labels[].name | select(startswith("status:"))][0] // "")] | @tsv' |
 		while IFS="$(printf '\t')" read -r n l; do
 			[ -n "$l" ] || continue
+			if ! issue_flow_statuses | grep -q "^${l#status:}|"; then
+				printf '飛ばす: #%s の %s は規約に無い状態(set-status.sh で付け替える)\n' "$n" "$l" >&2
+				continue
+			fi
 			sh "$(dirname "$0")/set-status.sh" "$n" "${l#status:}" </dev/null
 		done
 }
@@ -85,9 +114,10 @@ docs_wiki() {
 
 case ${1:-} in
 labels) labels ;;
+prune-labels) prune_labels "${2:-}" ;;
 project) project ;;
 resync) resync ;;
 enable-wiki) enable_wiki ;;
 docs-wiki) docs_wiki ;;
-*) die "使い方: setup.sh labels|project|resync|enable-wiki|docs-wiki" ;;
+*) die "使い方: setup.sh labels|prune-labels [--yes]|project|resync|enable-wiki|docs-wiki" ;;
 esac

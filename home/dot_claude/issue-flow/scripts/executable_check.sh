@@ -61,6 +61,21 @@ else
 	row NG "ラベル" "不足: $missing"
 fi
 
+# 規約から外れた status:* ラベル。open な ISSUE に付いていると queue に載らず
+# resync も止まるので NG、付いていなければ消し忘れなので WARN
+obsolete=$(obsolete_status_labels)
+if [ -n "$obsolete" ]; then
+	used=$(printf '%s\n' "$obsolete" | while IFS= read -r l; do
+		n=$(open_issues_with_label "$l")
+		[ -z "$n" ] || printf '%s(%s) ' "$l" "$n"
+	done)
+	if [ -n "$used" ]; then
+		row NG "不要なラベル" "規約に無い状態が open な ISSUE に付いている: $used"
+	else
+		row WARN "不要なラベル" "規約に無い: $(printf '%s' "$obsolete" | tr '\n' ' ')(setup.sh prune-labels で削除できる)"
+	fi
+fi
+
 # ---- Project ----
 if [ "$project_ok" -eq 1 ]; then
 	rc=0

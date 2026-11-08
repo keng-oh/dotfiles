@@ -18,7 +18,7 @@ argument-hint: "<ISSUE番号>"
 - 無ければ `gh issue list --label status:needs-refine --json number,title,labels` から
   優先度の高い順に候補を示し、ユーザーに選んでもらう
 
-対象が `status:needs-refine` / `status:triage` / `status:blocked` / `status:needs-approval`
+対象が `status:needs-refine` / `status:triage` / `status:needs-approval`
 以外なら、状態を伝えて続けるか確認する(ready 済みの見直しなどはありうる)。
 `in-progress` 以降のものは、実装・レビューが進行中なので本文を書き換えない
 (conventions.md §3「計画の見直しと進行中の ISSUE」)。
@@ -48,9 +48,9 @@ review が戻した理由)を必ず読み、それへの対応を本文に反映
      困る場面。推奨を先頭に)で示す:
      - 対話で実行しているとき → `AskUserQuestion` で聞く(推奨を先頭に)。
        答えを本文に反映する
-     - 自動実行などで聞けないとき → §10 の形で「未決事項」に書き、
-       `set-status.sh <N> blocked` にして、同じ選択肢を ISSUE にコメントする。
-       推奨案で決めて `needs-approval` にしない(「挙動の決定」のような節に書いて済ませない)
+     - 自動実行などで聞けないとき → §10 の形で「未決事項」に書き、手順 7 で
+       `needs-approval` にする。推奨案で決めて本文のほかの節(「挙動の決定」など)に
+       書いて済ませない
      - どちらの場合も、判断が要る点以外がすべて決まっているなら、本文のほかの節は埋めておく
        (答えが出たら、その点を反映するだけで `needs-approval` にできるように)
    - 内部の作りだけの違い(使う人から見えない差)は自分で決めてよい。
@@ -79,9 +79,10 @@ review が戻した理由)を必ず読み、それへの対応を本文に反映
 7. **状態を決める**。**`ready` には自分でしない**(承認は人間が行う。conventions.md §3)
    - 未決事項が空 → `set-status.sh <N> needs-approval`。ISSUE に「承認なら `ready` に、
      直す点があればコメントして `needs-refine` に」と短くコメントする
+   - 未決事項が残っている → `set-status.sh <N> needs-approval`。ISSUE には未決事項と同じ
+     選択肢(§10 の形)を書き、「選んだ案をコメントして `needs-refine` に」とコメントする
    - blocked by が残っていても `needs-approval` にしてよい(implement が着手時に確認する)。
      ただし報告で「#M 待ち」と伝える
-   - 未決事項が残っている → `needs-approval` にしない(手順 3 のとおり `blocked`)
 
 8. 調査中に見つけたスコープ外の問題はフォローアップ起票する(conventions.md §7)。
 

@@ -36,8 +36,10 @@ NG があれば**その場で直さず**、何が足りないかを示して `is
 - **個別 ISSUE**: 下記テンプレートに従う。エピックに属さない単発のもの(バグ報告等)もある
 - **依存**: 「#12 が終わらないと着手できない」は blocked by で登録する
   (`gh issue edit <N> --add-blocked-by 12`)。本文に「#12 の後」と書くだけで済ませない
-- `status:blocked` は **GitHub の外の要因**(上流の修正待ち、ユーザーの判断待ちなど)専用。
-  付けるときは理由をコメントする
+- 「止まっている」ことを表す状態ラベルは無い。待ちは依存(blocked by)で、
+  方針の判断待ちは未決事項を書いた `needs-approval`(§3)で表す。
+  上流の修正待ちのように GitHub の外の要因で待つときは、それを追う ISSUE を作って
+  blocked by で繋ぐ
 
 よく使うコマンド:
 
@@ -55,7 +57,7 @@ gh issue view <N> --json title,body,labels,parent,subIssues,blockedBy,comments
 
 | 系統 | ラベル |
 |---|---|
-| 状態 | `status:triage` → `status:needs-refine` → `status:needs-approval` → `status:ready` → `status:in-progress` → `status:in-review` → `status:approved` / 例外 `status:blocked` |
+| 状態 | `status:triage` → `status:needs-refine` → `status:needs-approval` → `status:ready` → `status:in-progress` → `status:in-review` → `status:approved` |
 | 優先度 | `priority:critical`(すぐ対応)/ `priority:high`(次にやる)/ `priority:medium`(そのうち)/ `priority:low`(余裕があれば) |
 | 種別 | `bug` / `enhancement` / `documentation`(GitHub 既定)/ `chore` / `refactor` / `epic` |
 | サイズ | `size:S`(1セッション)/ `size:M`(数セッション)/ `size:L`(分割を検討) |
@@ -66,7 +68,7 @@ gh issue view <N> --json title,body,labels,parent,subIssues,blockedBy,comments
 **状態の変更は必ずスクリプト経由**(ラベルと Project の Status を同時に変えるため):
 
 ```sh
-sh ~/.claude/issue-flow/scripts/set-status.sh <N> <triage|needs-refine|needs-approval|ready|in-progress|in-review|approved|blocked>
+sh ~/.claude/issue-flow/scripts/set-status.sh <N> <triage|needs-refine|needs-approval|ready|in-progress|in-review|approved>
 ```
 
 `gh issue edit --add-label status:...` を直接使わない。
@@ -78,13 +80,16 @@ sh ~/.claude/issue-flow/scripts/set-status.sh <N> <triage|needs-refine|needs-app
 - `needs-approval` → `ready`(方針の承認)。skill は提案を書いて `needs-approval` で止まる。
   人間が承認したら `ready` にする。直してほしい点はコメントで返し、`needs-refine` に戻す
   (refine がコメントを反映して再提案する)
+  - 「未決事項」が残っているものも `needs-approval` に来る。人間は選んだ案をコメントして
+    `needs-refine` に戻す(refine が本文に反映し、未決事項を空にして再提案する)。
+    未決事項が残ったまま `ready` にはしない(implement が着手しない)
 - `approved` → マージ・close(§6)
 
 ### 差し戻しの上限
 
 review が実装の不備で `in-progress` に差し戻すのは、1つの PR につき **2回まで**。
-3回目の不合格では差し戻さず、経緯をコメントして `blocked` にする
-(同じ指摘の往復を自動で続けさせないため)。回数は PR 上の判定コメントの見出し
+3回目の不合格では `in-progress` に戻さず、経緯をコメントして `needs-refine` にする
+(同じ指摘の往復を自動で続けさせず、方針から見直して人間の承認を通し直すため)。回数は PR 上の判定コメントの見出し
 `## issue-review 判定: 不合格` の数で数える。
 
 ### 計画の見直しと進行中の ISSUE
@@ -126,7 +131,7 @@ review が実装の不備で `in-progress` に差し戻すのは、1つの PR �
 <!-- issue-refine: やらないこと。見つけた別問題はフォローアップ ISSUE へ -->
 
 ## 未決事項
-<!-- issue-refine: 判断が要る点を §10 の形(選択肢ごとに、起きる状況・何が起きるか・困る場面、推奨を先頭に)で書く。残っている間は status:needs-approval にしない -->
+<!-- issue-refine: 判断が要る点を §10 の形(選択肢ごとに、起きる状況・何が起きるか・困る場面、推奨を先頭に)で書く。人間が選ぶまで残し、選ばれたら本文に反映して空にする -->
 ```
 
 **基準: 別セッションの Sonnet が、この本文だけ読めば迷わず実装できること。**

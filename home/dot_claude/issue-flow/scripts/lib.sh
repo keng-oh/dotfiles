@@ -14,7 +14,6 @@ status:ready|0e8a16|方針確定。実装に着手できる (issue-implement)
 status:in-progress|1d76db|実装中
 status:in-review|5319e7|PR のレビュー待ち (issue-review)
 status:approved|c2e0c6|レビュー通過。人間のマージ待ち
-status:blocked|b60205|GitHub の外の要因で停止中 (理由はコメント)
 flow:running|ffffff|issue-run が担当エージェントを起動中 (二重起動の防止)
 priority:critical|b60205|すぐ対応する
 priority:high|d93f0b|次にやる
@@ -44,7 +43,6 @@ ready|Ready|GREEN
 in-progress|In progress|BLUE
 in-review|In review|PURPLE
 approved|Approved|PINK
-blocked|Blocked|RED
 done|Done|GREEN
 EOF
 }
@@ -121,6 +119,22 @@ load_status_field() {
 	[ -n "$_f" ] || return 1
 	STATUS_FIELD_ID=$(printf '%s' "$_f" | jq -r .id)
 	STATUS_OPTIONS=$(printf '%s' "$_f" | jq -c '[.options[]? | {id, name}]')
+}
+
+# 規約に無い status:* ラベル(以前の規約で作られたもの)を1行1件で出す。
+# status: 以外のラベルはリポジトリ独自のものかもしれないので対象にしない
+obsolete_status_labels() {
+	_want=$(issue_flow_labels | cut -d'|' -f1)
+	gh label list --limit 500 --json name --jq '.[].name | select(startswith("status:"))' |
+		while IFS= read -r _l; do
+			printf '%s\n' "$_want" | grep -qxF "$_l" || printf '%s\n' "$_l"
+		done
+}
+
+# ラベルが付いている open な ISSUE の番号を「#1 #2」の形で出す(無ければ空)
+open_issues_with_label() {
+	gh issue list --state open --label "$1" --limit 100 --json number \
+		--jq '[.[].number | "#\(.)"] | join(" ")'
 }
 
 # Status の選択肢が規約どおり(名前と順序)なら 0

@@ -13,7 +13,7 @@
 #     running    flow:running が付いている(起動中)
 #     stale      status:in-progress だが、修正待ちの判定も flow:running も無い(要確認)
 #     waiting    status:ready だが、open な blocked by が残っている
-#     approval / blocked / approved   人間の番
+#     approval / approved   人間の番
 #     epic-done  open なエピックで、サブ ISSUE が全部閉じている(Roadmap 見直しの時期)
 # 1件も無ければ何も出力しない。
 set -eu
@@ -90,7 +90,7 @@ list needs-refine | while IFS="$tab" read -r n p r t; do
 	if [ "$r" = 1 ]; then emit running "$n" "$p" "$t"; else emit refine "$n" "$p" "$t"; fi
 done
 
-for s in needs-approval:approval blocked:blocked approved:approved; do
+for s in needs-approval:approval approved:approved; do
 	list "${s%%:*}" | while IFS="$tab" read -r n p r t; do
 		emit "${s#*:}" "$n" "$p" "$t"
 	done

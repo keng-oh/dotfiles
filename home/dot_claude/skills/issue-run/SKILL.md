@@ -57,7 +57,7 @@ gh issue edit <N> --add-label flow:running
 
 自動実行中なので、次を守る:
 - ユーザーは不在。AskUserQuestion は使わない。ユーザーの判断が要る点は、skill の
-  手順どおり ISSUE にコメントして止まる(refine なら未決事項に書いて blocked)
+  手順どおり ISSUE にコメントして止まる(refine なら未決事項に書いて needs-approval)
 - 判断が要る点は ~/.claude/issue-flow/conventions.md §10 に従う(推奨案があっても自分で
   決めず、§10 の形で選択肢を示す)。最終報告にも同じ選択肢を載せる
 - 状態の変更は skill の手順どおり set-status.sh で行う。ready と approved 以降へは
@@ -83,9 +83,8 @@ gh issue edit <N> --add-label flow:running
 各回の最後に、短くまとめる。前回の報告から変化が無ければ「変化なし」の1行でよい。
 
 - 今回起動したもの・完了したもの(完了したものはエージェントの変更報告の表を連結する)
-- **人間の番**: `approval`(承認待ち)/ `blocked`(判断待ち。理由のコメントへのリンク)/
-  `approved`(マージ待ち)
-  - `blocked` のうち判断が要る点で止まっているものは、リンクだけでなく、
+- **人間の番**: `approval`(承認待ち)/ `approved`(マージ待ち)
+  - `approval` のうち未決事項が残っているものは、リンクだけでなく、
     判断が要る点を選択肢つき(conventions.md §10 の形)でその場に並べる。
     報告を読むだけで選べるようにする。選択肢はエージェントの最終報告から、
     無ければ ISSUE 本文の「未決事項」(`gh issue view <N> --json body`)から取る

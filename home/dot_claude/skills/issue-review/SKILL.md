@@ -66,8 +66,9 @@ ISSUE の受け入れ条件と実際の差分・実行結果だけで判断す�
    - 実装の不備で不合格 → PR のレビューとコメントのうち、見出しが
      `## issue-review 判定: 不合格` のものの数を数える(今回の分を含む):
      - 2回以下 → `set-status.sh <N> in-progress`。`/issue-implement <N>` で修正するよう案内
-     - 3回目 → 差し戻さない。ISSUE に「3回不合格。残っている指摘と、方針か条件の見直しが
-       要りそうか」をコメントして `set-status.sh <N> blocked`(人間が判断する)
+     - 3回目 → `in-progress` に戻さない。ISSUE に「3回不合格。残っている指摘と、方針か条件の
+       見直しが要りそうか」をコメントして `set-status.sh <N> needs-refine`
+       (refine が方針を見直し、`needs-approval` で人間が判断する)
    - 方針自体に問題がある(方針どおりでは条件を満たせない、条件そのものが不適切)→
      ISSUE に理由をコメントして `set-status.sh <N> needs-refine`
 

@@ -18,9 +18,9 @@ description: GitHub ISSUE ドリブン開発(issue-flow)の前提を確認し、
    sh $S/check.sh
    ```
 
-   全項目 OK なら手順 3 へ。
+   NG も「不要なラベル」の WARN も無ければ手順 3 へ。
 
-2. NG の項目だけ、上から順に対処する。各手順の後に `check.sh` をもう一度実行して確かめる。
+2. NG の項目と「不要なラベル」の WARN だけ、上から順に対処する。各手順の後に `check.sh` をもう一度実行して確かめる。
 
    | 項目 | 対処 |
    |---|---|
@@ -28,6 +28,8 @@ description: GitHub ISSUE ドリブン開発(issue-flow)の前提を確認し、
    | gh ログイン | `gh auth login` をユーザーに実行してもらう(対話的なので代行できない) |
    | gh スコープ | `gh auth refresh -s project` をユーザーに実行してもらう。ブラウザでの承認が要る |
    | ラベル | `sh $S/setup.sh labels`。既存ラベルには触れず、足りないものだけ作る |
+   | 不要なラベル(NG) | 規約に無い状態ラベルが open な ISSUE に付いている。ISSUE ごとに今の規約のどの状態にするかをユーザーに確認し、`set-status.sh <N> <状態>` で付け替える。終わったら下の WARN の対処へ |
+   | 不要なラベル(WARN) | `sh $S/setup.sh prune-labels` で削除対象を見せ、ユーザーの了承を得てから `sh $S/setup.sh prune-labels --yes`。close 済みの ISSUE からも外れることを伝える |
    | Project | `sh $S/setup.sh project`。「選択肢を規約に揃えた」と出たら続けて `sh $S/setup.sh resync` |
    | Wiki | 下記「Wiki の準備」 |
 
