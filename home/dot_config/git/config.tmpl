@@ -7,8 +7,37 @@
 [gpg "openpgp"]
 	program = gpg
 
+[credential "https://github.com"]
+	helper =
+	helper = !gh auth git-credential
+
 [init]
 	defaultBranch = main
+
+[user]
+	email = contact@ken-g.dev
+	name = KENG
+
+[pull]
+	rebase = false
+
+[push]
+	autoSetupRemote = true
+
+[fetch]
+	prune = true
+
+[merge]
+	conflictstyle = zdiff3
+
+[diff]
+	algorithm = histogram
+
+[rerere]
+	enabled = true
+
+[branch]
+	sort = -committerdate
 
 {{ if eq .chezmoi.osRelease.id "cachyos" -}}
 [interactive]
@@ -21,9 +50,3 @@
 	show = delta
 
 {{ end -}}
-[pull]
-	rebase = false
-
-[user]
-	email = contact@ken-g.dev
-	name = KENG
