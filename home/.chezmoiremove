@@ -5,3 +5,6 @@
 .config/systemd/user/fcitx5-daemon.service
 .config/systemd/user/graphical-session.target.wants/fcitx5-daemon.service
 .config/direnv/lib/hm-nix-direnv.sh
+
+# 撤去した自作スクリプト(claude-rc: remote-control のセッション開始が不安定なため)
+.local/bin/claude-rc
