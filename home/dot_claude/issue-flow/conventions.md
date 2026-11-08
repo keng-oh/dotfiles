@@ -55,7 +55,7 @@ gh issue view <N> --json title,body,labels,parent,subIssues,blockedBy,comments
 
 | 系統 | ラベル |
 |---|---|
-| 状態 | `status:triage` → `status:needs-refine` → `status:ready` → `status:in-progress` → `status:in-review` → `status:approved` / 例外 `status:blocked` |
+| 状態 | `status:triage` → `status:needs-refine` → `status:needs-approval` → `status:ready` → `status:in-progress` → `status:in-review` → `status:approved` / 例外 `status:blocked` |
 | 優先度 | `priority:critical`(すぐ対応)/ `priority:high`(次にやる)/ `priority:medium`(そのうち)/ `priority:low`(余裕があれば) |
 | 種別 | `bug` / `enhancement` / `documentation`(GitHub 既定)/ `chore` / `refactor` / `epic` |
 | サイズ | `size:S`(1セッション)/ `size:M`(数セッション)/ `size:L`(分割を検討) |
@@ -65,10 +65,33 @@ gh issue view <N> --json title,body,labels,parent,subIssues,blockedBy,comments
 **状態の変更は必ずスクリプト経由**(ラベルと Project の Status を同時に変えるため):
 
 ```sh
-sh ~/.claude/issue-flow/scripts/set-status.sh <N> <triage|needs-refine|ready|in-progress|in-review|approved|blocked>
+sh ~/.claude/issue-flow/scripts/set-status.sh <N> <triage|needs-refine|needs-approval|ready|in-progress|in-review|approved|blocked>
 ```
 
 `gh issue edit --add-label status:...` を直接使わない。
+
+### 人間が持つ遷移
+
+次の2つは **skill が行わない**。人間の判断を通すための関所なので、例外を作らない:
+
+- `needs-approval` → `ready`(方針の承認)。skill は提案を書いて `needs-approval` で止まる。
+  人間が承認したら `ready` にする。直してほしい点はコメントで返し、`needs-refine` に戻す
+  (refine がコメントを反映して再提案する)
+- `approved` → マージ・close(§6)
+
+### 差し戻しの上限
+
+review が実装の不備で `in-progress` に差し戻すのは、1つの PR につき **2回まで**。
+3回目の不合格では差し戻さず、経緯をコメントして `blocked` にする
+(同じ指摘の往復を自動で続けさせないため)。回数は PR 上の判定コメントの見出し
+`## issue-review 判定: 不合格` の数で数える。
+
+### 計画の見直しと進行中の ISSUE
+
+`issue-roadmap` / `issue-plan` で計画を見直すとき、**`in-progress` / `in-review` /
+`approved` の ISSUE は状態も本文も変えない**(実装・レビューが進行中で、横から書き換えると
+食い違うため)。影響を受けそうなものは変更報告に「影響あり」として並べるだけにし、
+扱いはマージの判断のときに人間が決める。`ready` 以前のものは見直しの対象に含める。
 マージで close された ISSUE は Project 側の組み込みワークフローが Done にする。
 対応しないと決めたものは理由をコメントして `gh issue close <N> --reason "not planned"`。
 
@@ -102,7 +125,7 @@ sh ~/.claude/issue-flow/scripts/set-status.sh <N> <triage|needs-refine|ready|in-
 <!-- issue-refine: やらないこと。見つけた別問題はフォローアップ ISSUE へ -->
 
 ## 未決事項
-<!-- issue-refine: 残っている間は status:ready にしない -->
+<!-- issue-refine: 残っている間は status:needs-approval にしない -->
 ```
 
 **基準: 別セッションの Sonnet が、この本文だけ読めば迷わず実装できること。**
@@ -180,7 +203,7 @@ sh ~/.claude/issue-flow/scripts/wiki-path.sh
 | 対象 | 内容 | リンク |
 |---|---|---|
 | #123 | 起票(enhancement, priority:high, status:needs-refine) | <URL> |
-| #120 | 本文の「実装方針」ほかを更新、status:ready | <URL> |
+| #120 | 本文の「実装方針」ほかを更新、status:needs-approval | <URL> |
 | Wiki: Gotchas | 「○○の制約」を追記 | <URL> |
 | PR #130 | 作成(Closes #123) | <URL> |
 ```
