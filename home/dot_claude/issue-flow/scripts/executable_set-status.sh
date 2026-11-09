@@ -1,6 +1,7 @@
 #!/bin/sh
 # ISSUE の状態を変える唯一の入口。status:* ラベルの付け替えと、
 # Project の Status フィールドの更新を一括で行い、両者がずれないようにする。
+# 人間の番を表す action:approve / action:merge の付け外しもここだけで行う。
 #
 #   set-status.sh <ISSUE番号> <状態>
 #   状態: triage | needs-refine | needs-approval | ready | in-progress | in-review | approved
@@ -37,15 +38,23 @@ issue=$(gh issue view "$num" --json url,labels,state) || die "ISSUE #$num を取
 url=$(printf '%s' "$issue" | jq -r .url)
 
 # ---- ラベル ----
+# status:* を付け替え、人間の番を表す action:approve / action:merge を状態に合わせる。
+#   needs-approval → action:approve(action:decide が付いていれば decide を残し、approve は付けない)
+#   approved       → action:merge
+#   それ以外       → approve / merge / decide を外す
+# action:check が付いている間は approve / merge を付けない(check を外した後の
+# set-status.sh か setup.sh resync で付く)。同じ状態への呼び出しでも action は揃え直す
 old=$(printf '%s' "$issue" | jq -r '[.labels[].name | select(startswith("status:"))] | join(",")')
 new="status:$st"
-if [ "$old" != "$new" ]; then
-	remove=$(printf '%s' "$issue" | jq -r --arg n "$new" '[.labels[].name | select(startswith("status:") and . != $n)] | join(",")')
-	if [ -n "$remove" ]; then
-		gh issue edit "$num" --add-label "$new" --remove-label "$remove" >/dev/null
-	else
-		gh issue edit "$num" --add-label "$new" >/dev/null
-	fi
+plan=$(printf '%s' "$issue" | jq -r --arg n "$new" --arg st "$st" "$(jq_label_plan)")
+add=$(printf '%s' "$plan" | cut -f1)
+remove=$(printf '%s' "$plan" | cut -f2)
+action=$(printf '%s' "$plan" | cut -f3)
+if [ -n "$add" ] || [ -n "$remove" ]; then
+	set -- "$num"
+	[ -z "$add" ] || set -- "$@" --add-label "$add"
+	[ -z "$remove" ] || set -- "$@" --remove-label "$remove"
+	gh issue edit "$@" >/dev/null
 fi
 
 # ---- Project(item-add は登録済みなら既存の item を返す) ----
@@ -53,4 +62,4 @@ item_id=$(gh project item-add "$PROJECT_NUMBER" --owner "$OWNER" --url "$url" --
 gh project item-edit --id "$item_id" --project-id "$PROJECT_ID" \
 	--field-id "$STATUS_FIELD_ID" --single-select-option-id "$option_id" >/dev/null
 
-printf '#%s: %s → %s (Project #%s: %s)\n' "$num" "${old:-なし}" "$new" "$PROJECT_NUMBER" "$option_name"
+printf '#%s: %s → %s (Project #%s: %s) 人間の番: %s\n' "$num" "${old:-なし}" "$new" "$PROJECT_NUMBER" "$option_name" "${action:-なし}"

@@ -7,6 +7,10 @@
 #                          (open な ISSUE に付いているものは消さない)
 #   setup.sh project       Project を作成/link し、Status の選択肢を規約に揃える
 #   setup.sh resync        open な ISSUE の status:* ラベルを Project の Status に反映し直す
+#                          (action:approve / action:merge も状態に合わせて揃う)
+#   setup.sh actions       action:* の導入前の ISSUE に付ける。needs-approval で action:* が無く
+#                          未決事項が残っているものに action:decide と判断待ちのコメントを付け、
+#                          続けて resync で approve / merge を揃える
 #   setup.sh enable-wiki   リポジトリの Wiki 機能を有効にする
 #   setup.sh docs-wiki     GitHub Wiki の代わりに docs/wiki/ を作る(コミットはしない)
 set -eu
@@ -100,6 +104,22 @@ resync() {
 		done
 }
 
+actions() {
+	labels
+	gh issue list --state open --label status:needs-approval --limit 200 --json number,body,labels |
+		jq -r "$(jq_undecided)"' .[]
+            | select(all(.labels[]; .name | startswith("action:") | not))
+            | select(undecided) | .number' |
+		while IFS= read -r n; do
+			gh issue edit "$n" --add-label action:decide >/dev/null
+			gh issue comment "$n" --body "$DECIDE_MARK
+
+本文の「未決事項」から選んだ案をコメントしてください。状態やラベルは変えなくてかまいません(issue-run が回答を見つけて反映します)。" >/dev/null
+			printf '付与: #%s に action:decide(未決事項あり)\n' "$n"
+		done
+	resync
+}
+
 enable_wiki() {
 	gh repo edit "$REPO" --enable-wiki >/dev/null
 	printf 'Wiki を有効化した。最初のページは %s/wiki で「Create the first page」から作る必要がある\n' "$REPO_URL"
@@ -117,7 +137,8 @@ labels) labels ;;
 prune-labels) prune_labels "${2:-}" ;;
 project) project ;;
 resync) resync ;;
+actions) actions ;;
 enable-wiki) enable_wiki ;;
 docs-wiki) docs_wiki ;;
-*) die "使い方: setup.sh labels|prune-labels [--yes]|project|resync|enable-wiki|docs-wiki" ;;
+*) die "使い方: setup.sh labels|prune-labels [--yes]|project|resync|actions|enable-wiki|docs-wiki" ;;
 esac

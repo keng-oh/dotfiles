@@ -4,6 +4,8 @@ GitHub ISSUE を軸に開発を進める skill 群(`issue-setup` / `issue-roadma
 `issue-refine` / `issue-implement` / `issue-review` / `issue-run` / `wiki-tidy`)が共有する決まり。
 各 skill は最初にこのファイルを読む。
 
+状態遷移の図解は `README.md`(人間向け。決まりの正はこのファイル)。
+
 スクリプトは `~/.claude/issue-flow/scripts/` にある(以下 `$S` と書く)。
 すべて対象リポジトリの中で実行する。
 
@@ -37,7 +39,7 @@ NG があれば**その場で直さず**、何が足りないかを示して `is
 - **依存**: 「#12 が終わらないと着手できない」は blocked by で登録する
   (`gh issue edit <N> --add-blocked-by 12`)。本文に「#12 の後」と書くだけで済ませない
 - 「止まっている」ことを表す状態ラベルは無い。待ちは依存(blocked by)で、
-  方針の判断待ちは未決事項を書いた `needs-approval`(§3)で表す。
+  方針の判断待ちは未決事項を書いた `needs-approval` + `action:decide`(§3)で表す。
   上流の修正待ちのように GitHub の外の要因で待つときは、それを追う ISSUE を作って
   blocked by で繋ぐ
 
@@ -62,6 +64,7 @@ gh issue view <N> --json title,body,labels,parent,subIssues,blockedBy,comments
 | 種別 | `bug` / `enhancement` / `documentation`(GitHub 既定)/ `chore` / `refactor` / `epic` |
 | サイズ | `size:S`(1セッション)/ `size:M`(数セッション)/ `size:L`(分割を検討) |
 | 自動実行 | `flow:running`(`issue-run` がエージェントを起動中。付け外しは `issue-run` だけが行う) |
+| 人間の番 | `action:decide` / `action:approve` / `action:merge` / `action:check`(下記「人間の番」) |
 
 個別 ISSUE には状態・優先度・種別を必ず1つずつ付ける。サイズは refine が付ける。
 
@@ -80,10 +83,49 @@ sh ~/.claude/issue-flow/scripts/set-status.sh <N> <triage|needs-refine|needs-app
 - `needs-approval` → `ready`(方針の承認)。skill は提案を書いて `needs-approval` で止まる。
   人間が承認したら `ready` にする。直してほしい点はコメントで返し、`needs-refine` に戻す
   (refine がコメントを反映して再提案する)
-  - 「未決事項」が残っているものも `needs-approval` に来る。人間は選んだ案をコメントして
-    `needs-refine` に戻す(refine が本文に反映し、未決事項を空にして再提案する)。
+  - 「未決事項」が残っているものも `needs-approval` に来るが、`action:decide` が付く。
+    人間は**選んだ案をコメントするだけ**で、状態もラベルも触らない(下記「判断待ちの回し方」)。
     未決事項が残ったまま `ready` にはしない(implement が着手しない)
 - `approved` → マージ・close(§6)
+
+### 人間の番
+
+人間がやることを `action:*` で表す。状態の流れ(`status:*`)は一本道のまま変えず、
+別系統のラベルで「今、人間が何をすればよいか」を一覧で見分けられるようにする。
+
+| ラベル | 人間がやること | 付け外しするもの |
+|---|---|---|
+| `action:decide` | 未決事項の案を選んでコメントする | `issue-refine` |
+| `action:approve` | 方針を確認して承認する(`ready` にする) | `set-status.sh`(`needs-approval` のとき) |
+| `action:merge` | PR をマージする | `set-status.sh`(`approved` のとき) |
+| `action:check` | 要確認を見る(進まなかった・stale・前セッションの running など) | 付けるのは `issue-run`、外すのは人間 |
+
+- 1つの ISSUE に付く `action:*` は常に **1つ以下**
+- `action:approve` / `action:merge` は状態と1対1なので、`set-status.sh` が状態に合わせて
+  付け外しする。**手で付けない。** ほかの状態に移ると外れる(`action:decide` も
+  `needs-approval` 以外に移ると外れる)
+- 未決事項が残っている `needs-approval` には `action:decide` だけを付ける(`action:approve` は付けない)。
+  回答が反映されて未決事項が空になったら `action:approve` に替わる
+- `action:check` が付いている間は、`issue-run` はその ISSUE のどの工程も起動しない
+  (進まないものを毎回再試行しないため)。`issue-run` は付けるときにほかの `action:*` を外す。
+  人間は中身を見て対処したら手で外す。`action:approve` / `action:merge` は次の
+  `set-status.sh` か `setup.sh resync` で付き直る。`action:decide` は付き直らないので、
+  判断待ちに戻すなら人間が付け直す
+
+### 判断待ちの回し方
+
+1. refine: 未決事項があれば `action:decide` を付けて `needs-approval` にし、
+   先頭行が `## issue-refine 判断待ち` のコメントで選択肢(§10 の形)を示す
+2. 人間: 選んだ案をコメントする。状態もラベルも触らない
+3. `queue.sh`: `action:decide` 付きのうち、判断待ちのコメントより後に人間のコメントがあるものを
+   `refine` として出す
+4. refine: 回答を本文に反映し、未決事項を空にして `action:decide` を外し、`set-status.sh <N> needs-approval`
+   を呼び直す(`action:approve` に替わる。状態は `needs-approval` のまま。`ready` にするのは人間)
+
+人間のコメントは投稿者では見分けられない(skill も同じアカウントで書く)。そのため
+**skill が ISSUE に書くコメントは、先頭行を `## issue-<skill 名>` で始める**
+(例: `## issue-refine 判断待ち`、`## issue-refine フォローアップ`)。
+`queue.sh` は、判断待ちのコメントより後の、`## issue-` で始まらないコメントを人間の回答とみなす。
 
 ### 差し戻しの上限
 
@@ -189,7 +231,7 @@ sh ~/.claude/issue-flow/scripts/wiki-path.sh
 1. `gh issue create` で別 ISSUE を作る。本文冒頭に「<元 ISSUE の URL> から派生」、
    ラベルは種別と `priority:*`(判断できなければ `priority:medium`)
 2. `set-status.sh <新番号> triage`
-3. 元の ISSUE(または PR)に、起票したことをコメントする
+3. 元の ISSUE(または PR)に、起票したことをコメントする(先頭行は `## issue-<skill 名> フォローアップ`。§3「判断待ちの回し方」)
 
 ## 8. 公開リポジトリへの配慮
 

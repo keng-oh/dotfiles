@@ -31,7 +31,22 @@ sh ~/.claude/issue-flow/scripts/queue.sh
 - 起動する種別の優先順: `review` → `fix` → `implement` → `refine`
   (完了に近いものから片付ける)。同じ種別内は queue.sh の並び(優先度順)
 - `running` は、このセッションで起動したもの以外は**前のセッションの残り**。
-  触らずに「要確認(flow:running が残っている)」として報告する
+  処理には触らず、`action:check` を付けて(下記「要確認の印」)報告する
+- `refine` には、`needs-refine` のほか、判断待ち(`action:decide`)に人間が回答したものも含まれる。
+  どちらも同じく refine を起動する(refine 側が回答の反映だけを行う)
+- `stale` も起動しない。`action:check` を付けて報告する
+
+### 要確認の印
+
+要確認にする ISSUE には、ほかの `action:*` を外してから `action:check` を付ける
+(`action:*` は1つ以下。conventions.md §3「人間の番」):
+
+```sh
+gh issue edit <N> --add-label action:check --remove-label <付いている action:decide / approve / merge>
+```
+
+`action:check` が付いている間、`queue.sh` はその ISSUE を `check` としてしか出さない
+(起動対象にならない)。外すのは人間。
 
 ## 3. 起動する
 
@@ -57,7 +72,7 @@ gh issue edit <N> --add-label flow:running
 
 自動実行中なので、次を守る:
 - ユーザーは不在。AskUserQuestion は使わない。ユーザーの判断が要る点は、skill の
-  手順どおり ISSUE にコメントして止まる(refine なら未決事項に書いて needs-approval)
+  手順どおり ISSUE にコメントして止まる(refine なら未決事項に書き、action:decide を付けて needs-approval)
 - 判断が要る点は ~/.claude/issue-flow/conventions.md §10 に従う(推奨案があっても自分で
   決めず、§10 の形で選択肢を示す)。最終報告にも同じ選択肢を載せる
 - 状態の変更は skill の手順どおり set-status.sh で行う。ready と approved 以降へは
@@ -66,7 +81,8 @@ gh issue edit <N> --add-label flow:running
   実行し、ファイルは絶対パスで編集する(他の ISSUE のエージェントと並列で動いている)
 - PUBLIC リポジトリで、識別子(ホスト名・IP・ユーザー名など)を書かないと進めない場合は、
   GitHub に何も書かずに止まり、その旨を最終報告に書く
-- flow:running ラベルには触れない(起動側が外す)
+- flow:running と action:check には触れない(起動側が扱う)。ISSUE に書くコメントは
+  先頭行を `## issue-<skill 名>` で始める(conventions.md §3「判断待ちの回し方」)
 - 最終報告には、変更報告(conventions.md §9)の表と、止まった場合はその理由を含める
 ```
 
@@ -76,19 +92,27 @@ gh issue edit <N> --add-label flow:running
 
 1. `gh issue edit <N> --remove-label flow:running`
 2. 報告を読み、ISSUE の状態が想定どおり進んだか確かめる
-   (`gh issue view <N> --json labels`)。状態が変わっていなければ「進まなかった」として報告する
+   (`gh issue view <N> --json labels`)。状態が変わっていなければ「進まなかった」として
+   `action:check` を付け(上記「要確認の印」)、報告する。
+   ただし判断待ちの回答を反映した refine は状態が `needs-approval` のまま変わらないのが正常。
+   `action:decide` が `action:approve` に替わっていれば進んだとみなす。
+   decide のまま残っていて、refine の報告が「判断が要る点を示し直した」なら、それも正常(check は付けない)
 
 ## 5. 報告
 
 各回の最後に、短くまとめる。前回の報告から変化が無ければ「変化なし」の1行でよい。
 
 - 今回起動したもの・完了したもの(完了したものはエージェントの変更報告の表を連結する)
-- **人間の番**: `approval`(承認待ち)/ `approved`(マージ待ち)
-  - `approval` のうち未決事項が残っているものは、リンクだけでなく、
+- **人間の番**: `action:*` ごとに分けて、この順で並べる
+  - `action:check`(要確認。queue.sh の `check`、今回付けたもの): 何が起きたか(stale・
+    前のセッションの running・進まなかった)を一言添える。対処したら外すよう案内する
+  - `action:decide`(案を選んでコメント。queue.sh の `decide`): リンクだけでなく、
     判断が要る点を選択肢つき(conventions.md §10 の形)でその場に並べる。
     報告を読むだけで選べるようにする。選択肢はエージェントの最終報告から、
-    無ければ ISSUE 本文の「未決事項」(`gh issue view <N> --json body`)から取る
-- 要確認: `stale`、前のセッションの `running`、進まなかったもの
+    無ければ ISSUE 本文の「未決事項」(`gh issue view <N> --json body`)から取る。
+    答え方は「選んだ案を ISSUE にコメントするだけ(状態・ラベルは触らない)」と伝える
+  - `action:approve`(承認して `ready` に。queue.sh の `approval`)
+  - `action:merge`(PR をマージ。queue.sh の `approved`)
 - `waiting`: どの ISSUE 待ちか
 - `epic-done`: サブ ISSUE が全部閉じたエピック。`/issue-roadmap` での見直しを勧める
   (エピックは自動で閉じない)

@@ -76,6 +76,15 @@ if [ -n "$obsolete" ]; then
 	fi
 fi
 
+# 人間の番なのに action:* が無い ISSUE(action 系統の導入前に needs-approval /
+# approved になったもの)。queue の振り分けには影響しないので WARN
+lack=$(for s in needs-approval approved; do
+	gh issue list --state open --label "status:$s" --limit 200 --json number,labels \
+		--jq '.[] | select(all(.labels[]; .name | startswith("action:") | not)) | "#\(.number)"'
+done | tr '\n' ' ')
+[ -z "$lack" ] ||
+	row WARN "action ラベル" "人間の番なのに action:* が無い: $lack(setup.sh actions で付ける)"
+
 # ---- Project ----
 if [ "$project_ok" -eq 1 ]; then
 	rc=0

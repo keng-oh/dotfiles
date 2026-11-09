@@ -26,6 +26,11 @@ argument-hint: "<ISSUE番号>"
 差し戻しで `needs-refine` に戻ってきた ISSUE は、コメント(人間の指摘、implement や
 review が戻した理由)を必ず読み、それへの対応を本文に反映する。
 
+`needs-approval` で `action:decide` が付いている ISSUE は**判断待ち**。
+`## issue-refine 判断待ち` のコメントより後に人間の回答(`## issue-` で始まらないコメント)が
+あれば、下の「回答の反映」だけを行う。回答が無ければ、何も変えずに「回答待ち」と報告して終わる
+(conventions.md §3「判断待ちの回し方」)。
+
 ## 手順
 
 1. **読む**
@@ -48,9 +53,9 @@ review が戻した理由)を必ず読み、それへの対応を本文に反映
      困る場面。推奨を先頭に)で示す:
      - 対話で実行しているとき → `AskUserQuestion` で聞く(推奨を先頭に)。
        答えを本文に反映する
-     - 自動実行などで聞けないとき → §10 の形で「未決事項」に書き、手順 7 で
-       `needs-approval` にする。推奨案で決めて本文のほかの節(「挙動の決定」など)に
-       書いて済ませない
+     - 自動実行などで聞けないとき → §10 の形で「未決事項」に書き、手順 8 で
+       `action:decide` を付けて `needs-approval` にする。推奨案で決めて本文のほかの節
+       (「挙動の決定」など)に書いて済ませない
      - どちらの場合も、判断が要る点以外がすべて決まっているなら、本文のほかの節は埋めておく
        (答えが出たら、その点を反映するだけで `needs-approval` にできるように)
    - 内部の作りだけの違い(使う人から見えない差)は自分で決めてよい。
@@ -76,15 +81,35 @@ review が戻した理由)を必ず読み、それへの対応を本文に反映
    話題に合うトピックページに追記し、出典としてこの ISSUE のフル URL を付ける。
    新しいページを作ったら `Home` にも載せる。最後に commit・push(docs 方式は commit のみ)
 
-7. **状態を決める**。**`ready` には自分でしない**(承認は人間が行う。conventions.md §3)
-   - 未決事項が空 → `set-status.sh <N> needs-approval`。ISSUE に「承認なら `ready` に、
+7. 調査中に見つけたスコープ外の問題はフォローアップ起票する(conventions.md §7)。
+   元の ISSUE へのコメントは、先頭行を `## issue-refine フォローアップ` にする
+   (`## issue-` で始まらないと、判断待ちへの人間の回答と誤認される)
+
+8. **状態を決める**。**`ready` には自分でしない**(承認は人間が行う。conventions.md §3)。
+   `action:approve` は `set-status.sh` が付けるので、手で付けない
+   - 未決事項が空 → `set-status.sh <N> needs-approval`(`action:approve` が付く)。
+     ISSUE に、先頭行 `## issue-refine 承認待ち` で「承認なら `ready` に、
      直す点があればコメントして `needs-refine` に」と短くコメントする
-   - 未決事項が残っている → `set-status.sh <N> needs-approval`。ISSUE には未決事項と同じ
-     選択肢(§10 の形)を書き、「選んだ案をコメントして `needs-refine` に」とコメントする
+   - 未決事項が残っている → 先に `gh issue edit <N> --add-label action:decide`、
+     続けて `set-status.sh <N> needs-approval`(decide があるので approve は付かず、付いていれば外れる)。
+     ISSUE には、先頭行を `## issue-refine 判断待ち` にして、未決事項と同じ選択肢(§10 の形)と
+     「選んだ案をコメントしてください。状態やラベルは変えなくてかまいません」を書く
    - blocked by が残っていても `needs-approval` にしてよい(implement が着手時に確認する)。
      ただし報告で「#M 待ち」と伝える
 
-8. 調査中に見つけたスコープ外の問題はフォローアップ起票する(conventions.md §7)。
-
-9. 変更報告(conventions.md §9)を出す。`needs-approval` にした場合は、本文を確認して
+9. 変更報告(conventions.md §9)を出す。`action:approve` になった場合は本文を確認して
    承認するよう案内する(承認後は `/issue-implement <N>` で実装に進む)。
+   `action:decide` になった場合は、選択肢をその場にも並べ、コメントで答えるよう案内する。
+
+## 回答の反映(判断待ちに人間が答えたとき)
+
+1. 本文と、判断待ちのコメント以降のコメントを読む。回答がどの未決事項のどの案を選んだかを特定する
+2. 選ばれた案を本文の該当する節(実装方針・受け入れ条件・テスト方針など)に反映し、
+   その未決事項を「未決事項」から消す。回答に新しい指摘があれば、それも本文に反映する
+3. 状態を決める:
+   - 未決事項が空になった → `gh issue edit <N> --remove-label action:decide` のあと
+     `set-status.sh <N> needs-approval`(`action:approve` に替わる。状態は `needs-approval` のまま)。
+     先頭行 `## issue-refine 承認待ち` で、何を反映したかと「承認なら `ready` に」をコメントする
+   - 回答が一部だけ・読み取れない・新しい判断が要る点が出た → `action:decide` のまま、
+     残った点を手順 8 と同じ形の `## issue-refine 判断待ち` コメントで示し直す
+4. 変更報告を出す

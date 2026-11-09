@@ -18,9 +18,9 @@ description: GitHub ISSUE ドリブン開発(issue-flow)の前提を確認し、
    sh $S/check.sh
    ```
 
-   NG も「不要なラベル」の WARN も無ければ手順 3 へ。
+   NG も「不要なラベル」「action ラベル」の WARN も無ければ手順 3 へ。
 
-2. NG の項目と「不要なラベル」の WARN だけ、上から順に対処する。各手順の後に `check.sh` をもう一度実行して確かめる。
+2. NG の項目と「不要なラベル」「action ラベル」の WARN だけ、上から順に対処する。各手順の後に `check.sh` をもう一度実行して確かめる。
 
    | 項目 | 対処 |
    |---|---|
@@ -31,6 +31,7 @@ description: GitHub ISSUE ドリブン開発(issue-flow)の前提を確認し、
    | 不要なラベル(NG) | 規約に無い状態ラベルが open な ISSUE に付いている。ISSUE ごとに今の規約のどの状態にするかをユーザーに確認し、`set-status.sh <N> <状態>` で付け替える。終わったら下の WARN の対処へ |
    | 不要なラベル(WARN) | `sh $S/setup.sh prune-labels` で削除対象を見せ、ユーザーの了承を得てから `sh $S/setup.sh prune-labels --yes`。close 済みの ISSUE からも外れることを伝える |
    | Project | `sh $S/setup.sh project`。「選択肢を規約に揃えた」と出たら続けて `sh $S/setup.sh resync` |
+   | action ラベル(WARN) | 人間の番(conventions.md §3)の `action:*` を導入する前に `needs-approval` / `approved` になった ISSUE。`sh $S/setup.sh actions` で、未決事項が残っている `needs-approval` に `action:decide` と判断待ちのコメントを付け、ほかは resync で `action:approve` / `action:merge` を付ける。コメントを書き込むので、対象の番号を見せてから実行する。Project の項目より後に行う(resync が Project を使うため) |
    | Wiki | 下記「Wiki の準備」 |
 
    ユーザーに実行してもらうコマンドは、`! <コマンド>` の形でこのセッションから

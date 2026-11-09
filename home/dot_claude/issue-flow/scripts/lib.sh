@@ -15,6 +15,10 @@ status:in-progress|1d76db|実装中
 status:in-review|5319e7|PR のレビュー待ち (issue-review)
 status:approved|c2e0c6|レビュー通過。人間のマージ待ち
 flow:running|ffffff|issue-run が担当エージェントを起動中 (二重起動の防止)
+action:decide|e99695|人間の番: 未決事項の案を選んでコメントする (状態・ラベルは触らない)
+action:approve|f9d0c4|人間の番: 方針を確認して承認する (ready にする)
+action:merge|bfd4f2|人間の番: PR をマージする
+action:check|5a5a5a|人間の番: 要確認。中身を見て対処したら外す (付いている間は自動で動かさない)
 priority:critical|b60205|すぐ対応する
 priority:high|d93f0b|次にやる
 priority:medium|fbca04|そのうちやる
@@ -44,6 +48,45 @@ in-progress|In progress|BLUE
 in-review|In review|PURPLE
 approved|Approved|PINK
 done|Done|GREEN
+EOF
+}
+
+# ---- 人間の番 (action:*) -------------------------------------------------
+# refine が判断待ちにしたとき ISSUE に書くコメントの先頭行。queue.sh は、これより後の
+# コメントのうち skill のコメント (先頭が「## issue-」) でないものを人間の回答とみなす
+DECIDE_MARK='## issue-refine 判断待ち'
+SKILL_COMMENT_PREFIX='## issue-'
+
+# jq 定義: undecided = 本文の「未決事項」節に中身があるか
+# (HTML コメント・空白だけ、または「なし」なら空とみなす)
+jq_undecided() {
+	cat <<'EOF'
+def undecided:
+	((.body // "") | gsub("\r"; "") | gsub("<!--.*?-->"; ""; "s")
+	 | (capture("(?m)^## 未決事項[ \t]*\n(?<x>[\\s\\S]*?)(?=^## |\\z)").x // "")
+	 | gsub("^\\s+|\\s+$"; "")) as $x
+	| ($x != "" and $x != "なし" and $x != "なし。");
+EOF
+}
+
+# jq プログラム: ISSUE の JSON ({labels}) と --arg n status:<状態> --arg st <状態> から、
+# 「付けるラベル<TAB>外すラベル<TAB>変更後の action:*」をカンマ区切りで出す。
+# 規則は set-status.sh の冒頭のコメントを参照
+jq_label_plan() {
+	cat <<'EOF'
+[.labels[].name] as $have
+| def has($l): $have | index($l) != null;
+(if $st == "needs-approval" and (has("action:decide") or has("action:check") | not) then ["action:approve"]
+ elif $st == "approved" and (has("action:check") | not) then ["action:merge"]
+ else [] end) as $want_action
+| ([$n] + $want_action) as $want
+| ([$have[] | select(startswith("status:") and . != $n)]
+   + [$have[] | . as $l | select(($l == "action:approve" or $l == "action:merge") and ($want | index($l) == null))]
+   + (if $st != "needs-approval" and has("action:decide") then ["action:decide"] else [] end)) as $remove
+| ($want - $have) as $add
+| [($add | join(",")), ($remove | join(",")),
+   (($have + $add - $remove) | map(select(startswith("action:"))) | join(","))]
+| @tsv
 EOF
 }
 
